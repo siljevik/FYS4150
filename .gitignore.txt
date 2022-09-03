@@ -1,0 +1,18 @@
+# ignore Quartus  generated folders
+db/
+incremental_db/
+simulation/
+timing/
+*_sim/
+output_files/
+
+# ignore special files except .gitignore
+.#*
+\#*
+*~
+_*
+.*
+!.gitignore
+
+# ignore Quartus generated files
+*.rpt
