@@ -21,13 +21,15 @@ int main(){
 
 	double x = x_min;
 	double u = 1-(1-exp(-10))*x - exp(-10*x);
-
+//format-parameters to make the datafile readable
+	int width = 12;
+	int prec = 4;
 	//loop over steps
 	for (int i=0; i<= n_steps; i++)
 	 {
 	//write a line with the current x and y values to file
-	ofile << std::setw(1) << std::setprecision(1) << std::scientific << x
-	      << std::setw(1) << std::setprecision(1) << std::scientific << u
+	ofile << std::setw(width) << std::setprecision(prec) << std::scientific << x
+	      << std::setw(width) << std::setprecision(prec) << std::scientific << u
 	      << std:: endl;
 	// update x and u(x) values
 	x += h;
