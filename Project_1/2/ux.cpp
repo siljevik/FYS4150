@@ -21,7 +21,7 @@ int main(){
 
 // parameters to adjust the data and significant numbers in the txt file
 	int width_x = 9;
-	int width_u = 10;
+	int width_u = 11;
 	int prec = 3;
 //initial x and u values
 	double x = x_min;
