@@ -19,11 +19,12 @@ int main(){
 	int n_steps = 100;
 	double h = (x_max - x_min) / n_steps;
 
-	double x = x_min;
-	double u = 1-(1-exp(-10))*x - exp(-10*x);
-//format-parameters to make the datafile readable
+// parameters to adjust the data and significant numbers in the txt file
 	int width = 12;
 	int prec = 4;
+
+	double x = x_min;
+	double u = 1-(1-exp(-10))*x - exp(-10*x);
 	//loop over steps
 	for (int i=0; i<= n_steps; i++)
 	 {
