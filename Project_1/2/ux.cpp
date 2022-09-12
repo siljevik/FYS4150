@@ -16,16 +16,16 @@ int main(){
 	double x_min = 0.0;
 	double x_max = 1.0;
 // step size
-	int n_steps = 100;
+	int n_steps = 99;
 	double h = (x_max - x_min) / n_steps;
 
 // parameters to adjust the data and significant numbers in the txt file
-	int width_x = 9;
+	int width_x = 8;
 	int width_u = 11;
-	int prec = 3;
+	int prec = 4;
 //initial x and u values
 	double x = x_min;
-	double u = 1-(1-exp(-10))*x - exp(-10*x);
+	double u = (1-x)+(x*exp(-10) - exp(-10*x));
 	//loop over steps
 	for (int i=0; i<= n_steps; i++)
 	 {
@@ -35,7 +35,8 @@ int main(){
 	      << std:: endl;
 	// update x and u(x) values
 	x += h;
-	u = 1-(1-exp(-10))*x - exp(-10*x);
+	u = (1-x)+ (x*exp(-10) - exp(-10*x));
+// It doesn't stop at x=1. WHY?!?!
 	}
 
 	//close the output file
