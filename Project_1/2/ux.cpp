@@ -20,8 +20,8 @@ int main(){
 	double h = (x_max - x_min) / n_steps;
 
 // parameters to adjust the data and significant numbers in the txt file
-	int width = 12;
-	int prec = 4;
+	int width = 9;
+	int prec = 3;
 //initial x and u values
 	double x = x_min;
 	double u = 1-(1-exp(-10))*x - exp(-10*x);
