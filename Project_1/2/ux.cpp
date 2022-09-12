@@ -20,7 +20,8 @@ int main(){
 	double h = (x_max - x_min) / n_steps;
 
 // parameters to adjust the data and significant numbers in the txt file
-	int width = 12;
+	int width_x = 10;
+	int width_u = 11;
 	int prec = 3;
 //initial x and u values
 	double x = x_min;
@@ -29,8 +30,8 @@ int main(){
 	for (int i=0; i<= n_steps; i++)
 	 {
 	//write a line with the current x and y values to file
-	ofile << std::setw(width) << std::setprecision(prec) << std::scientific << x
-	      << std::setw(width) << std::setprecision(prec) << std::scientific << u
+	ofile << std::setw(width_x) << std::setprecision(prec) << std::scientific << x
+	      << std::setw(width_u) << std::setprecision(prec) << std::scientific << u
 	      << std:: endl;
 	// update x and u(x) values
 	x += h;
