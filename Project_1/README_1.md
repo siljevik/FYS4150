@@ -9,7 +9,10 @@ Run the filea by compiling it in the terminal(g++ required):
 Problem 2:
 In the '2' folder all the code and plot for problem 2 is, but also our try for the cpp code for problem 7. But we wrote a code in Python for problem 7 instead due to lack of time for it. The Python code and the other is in the main folder
 
+problem 7:
+The main.cpp file does not work properly yet. To get readable data, run the *.py file (13/09/22)
+
 Problem 9:
-For problem 9, the corresponding code is found under ../. The main.cpp is an implementation of the specialized algorithm from problem 7c, and written in the linux terminal. 
+For problem 9, the corresponding code is found under ../9. The main.cpp is an implementation of the specialized algorithm from problem 9c, and written in the linux terminal. 
 
 NB! Due to errors the code may not function properly at the moment(13/09/22).
