@@ -1,0 +1,1 @@
+/usr/bin/c++   -O2  -rdynamic CMakeFiles/smoke_test.dir/smoke_test.cpp.o  -o smoke_test  -Wl,-rpath,/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4 ../libarmadillo.so.11.2.4 -lopenblas -llapack 

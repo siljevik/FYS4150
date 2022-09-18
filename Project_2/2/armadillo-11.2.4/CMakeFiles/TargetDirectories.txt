@@ -1,0 +1,16 @@
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/CMakeFiles/install/strip.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/CMakeFiles/install/local.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/CMakeFiles/install.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/CMakeFiles/list_install_components.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/CMakeFiles/rebuild_cache.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/CMakeFiles/edit_cache.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/CMakeFiles/test.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/CMakeFiles/armadillo.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/tests1/CMakeFiles/install/strip.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/tests1/CMakeFiles/install/local.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/tests1/CMakeFiles/install.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/tests1/CMakeFiles/list_install_components.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/tests1/CMakeFiles/rebuild_cache.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/tests1/CMakeFiles/edit_cache.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/tests1/CMakeFiles/test.dir
+/home/sande/compfysproj/FYS4150/Project_2/2/armadillo-11.2.4/tests1/CMakeFiles/smoke_test.dir
