@@ -6,7 +6,7 @@
 using namespace arma;
 // declaration
 mat create_symmetric(int n, double a, double d);
-double max_offdiag_symmetric(const mat&A, int& k, int&l);
+double max_offdiag_symmetric(const mat&A, int& k, int&l, int& N);
 
 
 
@@ -34,7 +34,7 @@ int main(){
 	cout << "Our Matrix A:" << endl;
 	cout << create_symmetric(n,a,d) << endl;
 	cout << "With the largest off-diagonal element(in abs.):";
-	cout << max_offdiag_symmetric( create_symmetric(n,a,d) ,k,l) << endl;
+	cout << max_offdiag_symmetric( create_symmetric(n,a,d) ,k,l, N) << endl;
 return 0;
 }
 
@@ -60,42 +60,14 @@ mat create_symmetric(int n, double a, double d){
 
 	return A;
 }
+
+
 // A function that finds the max off-diag element of a symmetric matrix A.
-// - The matrix indices of the max element are returned by writing to the
-//   int references k and l (row and column, respectively)
-// - The value of the max element A(k,l) is returned as the function
-//   return value
-
-
-double max_offdiag_symmetric(const mat& A, int& k, int& l){
-  // Getting the size of matrix A
-	int N;
-	A.n_rows;
-
-  // Checking the consistancy; if the matrix is square and larger than 1x1, with armadillo. Prints out "Is Matrix A square?: true" if true
-//	cout << "Is Matrix A square?:" << endl;
-//	cout << A.is_square() << endl;
-
-  // The standard function 'assert' from <assert.h> can be useful for quick checks like this
-  // during the code development phase. Use it like this: assert(some condition),
-  // e.g assert(a==b). If the condition evaluates to false, the program is killed with
-  // an assertion error. More info: https://www.cplusplus.com/reference/cassert/assert/
-	// quick check if the matrix
+double max_offdiag_symmetric(const mat& A, int& k, int& l, int& N){
+	// quick check if the matrix is symmetric with the .is_square() function from armadillo
 	assert (A.is_square() == true);
-  // Initialize references k and l to the first off-diagonal element of A
-  // Initialize a double variable 'maxval' to A(k,l). We'll use this variable
-  // to keep track of the largest off-diag element.
-//	double maxval = A.max();
-
-  // Loop through all elements in the upper triangle of A (not including the diagonal)
-  // When encountering a matrix element with larger absolute value than the current value of maxval,
-  // update k, l and max accordingly.
-
-// looping through the upper triangle of the NxN matrix A.
-// When encountering a matrix element with a larger absolute value than the current value of maxval,
-// k, l and maxval will be updated
-
-	double max;
+	
+	double max;	// maximum value of A(k,l)
             for (int i = N-1; i > -1; --i) // Looking at position A(0,N-1) to A(N-1,0)
             {
                 for ( int j = i; j > -1; --j)
@@ -107,8 +79,6 @@ double max_offdiag_symmetric(const mat& A, int& k, int& l){
                     }
                 }
             }
-
             return max;
-            cout << max;
 }
 
