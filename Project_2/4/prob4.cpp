@@ -204,17 +204,3 @@ mat eigen_solver_loop(double tolerance, mat& A, mat& R, int N, int its_max, vec&
     std::cout << "\n Iterations: " << its << "\n" << "\n";
     return R;
 }
-
-    // Jacobi method eigensolver:
-    // - Runs jacobo_rotate until max off-diagonal element < eps
-    // - Writes the eigenvalues as entries in the vector "eigenvalues"
-    // - Writes the eigenvectors as columns in the matrix "eigenvectors"
-    //   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
-    // - Stops if it the number of iterations reaches "maxiter"
-    // - Writes the number of iterations to the integer "iterations"
-    // - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
-//    void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors, 
-//                            const int maxiter, int& iterations, bool& converged)
-
-
-
