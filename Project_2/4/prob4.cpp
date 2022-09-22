@@ -23,7 +23,7 @@ int main() {
     /////////////// FROM PROBLEM 2
 
     // big N to adjust the size of the NxN matrix A
-        int N = 6;  // From Praoblem 4 b)
+        int N = 2;  // From Praoblem 4 b)
     // minimum and maximum points
         double x_min = 0.0;
         double x_max = 1.0;
@@ -43,7 +43,7 @@ int main() {
         A(i+1, i) = -1./(h*h);
         A(i, i+1) = -1./(h*h);
         }
-    std::cout << "Matrix A: \n";
+    std::cout << "Original Matrix A: \n";
     std::cout << A;
 
     /////////////
@@ -64,10 +64,10 @@ int main() {
     int k = 0;
     double max;
     max = offdiag( A, p, q,N);
-    std::cout << "The maximum (absolute) value of A is " << max << '\n';
+    std::cout << "The maximum (absolute) value of (org) matrix A is " << max << '\n';
     R = jacobi_rotate( A, R, k, l, N);
     //A.print(std::cout);
-    std::cout << "The Jacobi rotated matrix is: \n";
+    std::cout << "jacobi_rotate matrix R (????idk) \n";
     R.print(std::cout);
     return 0;
 }
@@ -96,7 +96,7 @@ int main() {
             return max; 
         }
 
-//////////////////////////  T E S T  //////////////////////////
+/*//////////////////////////  T E S T  //////////////////////////
 mat jacobi_rotate(mat A, mat R, int row, int col, int N)
     {
         int n = N - 1;
@@ -118,7 +118,7 @@ mat jacobi_rotate(mat A, mat R, int row, int col, int N)
             }
         }
         return new_A;
-    }
+    }*/
 
 
         /*double s, c;
@@ -173,14 +173,79 @@ mat jacobi_rotate(mat A, mat R, int row, int col, int N)
     // the off-diagonal element at A(k,l).
     // - Assumes symmetric matrix, so we only consider k < l
     // - Modifies the input matrices A and R
-    /*mat jacobi_rotate(mat A, mat R, int k, int l, int N)
+    mat jacobi_rotate(mat A, mat R, int k, int l, int N)
     {
         //R = mat(N, N, fill::zeros);
         
-        double s, c;
+        for ( int k = 0; k < N; k++ ) 
+        {
+            for (int l = 0; l < N; l++)
+            {
+             //#################################
+                        double s, c;
+                if ( A(k,l) != 0.0 ) 
+                {    
+                    double t, tau; // t for tangent
+                    tau = (A(l,l) - A(k,k))/(2*A(k,l));
+
+                    if ( tau >= 0 )
+                        {t = 1.0/(tau + sqrt(1.0 + tau*tau));} 
+                    else 
+                        {t = -1.0/(-tau + sqrt(1.0 + tau*tau));}
+                    
+                    c = 1/sqrt(1+t*t);  // c for cosine
+                    s = c*t;            // s for sine
+                } 
+
+                else 
+                {
+                    c = 1.0;    // c for cosine
+                    s = 0.0;    // s for sine
+                }
+
+                double a_kk, a_ll, a_ik, a_il, r_ik, r_il;
+                
+                a_kk = A(k,k);
+                a_ll = A(l,l);
+                
+                A(k,k) = c*c*a_kk - 2.0*c*s*A(k,l) + s*s*a_ll;
+                A(l,l) = s*s*a_kk + 2.0*c*s*A(k,l) + c*c*a_ll;
+                
+                //A(k,l) = 0.0; // hard-coding non-diagonal elements by hand
+                //A(l,k) = 0.0; // same here
+                
+                for ( int i = 0; i < N; i++ ) 
+                {
+                    if ( i != k && i != l ) 
+                    {
+                        a_ik = A(i,k);
+                        a_il = A(i,l);
+                        A(i,k) = c*a_ik - s*a_il;
+                        A(k,i) = A(i,k);
+                        A(i,l) = c*a_il + s*a_ik;
+                        A(l,i) = A(i,l);
+                        // And finally the new eigenvectors ?????????????????????
+                        r_ik = A(i,k);
+                        r_il = A(i,l);
+                        R(i,k) = c*r_ik - s*r_il;
+                        R(i,l) = c*r_il + s*r_ik;
+                    }
+                    
+                }
+                
+                
+                    //#################################   
+
+            }
+        }
+        std::cout << "jacobi_rotate A??  \n" << A;
+        return R;
+    }
+
+        /*double s, c;
         if ( A(k,l) != 0.0 ) 
         {    
-            double t, tau;
+            double t, tau; // t for tangent
             tau = (A(l,l) - A(k,k))/(2*A(k,l));
 
             if ( tau >= 0 )
@@ -188,14 +253,14 @@ mat jacobi_rotate(mat A, mat R, int row, int col, int N)
             else 
                 {t = -1.0/(-tau + sqrt(1.0 + tau*tau));}
             
-            c = 1/sqrt(1+t*t);
-            s = c*t;
+            c = 1/sqrt(1+t*t);  // c for cosine
+            s = c*t;            // s for sine
         } 
 
         else 
         {
-            c = 1.0;
-            s = 0.0;
+            c = 1.0;    // c for cosine
+            s = 0.0;    // s for sine
         }
 
         double a_kk, a_ll, a_ik, a_il, r_ik, r_il;
@@ -219,7 +284,7 @@ mat jacobi_rotate(mat A, mat R, int row, int col, int N)
                 A(k,i) = A(i,k);
                 A(i,l) = c*a_il + s*a_ik;
                 A(l,i) = A(i,l);
-                // And finally the new eigenvectors
+                // And finally the new eigenvectors ?????????????????????
                 r_ik = A(i,k);
                 r_il = A(i,l);
                 R(i,k) = c*r_ik - s*r_il;
@@ -227,8 +292,7 @@ mat jacobi_rotate(mat A, mat R, int row, int col, int N)
             }
         }
         
-        A.print(std::cout);
-        R.print(std::cout);
+        std::cout << "jacobi_rotate A??  \n" << A;
         return R;
 
     } */// end of function jacobi_rotate
