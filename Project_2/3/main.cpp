@@ -6,8 +6,8 @@
 using namespace arma;
 // declaration
 mat create_symmetric(int n, double a, double d);
-double max_offdiag_symmetric(const mat&A, int& k, int&l, int& N);
-
+double offdiag(const mat&A, int& k, int&l, int& N);
+mat testmat(int& n);
 
 
 //----- main function -----
@@ -28,13 +28,16 @@ int main(){
 
 // k and l
 	int k = 0;
-	int l = N;
+	int l = 0;
 
 // print matrix
-	cout << "Our Matrix A:" << endl;
-	cout << create_symmetric(n,a,d) << endl;
+	mat A = create_symmetric(n,a,d);
+	mat B = testmat(n);
+	double maxval = offdiag(B,k , l, N);
+	cout << "Our test-matrix B:" << endl;
+	cout << B << endl;
 	cout << "With the largest off-diagonal element(in abs.):";
-	cout << max_offdiag_symmetric( create_symmetric(n,a,d) ,k,l, N) << endl;
+	cout <<  maxval << endl;
 return 0;
 }
 
@@ -63,14 +66,15 @@ mat create_symmetric(int n, double a, double d){
 
 
 // A function that finds the max off-diag element of a symmetric matrix A.
-double max_offdiag_symmetric(const mat& A, int& k, int& l, int& N){
+double offdiag(const mat& A, int& k, int& l, int& N){
 	// quick check if the matrix is symmetric with the .is_square() function from armadillo
 	assert (A.is_square() == true);
-	
+
 	double max;	// maximum value of A(k,l)
-            for (int i = N-1; i > -1; --i) // Looking at position A(0,N-1) to A(N-1,0)
+	// Looping thorugh the matrix to find the maximum value of the off-diagonal
+            for (int i = 0; i < N; i++) // Looking at position A(0,N-1) to A(N-1,0)
             {
-                for ( int j = i; j > -1; --j)
+                for ( int j = i+1; j < N; j++)
                 {
                     double aij = fabs(A(i,j));
                     if ( aij > max)
@@ -82,3 +86,17 @@ double max_offdiag_symmetric(const mat& A, int& k, int& l, int& N){
             return max;
 }
 
+mat testmat(int& n){
+
+mat B(n,n, fill::eye); // starting out with the identity matrix
+
+// add the values to the off-diagonal
+	int q = 1; double p = -0.7;
+	B(0,4) = q;
+	B(4,0) = q;
+	B(1,3) = p;
+	B(2,2) = p;
+//B.print(std::cout);
+return B;
+
+}
