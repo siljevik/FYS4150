@@ -1,21 +1,23 @@
 ///////////////////////////////////////////
 //  FOR SILJES EYES ONLY:                //
-//  Compile with                         //
+//  Compile with:                        //
 //  g++ -std=c++11 prob4.cpp -larmadillo //
-//  Run with                             //
+//  Run with:                            //
 //  ./a.out                              //
 ///////////////////////////////////////////
 
 #include <iostream>
 #include <armadillo>
-using namespace arma;   // so we don't have to use 'arma::' before every armadollon operation
+using namespace arma;   // So we don't have to use 'arma::' before every Armadillo operation
 
 // Declarations before our main
 double offdiag(mat& A, int& p, int& q, int N); // The '&' denotes reference to an object, so we can change it
 void jacobi_rotate(mat& A, mat& R, int k, int l, int N);
 mat eigen_solver_loop(double tolerance, mat& A, mat& R, int N, int its_max, vec& eigenvals_A) ;
 
-//////////////////  MAIN
+
+
+//////////////////////////////  MAIN   //////////////////////////////
 int main() 
 {
     int N = 6;          // Size of matrix A is NxN
@@ -52,7 +54,7 @@ int main()
     double max;
     max = offdiag(A, p, q,N); // Finds the largest number/entry in the matrix that is not in the diagonal
     
-    double tolerance = pow(10, -80); // pow(base, exponent) 'ten in the power of minus eight'
+    double tolerance = pow(10, -8); // pow(base, exponent) 'ten in the power of minus eight'
     int its_max = 10000;            // Let's not let our program go too crazy:D
     vec eigenvals_A(N);             // defining vector with N elements
     R = eigen_solver_loop(tolerance, A, R, N, its_max, eigenvals_A); // Creating a matrix where each column is an eigenvector
@@ -83,96 +85,96 @@ int main()
 }
 
 
-////////////////// OFF DIAGONAL
-    // Determine the the max off-diagonal element of a symmetric matrix A
-    // - Saves the matrix element indicies to k and l 
-    // - Returns absolute value of A(k,l) as the function return value
-    double offdiag(mat& A, int& p, int& q, int N) ///////////// OPPGAVE 3!!!   // & er reference/pointer
+
+
+
+////////////////////////////// OFF DIAGONAL  //////////////////////////////
+// Determine the the max off-diagonal element of a symmetric matrix A
+// - Saves the matrix element indicies to k and l 
+// - Returns absolute value of A(k,l) as the function return value
+double offdiag(mat& A, int& p, int& q, int N) ///////////// OPPGAVE 3!!!   // & er reference/pointer
+{
+    double max;
+    for (int i = 0; i < N; ++i) // Looking at position A(0,N-1) to A(N-1,0)
     {
-            double max;
-            for (int i = 0; i < N; ++i) // Looking at position A(0,N-1) to A(N-1,0)
+        for ( int j = i+1; j < N; ++j)
+        {
+            double aij = fabs(A(i,j)); // Absolute value of A(i,j)
+            if ( aij > max)
             {
-                for ( int j = i+1; j < N; ++j)
-                {
-                    double aij = fabs(A(i,j)); // Absolute value of A(i,j)
-                    if ( aij > max)
-                    {
-                        max = aij; p = i; q = j; // Updating our values/numbers
-                    }
-                }
-            
+                max = aij; p = i; q = j; // Updating our values/numbers
             }
-            return max; // Returns the max off-diagonal element of A
         }
-///////////////////////////////////////////////////// KOMMENTER FERDIG UNDER HER SILJE
-////////////////// JACOBI ROTATION
-    // Performs a single Jacobi rotation, to "rotate away"
-    // the off-diagonal element at A(k,l).
-    // - Assumes symmetric matrix, so we only consider k < l
-    // - Modifies the input matrices A and R
-void jacobi_rotate(mat& A, mat& R, int k, int l, int N)
-{   /*/ MATRIX:
-        // a_kk         a_lk   (l > k)
-
-        // a_kl         a_ll
-
-             // når maxoffdiag < 10^-8 ish skal det stoppe, så printer vi matrisen
-             // Telle antall ganger iterasjonene går for å få den roterte matrisen*/
-                double s, c;
-                if ( A(k,l) != 0.0 ) 
-                {    
-                    double t, tau; // t for tangent
-                    tau = (A(l,l) - A(k,k))/(2*A(k,l));
-
-                    if ( tau >= 0 )         
-                        {t = 1.0/(tau + sqrt(1.0 + tau*tau));}   // se slutt av fl notat
-                    else 
-                        {t = -1.0/(-tau + sqrt(1.0 + tau*tau));}
-                    
-                    c = 1/sqrt(1+t*t);  // c for cosine
-                    s = c*t;            // s for sine
-                } 
-                else 
-                {
-                    c = 1.0;    // c for cosine when A(k,l) = 0
-                    s = 0.0;    // s for sine when A(k,l) = 0
-                }
-                
-                // Updating
-                double a_kk, a_ll, a_ik, a_il, r_ik, r_il;
-                a_kk = A(k,k);
-                a_ll = A(l,l);
-                A(k,k) = c*c*a_kk - 2.0*c*s*A(k,l) + s*s*a_ll;   // since Akl=Alk
-                A(l,l) = s*s*a_kk + 2.0*c*s*A(k,l) + c*c*a_ll;
-                A(k,l) = 0.0; // hard-coding non-diagonal elements by hand
-                A(l,k) = 0.0; // same here
-                
-                for ( int i = 0; i < N; i++ ) // For the elements that are not kk, ll, kl, lk
-                {
-                    if ( i != k && i != l ) 
-                    {
-                        a_ik = A(i,k);
-                        a_il = A(i,l);
-                        A(i,k) = c*a_ik - s*a_il;
-                        A(k,i) = A(i,k);
-                        A(i,l) = c*a_il + s*a_ik;
-                        A(l,i) = A(i,l);
-                    }   
-                }
-
-                for (int i = 0; i<N; i++)
-                {
-                    r_ik = R(i,k);
-                    r_il = R(i,l);
-                    R(i,k) = c*r_ik - s*r_il;
-                    R(i,l) = c*r_il + s*r_ik;
-                }
-        //std::cout << "jacobi_rotate A??  \n" << A;
+            
+    }
+    return max; // Returns the max off-diagonal element of A
 }
 
 
 
-////////////////// EIGEN SOLVER
+//////////////////////////////  JACOBI ROTATION //////////////////////////////
+// Performs a single Jacobi rotation, to "rotate away"
+// the off-diagonal element at A(k,l).
+// - Assumes symmetric matrix, so we only consider k < l
+// - Modifies the input matrices A and R
+void jacobi_rotate(mat& A, mat& R, int k, int l, int N)
+{  
+    double s, c;
+    if ( A(k,l) != 0.0 ) 
+    {    
+        double t, tau; // t for tangent, tau for.. tau? haha
+        tau = (A(l,l) - A(k,k))/(2*A(k,l));
+
+        if ( tau >= 0 )         
+            {t = 1.0/(tau + sqrt(1.0 + tau*tau));}   // from our calculations
+        else 
+            {t = -1.0/(-tau + sqrt(1.0 + tau*tau));}
+                    
+        c = 1/sqrt(1+t*t);  // c for cosine
+        s = c*t;            // s for sine
+    } 
+    else 
+    {
+        c = 1.0;    // c for cosine when A(k,l) = 0
+        s = 0.0;    // s for sine when A(k,l) = 0
+    }
+                
+    // Updating
+    double a_kk, a_ll, a_ik, a_il, r_ik, r_il;
+    a_kk = A(k,k);
+    a_ll = A(l,l);
+    A(k,k) = c*c*a_kk - 2.0*c*s*A(k,l) + s*s*a_ll;   // 2* since A(k,l)=A(l,k)
+    A(l,l) = s*s*a_kk + 2.0*c*s*A(k,l) + c*c*a_ll;
+    A(k,l) = 0.0; // Manually setting the non-diagonal values to 0
+    A(l,k) = 0.0; 
+                
+    for ( int i = 0; i < N; i++ ) // For the elements that are not kk, ll, kl, lk
+    {
+        if ( i != k && i != l ) 
+        {
+            // Updating the non-kk/ll/kl/lk positions
+            a_ik = A(i,k);
+            a_il = A(i,l);
+            A(i,k) = c*a_ik - s*a_il;
+            A(k,i) = A(i,k);
+            A(i,l) = c*a_il + s*a_ik;
+            A(l,i) = A(i,l);
+        }   
+    }
+
+    for (int i = 0; i < N; i++)
+    {
+        // Updating the values in the R matrix (each column will be an eigenvector of A)
+        r_ik = R(i,k);
+        r_il = R(i,l);
+        R(i,k) = c*r_ik - s*r_il;
+        R(i,l) = c*r_il + s*r_ik;
+    }
+}
+
+
+
+////////////////////////////// EIGEN SOLVER //////////////////////////////
 mat eigen_solver_loop(double tolerance, mat& A, mat& R, int N, int its_max, vec& eigenvals_A) 
 {
     int p,q,its; // its = iterations (for counting how many interations the code have to do)
@@ -181,16 +183,12 @@ mat eigen_solver_loop(double tolerance, mat& A, mat& R, int N, int its_max, vec&
     max = offdiag(A,p,q, N);
     while (tolerance < max && its < its_max) 
     {
-        // One rotation for every max value that is bigger than the tolerance
-        // we set.
+        // One rotation for every max value that is bigger than the tolerance we set.
         jacobi_rotate(A, R, p, q, N);
         max = offdiag(A, p, q, N);
         its = its + 1;      // Counting iterations
     }
-    // Extracting the eigenvalues from the rotated A
-    //for (int i = 0; i < N; i++)
-    //    {eigenvals_A(i) = A(i,i);}
-
+    // Printing how many iterations our code had to do
     std::cout << "\n Iterations: " << its << "\n" << "\n";
     return R;
 }
