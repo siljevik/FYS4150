@@ -52,7 +52,7 @@ int main()
     double max;
     max = offdiag(A, p, q,N); // Finds the largest number/entry in the matrix that is not in the diagonal
     
-    double tolerance = pow(10, -8); // pow(base, exponent) 'ten in the power of minus eight'
+    double tolerance = pow(10, -80); // pow(base, exponent) 'ten in the power of minus eight'
     int its_max = 10000;            // Let's not let our program go too crazy:D
     vec eigenvals_A(N);             // defining vector with N elements
     R = eigen_solver_loop(tolerance, A, R, N, its_max, eigenvals_A); // Creating a matrix where each column is an eigenvector
