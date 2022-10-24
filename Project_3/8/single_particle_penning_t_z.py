@@ -23,7 +23,7 @@ with open(filename, encoding="utf8") as f:
         line_cont_ls = i.split() # List of values in the line
 
         # Finding the z value from this line (position 1????)
-        z_val = line_cont_ls[1] #?????
+        z_val = line_cont_ls[3] #?????
         # Adding the z value to the list
         z.append(z_val)
 
