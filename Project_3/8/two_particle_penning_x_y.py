@@ -1,8 +1,10 @@
+# POINT 2 IN PROBLEM 8
 import matplotlib.pyplot as plt
 
 # The filenames of the files the data will be extracted from
-filename_1 = "two_particle_without.txt" # Without interactions
 filename_2 = "two_particle_with.txt" # With interactions
+filename_1 = "two_particle_without.txt" # Without interactions
+
 
 # This plots two particles movement in a Penning trap, in the 
 # z-direction, as a function of time.
