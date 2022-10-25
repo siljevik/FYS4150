@@ -1,0 +1,42 @@
+#include <iostream>
+#include <armadillo>
+#include <vector>
+
+// namespaces
+using namespace arma;
+
+// including the header files containing our classes
+#include "header/particle.hpp"
+#include "header/penningtrap.hpp"
+// task 5 main function
+/* Create a class named Particle that should at least store
+ the following properties of a single particle:
+        charge(q)
+        mass(m)
+        position(r)
+        velocity(v)
+
+Some advice:
+
+        The constructor should assign values to the member variables.
+
+        For the position and velocity, use arma::vec objects.
+
+        Make all member variables public. This is just to ease
+        the interplay between the Particle class and the PenningTrap class.
+        (Alternatively, a nice approach in this case would be to make
+         PenningTrap a friend class of Particle.)
+ */
+
+int main(){
+
+/* write functions that can evolve your PenningTrap system in time using
+ 	- the forward Euler method: y_{n+1} = y_n + f(t_n, y_n)*dt
+	- the RK4 method
+You can implement these methods either 
+	- by regular functions, that take a reference to a PenningTrap object as input; via some type of “solver class” or “integrator class”, that contains/interacts with the PenningTrap object; or
+
+via member functions implemented directly in the PenningTrap class.
+*/
+};
+
