@@ -1,6 +1,6 @@
 #############################
 #                           #
-#    POINT 2 IN PROBLEM 8   #
+#    POINT 3 IN PROBLEM 8   #
 #                           #
 #############################
 import matplotlib.pyplot as plt
@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 # The filenames of the files the data will be extracted from
 filename_2 = "two_particle_with_traj.txt" # With interactions
 filename_1 = "two_particle_without_traj.txt" # Without interactions
+
 
 
 # This plots two particles movement in a Penning trap, in the 
@@ -35,6 +36,7 @@ def single_particle_penning_t_z(filename_1,filename_2):
     vx2_wo = []
     vz2_wo = []
     
+
 
     ######################################################
     #                   WITH INTERACTIONS                #
@@ -70,6 +72,7 @@ def single_particle_penning_t_z(filename_1,filename_2):
             vz2_w.append(vz2_w_val)
 
 
+
     ######################################################
     #                 WITHOUT INTERACTIONS               #
     # Extracts the data for the trajectory without       #
@@ -102,6 +105,8 @@ def single_particle_penning_t_z(filename_1,filename_2):
             z2_wo.append(z2_wo_val)
             vx2_wo.append(vx2_wo_val)
             vz2_wo.append(vz2_wo_val)
+
+
 
     ######################################################
     #                   PLOTTING                         #

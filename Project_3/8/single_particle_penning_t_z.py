@@ -37,7 +37,7 @@ def single_particle_penning_t_z(filename):
         plt.xlabel("Time [\u03bcs]")
         plt.ylabel("Movement in z-direction[\u03bcm]")
         # Saves and shows the plot
-        plt.savefig("single_particle_zt.png") 
+        plt.savefig("single_particle_zt.svg", format="svg") 
         plt.show()
 
     return z
