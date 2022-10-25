@@ -3,20 +3,26 @@
 #    POINT 3 IN PROBLEM 8   #
 #                           #
 #############################
+from platform import platform
 import matplotlib.pyplot as plt
+import numpy as np
 
 # The filenames of the files the data will be extracted from
-filename_2 = "two_particle_with_traj.txt" # With interactions
-filename_1 = "two_particle_without_traj.txt" # Without interactions
+filename_1 = "two_particle_data_w_int.txt" # With interactions
+filename_2 = "two_particle_data_no_int.txt" # Without interactions
+# Both files has this header (the comment under is just to have 
+# somewhat control of placement numbering):
+# Time, x1, x2, y1, y2, z1, z2, vx1, vx2, vy1, vy2, vz1, vz2
+#    0,  1,  2,  3,  4,  5,  6,   7,   8,   9,  10,  11,  12
 
 
 
 # This plots two particles movement in a Penning trap, in the 
 # z-direction, as a function of time.
-def single_particle_penning_t_z(filename_1,filename_2):
+def two_particle_penning_xzv(filename_1,filename_2):
 
-    # Creating an empty lists for the x and y positions for both the
-    # particles in the Penning trap with and without interactions
+    # Creating an empty lists for both the particles in the Penning trap with (w) and 
+    # without (wo) interactions.
     # Particle 1:
     x1_w = []
     z1_w = []
@@ -43,25 +49,29 @@ def single_particle_penning_t_z(filename_1,filename_2):
     # Extracts the data for the trajectory with          #
     # interactions                                       #
     ######################################################
-    with open(filename_1, encoding="utf8") as f: 
+    with open(filename_1) as f: 
+        next(f) # Skipping the header (top) row
         text = f.read()
+
         # Splitting it by \n
         line_ls = text.split('\n')
+        del line_ls[-1] # Last line is empty, so we delete it, bitch bye
 
         for i in line_ls:
-            line_cont_ls = i.split() # List of values in the line
+            line_cont_ls = i.split(",") # List of values in the line
 
-            # Finding the t and z value from this line (position 1????)
-            x1_w_val = line_cont_ls[0]
-            z1_w_val = line_cont_ls[3]
-            vx1_w_val = line_cont_ls[0]
-            vz1_w_val = line_cont_ls[3]
-            x2_w_val = line_cont_ls[0]
-            z2_w_val = line_cont_ls[3]
-            vx2_w_val = line_cont_ls[0]
-            vz2_w_val = line_cont_ls[3]
 
-            # Adding the t and z value to the list
+            # Extracting values from filename_1
+            x1_w_val = line_cont_ls[1]
+            z1_w_val = line_cont_ls[5]
+            vx1_w_val = line_cont_ls[7]
+            vz1_w_val = line_cont_ls[11]
+            x2_w_val = line_cont_ls[2]
+            z2_w_val = line_cont_ls[6]
+            vx2_w_val = line_cont_ls[8]
+            vz2_w_val = line_cont_ls[12]
+
+            # Adding the values to the belonging lists
             x1_w.append(x1_w_val)
             z1_w.append(z1_w_val)
             vx1_w.append(vx1_w_val)
@@ -78,25 +88,26 @@ def single_particle_penning_t_z(filename_1,filename_2):
     # Extracts the data for the trajectory without       #
     # interactions                                       #
     ######################################################
-    with open(filename_2, encoding="utf8") as f: 
+    with open(filename_2) as f: 
+        next(f)
         text = f.read()
-        # Splitting it by \n
         line_ls = text.split('\n')
+        del line_ls[-1] # Last line is empty, so we delete it, bitch bye
 
-        for i in line_ls:
-            line_cont_ls = i.split() # List of values in the line
+        for j in line_ls:
+            line_cont_ls = j.split(",") # List of values in the line
 
-            # Finding the t and z value from this line (position 1????)
-            x1_wo_val = line_cont_ls[0]
-            z1_wo_val = line_cont_ls[3]
-            vx1_wo_val = line_cont_ls[0]
-            vz1_wo_val = line_cont_ls[3]
-            x2_wo_val = line_cont_ls[0]
-            z2_wo_val = line_cont_ls[3]
-            vx2_wo_val = line_cont_ls[0]
-            vz2_wo_val = line_cont_ls[3]
+            # Extracting values from filename_1
+            x1_wo_val = line_cont_ls[1]
+            z1_wo_val = line_cont_ls[5]
+            vx1_wo_val = line_cont_ls[7]
+            vz1_wo_val = line_cont_ls[11]
+            x2_wo_val = line_cont_ls[2]
+            z2_wo_val = line_cont_ls[6]
+            vx2_wo_val = line_cont_ls[8]
+            vz2_wo_val = line_cont_ls[12]
 
-            # Adding the t and z value to the list
+            # Adding the values to the belonging lists
             x1_wo.append(x1_wo_val)
             z1_wo.append(z1_wo_val)
             vx1_wo.append(vx1_wo_val)
@@ -106,52 +117,59 @@ def single_particle_penning_t_z(filename_1,filename_2):
             vx2_wo.append(vx2_wo_val)
             vz2_wo.append(vz2_wo_val)
 
+    # Returning all the complete lists
+    return x1_w,z1_w,vx1_w,vz1_w,x1_wo,z1_wo,vx1_wo,vz1_wo,x2_w,z2_w,vx2_w,vz2_w,x2_wo,z2_wo,vx2_wo,vz2_wo
 
 
-    ######################################################
-    #                   PLOTTING                         #
-    # Plotting all 4 plots in a 2x2 grid in one svg file #
-    ######################################################
-    
-    fig, axs = plt.subplots(2, 2)
-    # Giving the whole cllection of plots a title
-    fig.suptitle('Trajectories of the two particles...')
 
-    # Plot for two particles' trajectories with interactions in the (x,vx) plane
-    axs[0, 0].plot(x1_w, vx1_w, color='forestgreen', label='Particle 1')
-    axs[0, 0].plot(x2_w, vx2_w, color='limegreen', label='Particle 2')
-    axs[0, 0].set_title('... in the (x,$v\_{x}$) plane, with interactions')
-    axs[0, 0].xlabel('x [\u03bcm]')
-    axs[0, 0].ylabel('$v\_{x}$ [\u03bcm/\u03bcms]')
-    axs[0, 0].legend()
 
-    # Plot for two particles' trajectories with interactions in the (z,vz) plane
-    axs[0, 1].plot(z1_w,vz1_w, color='salmon', label='Particle 1')
-    axs[0, 1].plot(z2_w,vz2_w, color='red', label='Particle 2')
-    axs[0, 1].set_title('... in the (z,$v\_{z}$) plane, with interactions')
-    axs[0, 1].xlabel('z [\u03bcm]')
-    axs[0, 1].ylabel('v\_{z}[\u03bcm/\u03bcs]')
-    axs[0, 1].legend()
 
-    # Plot for two particles' trajectories without interactions in the (x,vx) plane
-    axs[1, 0].plot(x1_wo, vx1_wo, color='teal', label='Particle 1')
-    axs[1, 0].plot(x2_wo, vx2_wo, color='mediumturquoise', label='Particle 2')
-    axs[1, 0].set_title('... in the (x,$v\_{x}$) plane, without interactions')
-    axs[1, 0].xlabel('x [\u03bcm]')
-    axs[1, 0].ylabel('$v\_{x}$ [\u03bcm/\u03bcms]')
-    axs[1, 0].legend()
+# RUNNING THE CODE
+x1_w,z1_w,vx1_w,vz1_w,x1_wo,z1_wo,vx1_wo,vz1_wo,x2_w,z2_w,vx2_w,vz2_w,x2_wo,z2_wo,vx2_wo,vz2_wo = two_particle_penning_xzv(filename_1,filename_2)
+
+
+
+######################################################
+#                     PLOTTING                       #
+# Plotting all 4 plots, saving them, one at a time   #
+######################################################
+
+# PLOT 1: For two particles' trajectories with interactions in the (x,vx) plane
+plt.plot(np.asarray(x1_w,float), np.asarray(vx1_w,float), color='forestgreen', label='Particle 1')
+plt.plot(np.asarray(x2_w,float), np.asarray(vx2_w,float), color='limegreen', label='Particle 2')
+plt.title('Trajectories in the (x,$v_x$)-plane, with interactions')
+plt.xlabel('x [\u03bcm]')
+plt.ylabel('$v_x$ [\u03bcm/\u03bcs]')
+plt.legend()
+plt.savefig("two_particle_traj_x_w.svg", format="svg") 
+plt.close()
+
+# PLOT 2: For two particles' trajectories without interactions in the (x,vx) plane
+plt.plot(np.asarray(x1_wo,float), np.asarray(vx1_wo,float), color='teal', label='Particle 1')
+plt.plot(np.asarray(x2_wo,float), np.asarray(vx2_wo,float), color='mediumturquoise', label='Particle 2')
+plt.title('Trajectories in the (x,$v_x$)-plane, without interactions')
+plt.xlabel('x [\u03bcm]')
+plt.ylabel('$v_x$ [\u03bcm/\u03bcs]')
+plt.legend()
+plt.savefig("two_particle_traj_x_wo.svg", format="svg") 
+plt.close()
+
+# PLOT 3: For two particles' trajectories with interactions in the (z,vz) plane
+plt.plot(np.asarray(z1_w,float), np.asarray(vz1_w,float), color='salmon', label='Particle 1')
+plt.plot(np.asarray(z2_w,float), np.asarray(vz2_w,float), color='red', label='Particle 2')
+plt.title('Trajectories in the (z,$v_z$)-plane, with interactions')
+plt.xlabel('z [\u03bcm]')
+plt.ylabel('v\_{z}[\u03bcm/\u03bcs]')
+plt.legend()
+plt.savefig("two_particle_traj_z_w.svg", format="svg") 
+plt.close()
      
-    # Plot for two particles' trajectories without interactions in the (z,vz) plane
-    axs[1, 1].plot(z1_wo, vz1_wo, color='darkmagneta',label='Particle 1')
-    axs[1, 1].plot(z2_wo, vz2_wo, color='orchid', label='Particle 2')
-    axs[1, 1].set_title('... in the (x,$v\_{x}$) plane, without interactions')
-    axs[1, 1].xlabel('z [\u03bcm]')
-    axs[1, 1].ylabel('v\_{z}[\u03bcm/\u03bcs]')
-    axs[1, 1].legend()
-
-    # Saving the plots as an svg file and opening it
-    plt.savefig("two_particle_traj.svg", format="svg") 
-    plt.show()
-
-
-    return 0
+# PLOT 4: For two particles' trajectories without interactions in the (z,vz) plane
+plt.plot(np.asarray(z1_wo,float), np.asarray(vz1_wo,float), color='darkmagenta',label='Particle 1')
+plt.plot(np.asarray(z2_wo,float), np.asarray(vz2_wo,float), color='orchid', label='Particle 2')
+plt.title('Trajectories in the (x,$v_x$)-plane, without interactions')
+plt.xlabel('z [\u03bcm]')
+plt.ylabel('$v_z$[\u03bcm/\u03bcs]')
+plt.legend()
+plt.savefig("two_particle_traj_z_wo.svg", format="svg") 
+plt.close()

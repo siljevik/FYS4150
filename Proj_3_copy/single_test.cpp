@@ -2,6 +2,8 @@
 //
 // Compile with: g++ single_test.cpp func/particle.cpp func/penningtrap.cpp func/analytical.cpp -std=c++11 -I include -o single_test.exe -larmadillo
 //
+// To execute file and save data: ./single_test.exe > single_particle_z.txt
+//
 /////////////////////////////////
 #include <iostream>
 #include <cmath>
@@ -47,25 +49,25 @@ int main()
 
   // num = numerical
   // ana = analytical
-  cout << "#" << setw(width) << "Time"
-       << setw(width) << "x_num"
-       << setw(width) << "y_num"
-       << setw(width) << "z_num"
-       << setw(width) << "x_ana"
-       << setw(width) << "y_ana"
-       << setw(width) << "z_ana"
+  cout << "Time"
+       << "," << "x_num"
+       << "," << "y_num"
+       << "," << "z_num"
+       << "," << "x_ana"
+       << "," << "y_ana"
+       << "," << "z_ana"
+       << endl;
+     // Printing the values with a comma (",") between them
+  cout << setprecision(prec) << t(0)
+       << "," << setprecision(prec) << x_0
+       << "," << setprecision(prec) << y_0
+       << "," << setprecision(prec) << z_0
+       << "," << setprecision(prec) << x_0
+       << "," << setprecision(prec) << y_0
+       << "," << setprecision(prec) << z_0
        << endl;
 
-  cout << setw(width) << setprecision(prec) << t(0)
-       << setw(width) << setprecision(prec) << x_0
-       << setw(width) << setprecision(prec) << y_0
-       << setw(width) << setprecision(prec) << z_0
-       << setw(width) << setprecision(prec) << x_0
-       << setw(width) << setprecision(prec) << y_0
-       << setw(width) << setprecision(prec) << z_0
-       << endl;
-
-	for (int i = 1; i < steps; i++)
+	for (int i = 1; i < steps-1; i++)
   	{
     	trap.evolve_RK4(dt, true);
 
@@ -76,13 +78,13 @@ int main()
     	double y_num = trap.particles[0].r[1];
     	double z_num = trap.particles[0].r[2];
 
-    	cout << setw(width) << setprecision(prec) << t(i)
-         << setw(width) << setprecision(prec) << x_num
-         << setw(width) << setprecision(prec) << y_num
-         << setw(width) << setprecision(prec) << z_num
-         << setw(width) << setprecision(prec) << x_ana
-         << setw(width) << setprecision(prec) << y_ana
-         << setw(width) << setprecision(prec) << z_ana
+    	cout << setprecision(prec) << t(i)
+         << "," << setprecision(prec) << x_num
+         << "," << setprecision(prec) << y_num
+         << "," << setprecision(prec) << z_num
+         << "," << setprecision(prec) << x_ana
+         << "," << setprecision(prec) << y_ana
+         << "," << setprecision(prec) << z_ana
          << endl;
   	}
   return 0;

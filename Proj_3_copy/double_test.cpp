@@ -2,6 +2,10 @@
 //
 // Compile w/ : g++ double_test.cpp func/particle.cpp func/penningtrap.cpp func/analytical.cpp -std=c++11 -I include -o double_test.exe -larmadillo
 //
+// To execute file and save data (without interactions): ./double_test.exe > two_particle_data_no_int.txt
+//
+// To execute file and save data (with interactions): ./double_test.exe > two_particle_data_w_int.txt
+//
 /////////////////
 #include <iostream>
 #include <cmath>
@@ -44,43 +48,45 @@ int main()
 
   arma::vec t = arma::linspace(0, t_tot, steps);
 
-  cout << "#" << setw(width) << "Time"
-       << setw(width) << "x1"
-       << setw(width) << "x2"
-       << setw(width) << "y1"
-       << setw(width) << "y2"
-       << setw(width) << "z1"
-       << setw(width) << "z2"
-       << setw(width) << "vx1"
-       << setw(width) << "vx2"
-       << setw(width) << "vy1"
-       << setw(width) << "vy2"
-       << setw(width) << "vz1"
-       << setw(width) << "vz2"
+  // Header naming the columns int the .txt-file
+  cout << "Time"
+       << "," << "x1"
+       << "," << "x2"
+       << "," << "y1"
+       << "," << "y2"
+       << "," << "z1"
+       << "," << "z2"
+       << "," << "vx1"
+       << "," << "vx2"
+       << "," << "vy1"
+       << "," << "vy2"
+       << "," << "vz1"
+       << "," << "vz2"
        << endl;
 
-  cout << setw(width) << t(0)
-       << setw(width) << r_1(0)
-       << setw(width) << r_2(0)
-       << setw(width) << r_1(1)
-       << setw(width) << r_2(1)
-       << setw(width) << r_1(2)
-       << setw(width) << r_2(2)
-       << setw(width) << v_1(0)
-       << setw(width) << v_2(0)
-       << setw(width) << v_1(1)
-       << setw(width) << v_2(1)
-       << setw(width) << v_1(2)
-       << setw(width) << v_2(2)
+  // First row in the .txt-file contains the initial values
+  cout << t(0)
+       << "," << r_1(0)
+       << "," << r_2(0)
+       << "," << r_1(1)
+       << "," << r_2(1)
+       << "," << r_1(2)
+       << "," << r_2(2)
+       << "," << v_1(0)
+       << "," << v_2(0)
+       << "," << v_1(1)
+       << "," << v_2(1)
+       << "," << v_1(2)
+       << "," << v_2(2)
        << endl;
 
   for (int i = 1; i < steps; i++)
   {
 	// Evolving the system w/ RK4 method and particle interaction
-	// by changing between true or false we decide if there are particle interactions
-	// true = particle interactions
-	// false = no particle interactions
-    	trap.evolve_RK4(dt, false);
+	// by changing between true or false we decide if there are particle interactions ##################### IMPORTANT DETAIL <3
+	// true = particle interactions      --> for two_particle_data_w_int.txt
+	// false = no particle interactions  --> for two_particle_data_no_int.txt
+    	trap.evolve_RK4(dt, true);          // THIS IS WHERE WE CHANGE BETWEEN TRUE AND FALSE
 
     	double x1 = trap.particles[0].r[0];
 	double x2 = trap.particles[1].r[0];
@@ -95,20 +101,20 @@ int main()
     	double vz1 = trap.particles[0].v[2];
     	double vz2 = trap.particles[1].v[2];
 
-
-    cout << setw(width) << setprecision(prec) << t(i)
-         << setw(width) << setprecision(prec) << x1
-         << setw(width) << setprecision(prec) << x2
-         << setw(width) << setprecision(prec) << y1
-         << setw(width) << setprecision(prec) << y2
-         << setw(width) << setprecision(prec) << z1
-         << setw(width) << setprecision(prec) << z2
-         << setw(width) << setprecision(prec) << vx1
-         << setw(width) << setprecision(prec) << vx2
-         << setw(width) << setprecision(prec) << vy1
-         << setw(width) << setprecision(prec) << vy2
-         << setw(width) << setprecision(prec) << vz1
-         << setw(width) << setprecision(prec) << vz2
+    // Inserting the updated values for each row in the .txt-file
+    cout << setprecision(prec) << t(i)
+         << "," << setprecision(prec) << x1
+         << "," << setprecision(prec) << x2
+         << "," << setprecision(prec) << y1
+         << "," << setprecision(prec) << y2
+         << "," << setprecision(prec) << z1
+         << "," << setprecision(prec) << z2
+         << "," << setprecision(prec) << vx1
+         << "," << setprecision(prec) << vx2
+         << "," << setprecision(prec) << vy1
+         << "," << setprecision(prec) << vy2
+         << "," << setprecision(prec) << vz1
+         << "," << setprecision(prec) << vz2
          << endl;
   }
 
