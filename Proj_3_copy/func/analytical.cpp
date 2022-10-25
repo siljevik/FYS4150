@@ -5,6 +5,8 @@
 
 #include "../header/analytical.hpp"
 
+// Defining the specific analytical solution, using the inputs for the equations 
+// from the analytical part.
 arma::vec analytical_solution(arma::vec r_in, arma::vec v_in, double q,
                               double B_ext, double m, double V_ext,
                               double d, double t)

@@ -11,7 +11,7 @@ const double B0 = 1.0*T;          // Magnetic field constant
 const double V0 = pow(25, -3)*V;         // Electric field constant
 const double d = 500;               // [mu*m]
 
-// Analytical solution
+// Analytical solution - Member function
 arma::vec analytical_solution(arma::vec r_in, arma::vec v_in, double q,
                               double B_ext, double m, double V_ext,
                               double d, double t);

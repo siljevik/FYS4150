@@ -84,21 +84,23 @@ def two_particle_penning_xy(filename_1,filename_2):
     
     # 2 particles with interactions
     fig = plt.figure()
-    ax = plt.axes(x_w, y_w, z_w, color='mediumslateblue', projection='3d') ### Veldig usikker her
+    ax = plt.axes(x_w, y_w, z_w, color='mediumslateblue', projection='3d')
 
     #ax_1.plot3D(x_w, y_w, z_w, color='mediumslateblue')
     plt.title("Two-particle movement in the xy-plane, with interactions")
     plt.xlabel("x [\u03bcm]")
     plt.ylabel("y [\u03bcm]")
-    plt.savefig("two_particle_xy_w.svg") # Saves it as a .svg-file
+    plt.zlabel("z [\u03bcm]")
+    plt.savefig("two_particle_3D_w.svg") # Saves it as a .svg-file
     plt.show()
 
     # 2 particles without interaction
-    plt.plot(x_wo, y_wo, z_wo color='lightseagreen') # noe må bli gjort her for å få 3D
+    plt.plot(x_wo, y_wo, z_wo color='lightseagreen', projection='3d') # noe må bli gjort her for å få 3D
     plt.title("Two-particle movement in the xy-plane, without interactions")
     plt.xlabel("x [\u03bcm]")
     plt.ylabel("y [\u03bcm]")
-    plt.savefig("two_particle_xy_wo.svg") # Saves it as a .svg-file
+    plt.zlabel("z [\u03bcm]")
+    plt.savefig("two_particle_3D_wo.svg") # Saves it as a .svg-file
     plt.show()
     
-    return x_w, y_w, x_wo, y_wo
+    return 0
