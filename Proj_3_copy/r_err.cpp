@@ -9,9 +9,9 @@
 #include <iomanip> // needed for the setw() and setprecision()
 
 // classfiles
-#include "particle.hpp"
-#include "penning_trap.hpp"
-#include "analytical.hpp"
+#include "header/particle.hpp"
+#include "header/penningtrap.hpp"
+#include "header/analytical.hpp"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ int main()
 
   PenningTrap trap = PenningTrap(B0, V0, d);
 
-  double q = 1.0; // charge  
+  double q = 1.0; // charge
   double m = 40.078;  // mass of Ca+ ion in u
 
   double x_0 = 1.0, y_0 = 0.0, z_0 = 1.0;
@@ -39,7 +39,7 @@ int main()
   arma::vec h = arma::vec(4);
 
   ofstream outfile;
-  outfile.open("data_r_err.txt", ofstream::out | ofstream::trunc);
+  outfile.open("data_r_err_RK4.txt", ofstream::out | ofstream::trunc);
 
   outfile << "#" << setw(width) << "dt"
           << setw(width) << "time"
@@ -48,15 +48,15 @@ int main()
           << setw(width) << "r_err"
           << endl;
 
-  //for (int i = 1; i < 5; i++)
-  //{
-        // nk can be written as n_k = 2000 * 2^{k}, k = 1,2,3,4
-    int nk = 4000;        //int steps = 2000 * pow(2, i);
+  for (int i = 1; i < 5; i++)
+  {
+        // run for nk = 4000, 8000, 16000, 32000
+    int nk = 2000*pow(2,i);        //int steps = 2000 * pow(2, i);
     double hk = t_tot/nk; //double dt = t_tot / steps;
 
-    //h(i-1) = dt;
+    h(i-1) = hk;
 
-    arma::vec t = arma::linspace(0, t_tot, steps);
+    arma::vec t = arma::linspace(0, t_tot, nk);
 
     trap.particles.clear();
     trap.add_particle(p);
@@ -73,8 +73,8 @@ int main()
     {
 
       // run this for RK4 and forward_euler
-      trap.forward_euler(dt, true);
-      // trap.evolve_RK4(dt, true);
+      //trap.forward_euler(hk, true);
+      trap.evolve_RK4(hk, true);
 
       // Numerical and analytical position of particle 1
       arma::vec r_num = trap.particles[0].r;
@@ -89,14 +89,14 @@ int main()
         dMax(i - 1) = abs_err;
       }
 
-      outfile << setw(width) << setprecision(prec) << dt
+      outfile << setw(width) << setprecision(prec) << hk
               << setw(width) << setprecision(prec) << t(j)
               << setw(width) << setprecision(prec) << arma::norm(r_ana)
               << setw(width) << setprecision(prec) << arma::norm(r_num)
               << setw(width) << setprecision(prec) << rel_err
               << endl;
     }
-  //}
+  }
   outfile.close();
 
   double r_err = 0.;
@@ -106,8 +106,8 @@ int main()
     r_err += (1.0/3) * (log(dMax(k) / dMax(k-1)) / log(h(k) / h(k-1)));
   }
 
-   cout << "Convergence rate for forward Euler: " << setprecision(4) << r_err << endl;
- // cout << "Convergence rate for RK4: " << setprecision(4) << r_err << endl;
+   //cout << "Convergence rate for forward Euler: " << setprecision(4) << r_err << endl;
+  cout << "Convergence rate for RK4: " << setprecision(4) << r_err << endl;
 
   /* From terminal:
   > Convergence rate for FE: 1.443
