@@ -43,9 +43,9 @@ To execute file and save data (without interactions): ./double_test.exe > two_pa
 To execute file and save data (with interactions): ./double_test.exe > two_particle_data_w_int.txt
 #### Single particle w/ more steps
 
-Compile w/: g++ r_err.cpp func/particle.cpp func/penningtrap.cpp func/analytical.cpp -std=c++11 -I include -o r_err.exe -larmadillo
+* Compile w/: g++ r_err.cpp func/particle.cpp func/penningtrap.cpp func/analytical.cpp -std=c++11 -I include -o r_err.exe -larmadillo
 
-execute w/: ./r_err.exe
+* execute w/: ./r_err.exe
 
 By using the simulation results for the four different stepsizes, the error convergence is estimated for RK4 and FE, and printed out in the terminal.
 (Should return the values FE = 1.443 and RK4 = 1)
