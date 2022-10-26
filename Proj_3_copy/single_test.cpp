@@ -16,23 +16,26 @@
 #include "header/penningtrap.hpp"
 #include "header/analytical.hpp"
 
-
-// Test for a single particle
-
+//////////////////////////////
+// ~~~~~~~~~~~~~~~~~~~~~~~~ //
+// TEST FOR SINGLE PARTICLE //
+// ~~~~~~~~~~~~~~~~~~~~~~~~ //
+//////////////////////////////
 using namespace std;
 
 int main()
 {
-  int width = 18;
+  // int width = 18; // We don't use it ?
   int prec = 4;
 
   PenningTrap trap = PenningTrap(B0, V0, d);
 
-  double q = 1.0; // charge of particle [e]
-  double m = 40.078;  //Mass of Ca+ ion [u]
+  double q = 1.0;     // Charge of particle [e]
+  double m = 40.078;  // Mass of Ca+ ion [u]
 
-  double x_0 = 20., y_0 = 0., z_0 = 20.;
-  double vx_0 = 0., vy_0 = 25., vz_0 = 0.;
+  // Initial values of Particle 1
+  double x_0 = 20.0, y_0 = 0.0, z_0 = 20.0;
+  double vx_0 = 0.0, vy_0 = 25.0, vz_0 = 0.0;
 
   arma::vec r = arma::vec{x_0, y_0, z_0};
   arma::vec v = arma::vec{vx_0, vy_0, vz_0};
@@ -41,9 +44,14 @@ int main()
 
   trap.add_particle(p);
 
-  int t_tot = 5000;
-  double dt = pow(10,-3);
-  int steps = t_tot / dt;
+  /*int t_tot = 50;         // Total time
+  double dt = pow(10,-3);      // Stepsize time
+  int steps = t_tot / dt; // Number of steps*/
+
+  int t_tot = 50;         // Total time
+  int steps = 1000; // Number of steps
+  double dt = t_tot/steps;      // Stepsize time
+  
 
   arma::vec t = arma::linspace(0, t_tot, steps);
 

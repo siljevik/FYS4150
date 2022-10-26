@@ -35,10 +35,10 @@ arma::mat PenningTrap::external_E_field(arma::mat R)
   return E;
 }
 
-// Method to calculate ext. B-field
+// Method to calculate ext. B-field (magnetic field)
 arma::mat PenningTrap::external_B_field(arma::mat V)
 {
-  int N = particles.size();
+  int N = particles.size(); // Number of particles
   arma::vec B = arma::vec{0.0, 0.0, B0};
   arma::mat B_tot = arma::mat(3, N);
 
@@ -108,13 +108,13 @@ arma::mat PenningTrap::total_force_external(arma::mat R, arma::mat V)
 arma::mat PenningTrap::total_force(arma::mat R, arma::mat V, bool particle_interaction)
 {
   arma::mat F_tot;
-// for particle interaction we consider the total force form external fields and particles
+// For particle interaction we consider the total force form external fields and particles
   if (particle_interaction)
   {
     F_tot = PenningTrap::total_force_external(R, V)
     + PenningTrap::total_force_particles(R);
   }
-// with no interaction we only consider the external forces
+// With no interaction we only consider the external forces
   else
   {
     F_tot = PenningTrap::total_force_external(R, V);
@@ -127,52 +127,55 @@ arma::mat PenningTrap::total_force(arma::mat R, arma::mat V, bool particle_inter
 void PenningTrap::evolve_RK4(double dt, bool particle_interaction)
 {
 
-  int N = particles.size();
+  int N = particles.size(); // Number of particles
 
-  arma::mat R = arma::zeros(3, N);
-  arma::mat V = arma::zeros(3, N);
-  arma::mat a = arma::zeros(3, N);
-  double m = particles[0].m;
+  arma::mat R = arma::zeros(3, N); // Position
+  arma::mat V = arma::zeros(3, N); // Velocity
+  arma::mat a = arma::zeros(3, N); // Acceleration
+  double m = particles[0].m;       // Mass of the particle 1
 
-  arma::mat K1_r, K2_r, K3_r, K4_r;
-  arma::mat K1_v, K2_v, K3_v, K4_v;
+  arma::mat K1_r, K2_r, K3_r, K4_r; // Position
+  arma::mat K1_v, K2_v, K3_v, K4_v; // Velocity
 
+  // Looping through each of the N particles to update position and velocity
   for (int i = 0; i < N; i++)
   {
     R.col(i) = particles[i].r;
     V.col(i) = particles[i].v;
   }
 
-// acceleration of particle:
+  // Acceleration of particle (Newtons 2nd law):
   a = (1/m) * total_force(R, V, particle_interaction);
 
-//K1
+  //K1
   K1_v = dt * a;
   K1_r = dt * V;
 
   a = (1/m) * total_force(R + 0.5 * K1_r, V + 0.5 * K1_v, particle_interaction);
 
-//K2
+  //K2
   K2_v = dt * a;
   K2_r = dt * (V + 0.5 * K1_v);
 
   a = (1/m) * total_force(R + 0.5 * K2_r, V + 0.5 * K2_v, particle_interaction);
 
-//K3
+  //K3
   K3_v = dt * a;
   K3_r = dt * (V + .5 * K2_v);
 
   a = (1/m) * total_force(R + K3_r, V + K3_v, particle_interaction);
 
-//K4
+  //K4
   K4_v = dt * a;
   K4_r = dt * (V + K3_v);
 
+  // Adding the values to position and vector matrices
   R += (1.0/6) * (K1_r + 2 * K2_r + 2 * K3_r + K4_r);
   V += (1.0/6) * (K1_v + 2 * K2_v + 2 * K3_v + K4_v);
 
   for (int i = 0; i < N; i++)
   {
+    // Updating the old position/velocity to the new one calculated above
     particles[i].r = R.col(i);
     particles[i].v = V.col(i);
   }

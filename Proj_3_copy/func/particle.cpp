@@ -10,7 +10,7 @@ Particle::Particle(double chrg_in, double mass_in, arma::vec pos_in, arma::vec v
 	v = v_in;
 }
 
-// we want to write out the information about the particle in a string
+// To write out the information about the particle in a string
 std::string Particle::p_info(){
 std::string p_props = "Properties of particle: \nCharge " + std::to_string(q) + " e.\nMass "
 			+ std::to_string(m) + " u";
