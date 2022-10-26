@@ -34,7 +34,7 @@ int main()
 
   Particle p = Particle(q, m, r, v);
 
-  double total_time = 50;
+  double t_tot = 50; // microseconds
   arma::vec dMax = arma::vec(4);
   arma::vec h = arma::vec(4);
 
@@ -73,8 +73,8 @@ int main()
     {
 
       // run this for RK4 and forward_euler
-      // trap.forward_euler(dt, true);
-      trap.evolve_RK4(dt, true);
+    //   trap.forward_euler(dt, true);
+    trap.evolve_RK4(dt, true);
 
       arma::vec r_num = trap.particles[0].r;
       arma::vec r_ana = analytical_solution(r, v, p.q, B0, p.m, V0, d, t(j));
@@ -105,7 +105,7 @@ int main()
   }
 
   // cout << "Convergence rate for forward Euler: " << setprecision(4) << r_err << endl;
-  cout << "Convergence rate for RK4: " << setprecision(4) << r_err << endl;
+   cout << "Convergence rate for RK4: " << setprecision(4) << r_err << endl;
 
   /* From terminal:
   > Convergence rate for FE: 1.395

@@ -5,6 +5,8 @@
 
 #include "../header/analytical.hpp"
 
+using namespace std;
+
 // Defining the specific analytical solution, using the inputs for the equations 
 // from the analytical part.
 arma::vec analytical_solution(arma::vec r_in, arma::vec v_in, double q,
@@ -19,17 +21,17 @@ arma::vec analytical_solution(arma::vec r_in, arma::vec v_in, double q,
 
   double w_0 = q * B_ext / m;
   double w_z_sqrd = 2. * q * V_ext / (m * std::pow(d, 2.0));
-  double w_z = std::sqrt(w_z_sqrd);
+  double w_z = std::sqrt(w_z_sqrd); // should return 0.6939 per microsec for Ca+
 
-  double w_plus = (w_0 + std::sqrt(std::pow(w_0, 2.0) - 2. * w_z_sqrd)) / 2.;
-  double w_min = (w_0 - std::sqrt(std::pow(w_0, 2.0) - 2. * w_z_sqrd)) / 2.;
+  double w_plus = (w_0 + std::sqrt(std::pow(w_0, 2.0) - 2.0 * w_z_sqrd)) / 2.0;
+  double w_min = (w_0 - std::sqrt(std::pow(w_0, 2.0) - 2.0 * w_z_sqrd)) / 2.0;
 
   double A_plus = (v_0 + w_min * x_0) / (w_min - w_plus);
   double A_min = - (v_0 + w_plus * x_0) / (w_min - w_plus);
 
-  r(0) = A_plus * std::cos(w_plus * t) + A_min * std::cos(w_min * t);
-  r(1) = - (A_plus * std::sin(w_plus * t) + A_min * std::sin(w_min * t));
-  r(2) = z_0 * std::cos(w_z * t);
+  r(0) = A_plus * cos(w_plus * t) + A_min * cos(w_min * t);
+  r(1) = - (A_plus * sin(w_plus * t) + A_min * sin(w_min * t));
+  r(2) = z_0 * cos(w_z * t);
 
   return r;
 }
