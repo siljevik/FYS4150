@@ -30,13 +30,13 @@ Simulation of a single particle, and two particles with and without interactions
 
 #### For the single particle
 
-Compile w/: g++ single_test.cpp func/particle.cpp func/penningtrap.cpp func/analytical.cpp -std=c++11 -I include -o single_test.exe -larmadillo
+* Compile w/: g++ single_test.cpp func/particle.cpp func/penningtrap.cpp func/analytical.cpp -std=c++11 -I include -o single_test.exe -larmadillo
 
 The simulation of the single particle is conducted with the single_test.cpp file and executed w/ ./single_test.exe > data_single_text.txt.
 
 #### for a pair of particles
 
-Compile w/ : g++ double_test.cpp func/particle.cpp func/penningtrap.cpp func/analytical.cpp -std=c++11 -I include -o double_test.exe -larmadillo
+* Compile w/ : g++ double_test.cpp func/particle.cpp func/penningtrap.cpp func/analytical.cpp -std=c++11 -I include -o double_test.exe -larmadillo
 
 To execute file and save data (without interactions): ./double_test.exe > two_particle_data_no_int.txt
 
@@ -50,7 +50,7 @@ execute w/: ./r_err.exe
 By using the simulation results for the four different stepsizes, the error convergence is estimated for RK4 and FE, and printed out in the terminal.
 (Should return the values FE = 1.443 and RK4 = 1)
 
-* Lack graphs in 4 subplots to illustrate the relative error*
+NB!Lack graphs in 4 subplots to illustrate the relative error*
 
 
 ### Problem 9
