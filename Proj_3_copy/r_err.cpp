@@ -26,20 +26,20 @@ int main()
   double q = 1.0; // charge
   double m = 40.078;  // mass of Ca+ ion in u
 
-  double x0 = 1.0, y0 = 0.0, z0 = 1.0;
+  double x_0 = 1.0, y_0 = 0.0, z_0 = 1.0;
   double vx_0 = 0.0, vy_0 = 1.0, vz_0 = 0.0;
 
-  arma::vec r = arma::vec{x0, y0, z0};
+  arma::vec r = arma::vec{x_0, y_0, z_0};
   arma::vec v = arma::vec{vx_0, vy_0, vz_0};
 
   Particle p = Particle(q, m, r, v);
 
-  double total_time = 50;
+  double t_tot = 50;
   arma::vec dMax = arma::vec(4);
   arma::vec h = arma::vec(4);
 
   ofstream outfile;
-  outfile.open("data_r_err.txt", ofstream::out | ofstream::trunc);
+  outfile.open("data_r_err_RK4.txt", ofstream::out | ofstream::trunc);
 
   outfile << "#" << setw(width) << "dt"
           << setw(width) << "time"
@@ -50,35 +50,37 @@ int main()
 
   for (int i = 1; i < 5; i++)
   {
-    // nk can be written as n_k = 2000 * 2^{k}, k = 1,2,3,4
-    int steps = 2000 * pow(2, i);
-    double dt = t_tot / steps;
+        // run for nk = 4000, 8000, 16000, 32000
+    int nk = 2000*pow(2,i);        //int steps = 2000 * pow(2, i);
+    double hk = t_tot/nk; //double dt = t_tot / steps;
 
-    h(i-1) = dt;
+    h(i-1) = hk;
 
-    arma::vec t = arma::linspace(0, t_tot, steps);
+    arma::vec t = arma::linspace(0, t_tot, nk);
 
     trap.particles.clear();
     trap.add_particle(p);
     trap.particles[0].r = r;
 
-    outfile << setw(width) << setprecision(prec) << dt
+    outfile << setw(width) << setprecision(prec) << hk
             << setw(width) << setprecision(prec) << t(0)
             << setw(width) << setprecision(prec) << arma::norm(r)
             << setw(width) << setprecision(prec) << arma::norm(r)
             << setw(width) << setprecision(prec) << 0
             << endl;
 
-    for (int j = 1; j < steps; j++)
+    for (int j = 1; j < nk; j++)
     {
 
       // run this for RK4 and forward_euler
-      // trap.forward_euler(dt, true);
-      trap.evolve_RK4(dt, true);
+      //trap.forward_euler(hk, true);
+      trap.evolve_RK4(hk, true);
 
+      // Numerical and analytical position of particle 1
       arma::vec r_num = trap.particles[0].r;
       arma::vec r_ana = analytical_solution(r, v, p.q, B0, p.m, V0, d, t(j));
 
+      // Absolut and relative error
       double abs_err = arma::norm(r_num - r_ana);
       double rel_err = abs_err / arma::norm(r_ana);
 
@@ -87,7 +89,7 @@ int main()
         dMax(i - 1) = abs_err;
       }
 
-      outfile << setw(width) << setprecision(prec) << dt
+      outfile << setw(width) << setprecision(prec) << hk
               << setw(width) << setprecision(prec) << t(j)
               << setw(width) << setprecision(prec) << arma::norm(r_ana)
               << setw(width) << setprecision(prec) << arma::norm(r_num)
@@ -101,14 +103,14 @@ int main()
 
   for (int k = 1; k < 4; k++)
   {
-    r_err += 1. / 3 * (log(dMax(k) / dMax(k-1)) / log(h(k) / h(k-1)));
+    r_err += (1.0/3) * (log(dMax(k) / dMax(k-1)) / log(h(k) / h(k-1)));
   }
 
-  // cout << "Convergence rate for forward Euler: " << setprecision(4) << r_err << endl;
+   //cout << "Convergence rate for forward Euler: " << setprecision(4) << r_err << endl;
   cout << "Convergence rate for RK4: " << setprecision(4) << r_err << endl;
 
   /* From terminal:
-  > Convergence rate for FE: 1.395
+  > Convergence rate for FE: 1.443
   > Convergence rate for RK4: 1
   */
 

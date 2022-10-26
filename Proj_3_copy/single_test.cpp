@@ -44,6 +44,7 @@ int main()
 
   trap.add_particle(p);
 
+<<<<<<< HEAD
   /*int t_tot = 50;         // Total time
   double dt = pow(10,-3);      // Stepsize time
   int steps = t_tot / dt; // Number of steps*/
@@ -52,6 +53,15 @@ int main()
   int steps = 1000; // Number of steps
   double dt = t_tot/steps;      // Stepsize time
   
+=======
+<<<<<<< HEAD
+  int t_tot = 50; // microseconds
+=======
+  int t_tot = 5000;
+>>>>>>> cf16f5cc0465c184ee1715ed0f11d9846509ad83
+  double dt = pow(10,-3);
+  int steps = t_tot / dt;
+>>>>>>> 5b78f0612ba4a400a575a89553b4856d1f507187
 
   arma::vec t = arma::linspace(0, t_tot, steps);
 
