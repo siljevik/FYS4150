@@ -17,8 +17,7 @@ filename_2 = "two_particle_data_no_int.txt" # Without interactions
 
 
 
-# This plots two particles movement in a Penning trap, in the 
-# z-direction, as a function of time.
+# This plots two particles movement in a Penning trap, in the x,vx-plane and the z,vz-plane
 def two_particle_penning_xzv(filename_1,filename_2):
 
     # Creating an empty lists for both the particles in the Penning trap with (w) and 
@@ -97,7 +96,7 @@ def two_particle_penning_xzv(filename_1,filename_2):
         for j in line_ls:
             line_cont_ls = j.split(",") # List of values in the line
 
-            # Extracting values from filename_1
+            # Extracting values from filename_2
             x1_wo_val = line_cont_ls[1]
             z1_wo_val = line_cont_ls[5]
             vx1_wo_val = line_cont_ls[7]
