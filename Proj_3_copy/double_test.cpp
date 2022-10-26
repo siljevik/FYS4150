@@ -28,13 +28,13 @@ int main()
 
   PenningTrap trap = PenningTrap(B0, V0, d);
 
-  double q = 1.;
-  double m = 40.078;  // Ca+ ion
+  double q = 1.;	// charge of particle [e]
+  double m = 40.078;  // mass of Ca+ ion [u]
 
-  arma::vec r_1 = arma::vec{20., 0., 20.};
-  arma::vec r_2 = arma::vec{25., 25., 0.};
-  arma::vec v_1 = arma::vec{0., 25., 0.};
-  arma::vec v_2 = arma::vec{0., 40., 5.};
+  arma::vec r_1 = arma::vec{20.0, 0.0, 20.0}; // mu*m
+  arma::vec r_2 = arma::vec{25.0, 25.0, 0.0}; // mu*m
+  arma::vec v_1 = arma::vec{0.0, 25.0, 0.0}; // (mu*m) / (mu*s)
+  arma::vec v_2 = arma::vec{0.0, 40.0, 5.0}; // (mu*m) / (mu*s)
 
   Particle p_1 = Particle(q, m, r_1, v_1);
   Particle p_2 = Particle(q, m, r_2, v_2);

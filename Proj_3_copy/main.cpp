@@ -1,6 +1,14 @@
+//////////////////////////////////
+//
+// Compile with: g++ -O2 main.cpp func/particle.cpp -std=c++11 -I include -o main.exe -larmadillo
+//
+// Run with: ./main.exe
+//
+/////////////////////////////////
 #include <iostream>
 #include <armadillo>
 #include <cmath>
+#include <chrono>
 #include <fstream>
 #include <iomanip>
 
@@ -13,16 +21,6 @@ using namespace std;
 #include "header/penningtrap.hpp"
 // including our file containing all the functions
 #include "func/penningtrap_t.cpp"
-// task 5 main function
-/* Create a class named Particle that should at least store
- the following properties of a single particle:
-        charge(q)
-        mass(m)
-        position(r)
-        velocity(v)
-
- */
-
 
 using namespace std;
 
