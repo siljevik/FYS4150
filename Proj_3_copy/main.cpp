@@ -37,20 +37,6 @@ int main(){
 	double const d = 500;		// mu*m
 	double const mCa_pos = 40.078;	// mass of Ca+ ion [u]
 	double const q = 1;		// charge of +1 e (elementary charge)
-/* write functions that can evolve your PenningTrap system in time using
- 	- the forward Euler method: y_{n+1} = y_n + f(t_n, y_n)*dt
-	- the RK4 method
-
-You can implement these methods either
-
-	- via regular functions, that take a reference to a PenningTrap object as input;
-
-	- via some type of “solver class” or “integrator class”, that contains/interacts with the PenningTrap object; or
-
-	- via member functions implemented directly in the PenningTrap class.
-*/
-
-
 
 /////////////// problem 9
 
@@ -62,7 +48,7 @@ You can implement these methods either
 	// Note; to set the seed for Armadillos random number generator:
 	arma::arma_rng::set_seed_random();
 
-	int t_tot = 500;
+	int t_tot = 500; // microseconds
 	double dt = 1.3*pow(10, -2);
 	double t_steps = ceil(t_tot/dt);
 

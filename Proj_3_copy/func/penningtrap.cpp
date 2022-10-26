@@ -108,13 +108,13 @@ arma::mat PenningTrap::total_force_external(arma::mat R, arma::mat V)
 arma::mat PenningTrap::total_force(arma::mat R, arma::mat V, bool particle_interaction)
 {
   arma::mat F_tot;
-
+// for particle interaction we consider the total force form external fields and particles
   if (particle_interaction)
   {
     F_tot = PenningTrap::total_force_external(R, V)
     + PenningTrap::total_force_particles(R);
   }
-
+// with no interaction we only consider the external forces
   else
   {
     F_tot = PenningTrap::total_force_external(R, V);
@@ -143,7 +143,7 @@ void PenningTrap::evolve_RK4(double dt, bool particle_interaction)
     V.col(i) = particles[i].v;
   }
 
-// acceleration a:
+// acceleration of particle:
   a = (1/m) * total_force(R, V, particle_interaction);
 
 //K1
