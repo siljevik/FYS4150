@@ -30,7 +30,7 @@ def single_particle_penning_t_z(filename):
         text = f.read()
         # Splitting it by \n, to get a vector containing each line/row of txt file
         line_ls = text.split('\n')
-        del line_ls[-1]
+        del line_ls[-1] # Nothing to see here. Bitch bye
 
         for i in line_ls:
             line_cont_ls = i.split(",") # List of values in the line

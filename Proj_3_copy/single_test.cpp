@@ -41,7 +41,11 @@ int main()
 
   trap.add_particle(p);
 
+<<<<<<< HEAD
   int t_tot = 50; // microseconds
+=======
+  int t_tot = 5000;
+>>>>>>> cf16f5cc0465c184ee1715ed0f11d9846509ad83
   double dt = pow(10,-3);
   int steps = t_tot / dt;
 
