@@ -13,7 +13,7 @@
 #include <iomanip> // needed for the setw() and setprecision()
 
 
-// include classes
+// Include classes
 #include "header/particle.hpp"
 #include "header/penningtrap.hpp"
 #include "header/analytical.hpp"
@@ -23,13 +23,13 @@ using namespace std;
 
 int main()
 {
-  int width = 18;
+  // int width = 18; Not using this??
   int prec = 4;
 
   PenningTrap trap = PenningTrap(B0, V0, d);
 
-  double q = 1.;	// charge of particle [e]
-  double m = 40.078;  // mass of Ca+ ion [u]
+  double q = 1.;	     // Charge of particle [e]
+  double m = 40.078;     // Mass of Ca+ ion [u]
 
   arma::vec r_1 = arma::vec{20.0, 0.0, 20.0}; // mu*m
   arma::vec r_2 = arma::vec{25.0, 25.0, 0.0}; // mu*m
@@ -42,13 +42,14 @@ int main()
   trap.add_particle(p_1);
   trap.add_particle(p_2);
 
-  int t_tot = 50;   // total time [mu*s]
-  double dt = pow(10,-3); // timestep dt
-  int steps = t_tot / dt; // steps
+  int t_tot = 50;             // Total time [mu*s]
+  double dt = pow(10,-3);     // Stepsize [mu*s]
+  int steps = t_tot / dt;     // Total number of steps
 
+  // Time vector
   arma::vec t = arma::linspace(0, t_tot, steps);
 
-  // Header naming the columns int the .txt-file
+  // Header naming the columns in the first (or place 0) line/row of the .txt-file
   cout << "Time"
        << "," << "x1"
        << "," << "x2"
@@ -64,7 +65,7 @@ int main()
        << "," << "vz2"
        << endl;
 
-  // First row in the .txt-file contains the initial values
+  // Second (or place 1) row in the .txt-file contains the initial values
   cout << t(0)
        << "," << r_1(0)
        << "," << r_2(0)
@@ -80,13 +81,14 @@ int main()
        << "," << v_2(2)
        << endl;
 
+  // Inserting for each row under the header and initial values
   for (int i = 1; i < steps; i++)
   {
 	// Evolving the system w/ RK4 method and particle interaction
 	// by changing between true or false we decide if there are particle interactions ##################### IMPORTANT DETAIL <3
 	// true = particle interactions      --> for two_particle_data_w_int.txt
 	// false = no particle interactions  --> for two_particle_data_no_int.txt
-    	trap.evolve_RK4(dt, true);          // THIS IS WHERE WE CHANGE BETWEEN TRUE AND FALSE
+    	trap.evolve_RK4(dt, false);          // THIS IS WHERE WE CHANGE BETWEEN TRUE AND FALSE
 
     	double x1 = trap.particles[0].r[0];
 	double x2 = trap.particles[1].r[0];
