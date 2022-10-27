@@ -22,7 +22,6 @@ def single_particle_penning_t_z(filename):
     t = []
     z = []
     zr = []
-
     
     
 
@@ -44,20 +43,14 @@ def single_particle_penning_t_z(filename):
             # Adding the t and z value to the list
             t.append(t_val)
             z.append(z_val)
-    wz_sq = (2*2410000)/(40.078*(500**2))
-    wz = np.sqrt(wz_sq)
 
-    for j in t:
-        z_val = 20*np.cos(wz * j)
-        z.append(z_val)
-
-    return t,z, zr
+    return t,z
 
 # For running the code:
-t,z, zr = single_particle_penning_t_z(filename)
+t,z = single_particle_penning_t_z(filename)
 
 # Plots the lines
-plt.plot(np.asarray(t, float), np.asarray(zr, float), color='orchid')
+plt.plot(np.asarray(t, float), np.asarray(z, float), color='orchid')
 # naming the plot and axes
 plt.title("Single particle movement")
 plt.xlabel("Time [\u03bcs]")
