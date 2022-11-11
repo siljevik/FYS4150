@@ -29,9 +29,17 @@ int main(){
     double s_u = 1; // Spin down
     double T = 1; // Temperature   ----> Can be changed later
     // Matrix with random spin up and downs
-    double L = 2; // Lattize size
-    arma::mat ising_grid = arma::mat(L, L);
+    int L = 2; // Lattize size
+    int N = pow(L,2); // number of states 
+    arma::mat S = arma::mat(L, L);
 
 
+/*
+    MCMC_spin mysystem(2.4);
+
+
+    mysystem.energy();
+
+*/    
 return 0;
 }
