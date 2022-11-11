@@ -12,6 +12,7 @@
 #include <fstream>
 #include <iomanip>
 #include <chrono>
+#include <random>
 // including the header and function files containing our classes
 #include "MCMC_spin.hpp"
 #include "MCMC_spin.cpp"

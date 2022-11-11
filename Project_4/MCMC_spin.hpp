@@ -26,6 +26,14 @@ arma::mat S; // LxL matrix with spin states
 ///// Functions
   // For Problem 4 we want to declear the following functions:
 
+  // memberfunctions for generating S
+  void rand_spin_matrix();
+
+   // Initialize the omp_rng_container according to the number of threads
+  void initialize_omp_rng_container(unsigned int base_seed=-1);
+  void get_random_int_m1_p1();
+
+
 // Basic but highly necessary functions for later use
   void energy(amra::mat S); // energy dependant on lattice L
   void partition_Z(double beta, double J); // returns partition Z
