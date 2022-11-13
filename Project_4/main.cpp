@@ -32,7 +32,10 @@ int main(){
     // Matrix with random spin up and downs
     int L = 2; // Lattize size
     int N = pow(L,2); // number of states 
-    arma::mat S = arma::mat(L, L);
+    // Creating an 'empty' matrix (filled with zeros)
+    arma::mat S = arma::mat(L, L, fill::zeros);
+    // Filling the matrix up with random spins:
+    spinnerboi(arma::mat S);
 
 
 /*
