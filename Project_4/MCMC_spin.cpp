@@ -1,11 +1,20 @@
+#include <iostream>
+#include <armadillo>
+#include <cmath>
+#include <fstream>
+#include <iomanip>
+#include <chrono>
+#include <random>
+
 #include "MCMC_spin.hpp"
-#include "rand_state.cpp"
+
+using namespace std;
 
 
-MCMC_spin::MCMC_spin(arguments)
+MCMC_spin::MCMC_spin()
 {
   // ...
-}
+};
 
 void MCMC_spin::spinnerboi(arma::mat S)
 {
@@ -33,20 +42,20 @@ double MCMC_spin::tot_energy(arma::mat S, int L)
 {
   // Creating empty vectors to look up indexes so we can look
   // at neighbours of the states (in case of 'border'-atoms)
-  arma::vec plusone = [];
-  arma::vec minusone = [];
+  vector<int> plusone;
+  vector<int> minusone;
   
   // Then fill up plusone (e.g. [1,2,3, ... , L-1, 0])
   for (int i = 0; i<L-1; i++){
     plusone.pushback(i+1);
-  };
+  }
   plusone.pushback(0);
   
   // Fill up minusone (e.g. [L-1,0,1,2, ... , L-2])
-  minusone.pushback(L-1)
+  minusone.pushback(L-1);
   for (int i = 0; i<L-1; i++){
     minusone.pushback(i);
-  };
+  }
   
   // Creating an E integer for the total energy of the system
   int E = 0; 
@@ -73,8 +82,8 @@ double MCMC_spin::tot_energy(arma::mat S, int L)
       int E += -E_ij*(E_o + E_u + E_v + E_h);
       // return ze sum of spin divided by 2 to correct for the doublecounting
       return E/2;
-    };
-  };
+    }
+  }
 }
 
 
@@ -83,9 +92,9 @@ double MCMC_spin::tot_energy(arma::mat S, int L)
 
 
 // Analytical expression of Z for 2D lattice (2x2)
-double MCMC_spin::partition_Z(double beta, double J){
+//ouble MCMC_spin::partition_Z(double beta, double J){
   //for problem 4 we have the partition function
-    double Z = 4 * cosh(8*beta*J) + 12;
-    return Z;
-}
+  //  double Z = 4 * cosh(8*beta*J) + 12;
+  //  return Z;
+//}
 

@@ -1,6 +1,6 @@
 //////////////////////////////////
 //
-// Compile with: g++ -O2 main.cpp func/particle.cpp  -std=c++11 -I include -o main.exe -larmadillo
+// Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -larmadillo
 //                        ---> THIS ONE MUST BE EDITED <---
 //
 // Run with: ./main.exe
@@ -13,7 +13,8 @@
 #include <iomanip>
 #include <chrono>
 #include <random>
-// including the header and function files containing our classes
+
+// including the header and function files
 #include "MCMC_spin.hpp"
 #include "MCMC_spin.cpp"
 
@@ -33,9 +34,18 @@ int main(){
     int L = 2; // Lattize size
     int N = pow(L,2); // number of states 
     // Creating an 'empty' matrix (filled with zeros)
-    arma::mat S = arma::mat(L, L, fill::zeros);
+    arma::mat S(L, L, fill::zeros);
+    cout << S;
+
+
+    // Calling the class
+    MCMC_spin MCMC_s;
     // Filling the matrix up with random spins:
-    spinnerboi(arma::mat S);
+    MCMC_s.spinnerboi(S);
+
+    MCMC_s.tot_energy(S,L); 
+
+    cout << S;
 
 
 /*
