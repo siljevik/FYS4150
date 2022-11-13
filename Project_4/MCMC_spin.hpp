@@ -19,10 +19,13 @@ private:
 public:
 
 // Spins the elements in lattice S
-void spinnerboi(arma::mat S);
+arma::mat spinnerboi(arma::mat S, int L);
 
 // Calculates the total energy of the lattice
-void tot_energy(arma::mat S, int L);
+double tot_energyboi(arma::mat S, int L, int E);
+
+// Calculates the total magnetism of the lattice
+double tot_magnetboi(arma::mat S, int L, int M);
 
 
 }; // Classes always end with };
