@@ -86,6 +86,7 @@ double MCMC_spin::tot_energyboi(arma::mat S, int L, int E)
       tot_energy_pr_atom_list.push_back(E);
     }
   }
+  //cout << "Energy list: " << tot_energy_pr_atom_list;
   return E;
 }
 
