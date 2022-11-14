@@ -9,14 +9,20 @@
 
 
 #include "MCMC_spin.hpp"
+#include "analytical.hpp"
 
 using namespace std;
 
+
+/*===========================================*/
+/*~~~~~~ Generator of spins in lattice ~~~~~~*/
+/*===========================================*/
 // Since we want to return the updated vector
 arma::mat MCMC_spin::spinnerboi(arma::mat S, int L)
 {
-  // The spins are either up (+1) or down (-1), 
-  // and constant since that won't change.
+  // The spins are either up (+1) or down (-1), and constant 
+  // since that won't change. So this is a vector we will use 
+  // for the random generating of spin up or down.
   const vector<int> spinlist = {-1,+1};
 
   // The random number generator from example: 
@@ -35,13 +41,13 @@ arma::mat MCMC_spin::spinnerboi(arma::mat S, int L)
       S(i,j) = spinlist[my_01_pdf(generator)];
     }
   }
-  //cout << S;
   return arma::mat (S);
 }
 
 
-
-// Totl energy of the 2D lattice 
+/*==========================================*/
+/*~~~~~ Total energy of the 2D lattice ~~~~~*/
+/*==========================================*/
 double MCMC_spin::tot_energyboi(arma::mat S, int L, int E)
 {
   // Creating empty vectors to look up indexes so we can look
@@ -90,7 +96,10 @@ double MCMC_spin::tot_energyboi(arma::mat S, int L, int E)
   return E;
 }
 
-// Totl energy of the 2D lattice 
+
+/*=============================================*/
+/*~~~~~ Total magnetism of the 2D lattice ~~~~~*/
+/*=============================================*/
 double MCMC_spin::tot_magnetboi(arma::mat S, int L, int M)
 {
   // Looping though the lattice

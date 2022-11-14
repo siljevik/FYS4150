@@ -6,8 +6,6 @@
 #include <chrono>
 #include <random>
 
-//#include "MCMC_spin.cpp"
-
 #ifndef __MCMC_spin_hpp__   
 #define __MCMC_spin_hpp__
 
