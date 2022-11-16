@@ -7,10 +7,11 @@
 #include <chrono>
 #include <random>
 #include <vector>
+#include <math.h>
 
 
 #include "analytical.hpp"
-#include "MCMC_spin.hpp"
+//#include "MCMC_spin.hpp"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ using namespace std;
 /*~~~~~~ Partition function Z ~~~~~~*/
 /*==================================*/
 // Analytical expression og the partition function, Z
-double part_func(double J, double beta)
+double analytical::part_func(double J, double beta)
 {
     double c = 8*beta*J;
 
@@ -36,9 +37,8 @@ double part_func(double J, double beta)
 /*==================================*/
 /*~~~~~ Expected energy values ~~~~~*/
 /*==================================*/
-/*
 // Expected total energy
-double exp_tot_E(double J, double beta,double Z)
+double analytical::exp_tot_E(double J, double beta,double Z)
 {
     double c = 8*beta*J;
     double invZ = 1/Z;
@@ -48,7 +48,7 @@ double exp_tot_E(double J, double beta,double Z)
 }
 
 // Expected squared total energy, <E^2>
-double exp_tot_E_sqrd(double J, double beta, double Z)
+double analytical::exp_tot_E_sqrd(double J, double beta, double Z)
 {
     double c = 8*beta*J;
     double JJ = J*J;
@@ -57,14 +57,13 @@ double exp_tot_E_sqrd(double J, double beta, double Z)
     double exp_EE = JJ*64*sinh(c)*invZ;
     return exp_EE; 
 }
-*/
+
 
 /*==================================*/
 /*~~~~~ Expected magnetization ~~~~~*/
 /*==================================*/
 // Expected total magentization
-/*
-double exp_tot_M(double J, double beta, double Z)
+double analytical::exp_tot_M(double J, double beta, double Z)
 {
     double c = 8*beta*J;
     double invZ = 1/Z;
@@ -75,7 +74,7 @@ double exp_tot_M(double J, double beta, double Z)
 }
 
 // Expected squared magnetization
-double exp_tot_M_sqrd(double J, double beta, double Z)
+double analytical::exp_tot_M_sqrd(double J, double beta, double Z)
 {
     double c = 8*beta*J;
     double invZ = 1/Z;
@@ -84,14 +83,13 @@ double exp_tot_M_sqrd(double J, double beta, double Z)
     double exp_MM = top*invZ;
     return exp_MM;
 }
-*/
+
 
 /*==================================*/
 /*~~~~~ Specific heat capacity ~~~~~*/
 /*==================================*/
-/*
 //Specific heat capacity, CV, normalized to number of spins, N:
-double spec_heat_cap(int N, double J, double beta, double kb, double T, double exp_E, double exp_EE)
+double analytical::spec_heat_cap(int N, double J, double beta, double kb, double T, double exp_E, double exp_EE)
 {
     double broek = ( 1/N )*( 1/(kb*T) );
     double variance_E = exp_EE - (exp_E*exp_E);
@@ -100,14 +98,13 @@ double spec_heat_cap(int N, double J, double beta, double kb, double T, double e
     double CV = broek*variance_E;
     return CV;
 }
-*/
+
 
 /*==================================*/
 /*~~~~~~~~~ Susceptibility ~~~~~~~~~*/
 /*==================================*/
-/*
 //Susceptibility, chi, normailzed to number of spins, N:
-double sus_chi(int N, double J, double beta, double kb, double T, double exp_M, double exp_MM)
+double analytical::sus_chi(int N, double J, double beta, double kb, double T, double exp_M, double exp_MM)
 {
     double broek = ( 1/N )*( 1/(kb*T) );
     double variance_M = exp_MM - (exp_M*exp_M);
@@ -115,4 +112,3 @@ double sus_chi(int N, double J, double beta, double kb, double T, double exp_M, 
     double chi = broek*variance_M;
     return chi;
 }
-*/

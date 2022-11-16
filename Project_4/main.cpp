@@ -27,8 +27,13 @@ int main(){
     // Calling the MCMC_spin class (MCMC = Markov Chain Monte Carlo)
     //MCMC_spin MCMC_s;
     // Calling the analytical class
+    MCMC_spin MCMC_s;
     analytical analyticalboi;
+    
 
+    /*=================================*/
+    /*~~~~ Constants and Variables ~~~~*/
+    /*=================================*/
     // Constants:
     double const k_b = 1.380649*pow(10.,-23.); // Boltzman constant [ m^2 * kg / (s^2 * K) ]
 
@@ -49,7 +54,7 @@ int main(){
     /*=================================*/
     /*~~~~ Markov Chain Monte Calo ~~~~*/
     /*=================================*/
-    /*
+    
     // Creating an 'empty' matrix (filled with zeros)
     arma::mat S(L, L);//, fill::zeros);
 
@@ -67,15 +72,15 @@ int main(){
     cout << "Energy: " << E2 << " J\n";
     cout << "Magnetism: " << M2 << " unit";
     
-    */
     
+
     /*==================================*/
     /*~~~~~       Analytical       ~~~~~*/
     /*==================================*/
     
     // Expected total energy J is the energy constant
     double Z        = analyticalboi.part_func(J, beta);
-    /*
+    
     // Expected total energy
     double exp_E    = analyticalboi.exp_tot_E(J,beta,Z);
     double exp_EE   = analyticalboi.exp_tot_E_sqrd(J,beta,Z);
@@ -86,7 +91,7 @@ int main(){
     double CV       = analyticalboi.spec_heat_cap(N,J,beta,k_b,T,exp_E,exp_EE);
     // Susceptibility, chi, normailzed to number of spins, N
     double chi      = analyticalboi.sus_chi(N,J,beta,k_b,T,exp_M,exp_MM);
-    */
+    
     /*
     cout << Z << "\n";
     cout << exp_E << "\n";

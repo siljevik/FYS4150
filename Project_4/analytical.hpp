@@ -21,7 +21,7 @@ public:
 
 // Partition function
 double part_func(double J, double beta);
-/*
+
 // Expected total energy
 double exp_tot_E(double J, double beta, double Z);
 double exp_tot_E_sqrd(double J, double beta, double Z);
@@ -34,7 +34,7 @@ double exp_tot_M_sqrd(double J, double beta, double Z);
 double spec_heat_cap(int N, double J, double beta, double kb, double T, double exp_E, double exp_EE);
 //Susceptibility
 double sus_chi(int N, double J, double beta, double kb, double T, double exp_M, double exp_MM);
-*/
+
 }; // Classes always end with };
 
 #endif
