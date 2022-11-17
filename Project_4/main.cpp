@@ -35,7 +35,7 @@ int main(){
     /*~~~~ Constants and Variables ~~~~*/
     /*=================================*/
     // Constants:
-    double const k_b = 1.380649*pow(10.,-23.); // Boltzman constant [ m^2 * kg / (s^2 * K) ]
+    double const k_b = 1;//1.380649*pow(10.,-23.); // Boltzman constant [ m^2 * kg / (s^2 * K) ]
 
     // Known values
     double s_d = -1; // Spin up
@@ -48,6 +48,7 @@ int main(){
     int M = 0;
     double J = 1;
     double beta =1/(T*k_b);
+    //cout << "Beta is: " << beta << "\n";
     
 
 
@@ -70,7 +71,7 @@ int main(){
     // 
     cout << "Matrix: \n" << S2;
     cout << "Energy: " << E2 << " J\n";
-    cout << "Magnetism: " << M2 << " unit";
+    cout << "Magnetism: " << M2 << " unit\n";
     
     
 
@@ -92,15 +93,15 @@ int main(){
     // Susceptibility, chi, normailzed to number of spins, N
     double chi      = analyticalboi.sus_chi(N,J,beta,k_b,T,exp_M,exp_MM);
     
-    /*
-    cout << Z << "\n";
-    cout << exp_E << "\n";
-    cout << exp_EE << "\n";
-    cout << exp_M << "\n";
-    cout << exp_MM << "\n";
+    // Testing testing 1-2-3
+    cout << "Z: " << Z << "\n";
+    cout << "exp_E: " << exp_E << "\n";
+    cout << "exp_E: " << exp_EE << "\n";
+    cout << "exp_M: " << exp_M << "\n";
+    cout << "exp_MM: " << exp_MM << "\n";
     cout << "Critical temperature: " << CV << "\n";
-    cout << chi << "\n";
-    */
+    cout << "Chi: " << chi << "\n";
+    
 
 return 0;
 }
