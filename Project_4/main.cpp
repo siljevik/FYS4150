@@ -49,16 +49,15 @@ int main(){
     int M = 0;
     double J = 1; // Coupling constant = 1
     double beta =1/(T*k_b);
-    //cout << "Beta is: " << beta << "\n";
+    
+    // Creating an 'empty' matrix (filled with zeros)
+    arma::mat S(L, L);
     
 
 
     /*=================================*/
     /*~~~~ Markov Chain Monte Calo ~~~~*/
     /*=================================*/
-    
-    // Creating an 'empty' matrix (filled with zeros)
-    arma::mat S(L, L);//, fill::zeros);
 
     // Filling the matrix up with random spins:
     arma::mat S2 = MCMC_s.spinnerboi(S,L);
@@ -117,31 +116,33 @@ int main(){
     // Running the single_spinnergal function once
     arma::mat S_new = MCMC_s.single_spinnergal(S2,L);
     double E3 = MCMC_s.tot_energyboi(S_new,L,E2);
-    double p_sT = prob_func(beta,E2,E3,Z);
-    double E_p_sT = p_sT*E2;
+    double first_p_sT = MCMC_s.prob_func(beta,E2,E3,Z);
+    double E_p_sT = first_p_sT*E2;
 
+    double E_before = E3;
     // Creating a variable to be used for counting Monte Carlo cycles
     int MC_count = 0;
     //Checking if the p_sT is less than or else (equal to)
-    while (E_p_st < exp_E) // Må denne gjøres om pga vi aldri får 
+    while (E_p_sT > exp_E) // Må denne gjøres om pga vi aldri får 
     // nøyaktig lik exp_E
     {
-        // We spin one
+        // We spin one random atom in the lattice
         arma::mat S_next = MCMC_s.single_spinnergal(S_new,L);
         // Renaming energy
-        E3 = E_before;
-        // Caldulate the new energy
-        double E_after = MCMC_s.tot_energyboi(S_next,L,E3);
-        // Calculate p_sT
-        double p_sT_next = prob_func(beta,E_before,E_after,Z);
-        // Update values
-        MC_count += 1;
-        E_after = E_before;
-        S_next = S_new;
+        
+        // Calculate the new energy
+        double E_after = MCMC_s.tot_energyboi(S_next,L,E_before);
+        // Calculate new p_sT
+        double p_sT = MCMC_s.prob_func(beta,E_before,E_after,Z);
+        // Calculating E_p_sT
         E_p_sT = p_sT*E_before;
+        // Updating values
+        MC_count += 1;
+        S_next = S_new;
+        E_before = E_after;
     }
     // Men hva skjer etter?
-    //    cout << "\n We did " << MC_count << " Monte Carlo cycles to get good agreement with the analytical result.\n";
+    cout << "\n We did " << MC_count << " Monte Carlo cycles to get good agreement with the analytical result.\n";
     /////////////////////////////////////////
     
 
