@@ -126,6 +126,7 @@ int main(){
         double p_sT = MCMC_s.prob_func(beta,E_before,E_after,Z);
         // Calculating E_p_sT
         E_p_sT = p_sT*E_before;
+        cout << "\n E_p_sT: " << E_p_sT;
         // Updating values
         MC_count += 1;
         S_new = S_next;
