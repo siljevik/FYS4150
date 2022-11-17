@@ -3,15 +3,11 @@
 #include <random>
 #include <vector>
 #include <math.h>
-
-
 #include "analytical.hpp"
 
 using namespace std;
 
 /*~~~~~~~ Implemented analytical expressions ~~~~~~~*/
-
-// fix the damn variables!!!
 
 /*==================================*/
 /*~~~~~~ Partition function Z ~~~~~~*/
@@ -37,13 +33,11 @@ double analytical::exp_tot_E(double J, double beta,double Z)
 {
     double c = 8*beta*J;
     double invZ = 1/Z;
-    // Expected energy, <E>
-    double exp_E = (-J)*8*sinh(c)*invZ;
+    double exp_E = (-J)*8*sinh(c)*invZ; // Expected energy, <E>
     return exp_E;
 }
 
 // Expected squared total energy, <E^2>
-
 double analytical::exp_tot_E_sqrd(double J, double beta, double Z)
 {
     double c = 8*beta*J;

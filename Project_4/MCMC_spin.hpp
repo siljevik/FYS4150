@@ -28,6 +28,10 @@ std::vector<double> energy_listboi(arma::mat S, int L);
 // Calculates the total magnetism of the lattice
 double tot_magnetboi(arma::mat S, int L, int M);
 
+// Spins a single random atom in the lattice
+arma::mat single_spinnergal(arma::mat S, int L);
+
+double prob_func(double beta, double E_before, double E_after, double Z);
 
 }; // Classes always end with };
 

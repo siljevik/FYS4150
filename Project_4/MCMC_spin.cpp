@@ -165,13 +165,71 @@ double MCMC_spin::tot_magnetboi(arma::mat S, int L, int M)
   return M;
 }
 
+arma::mat MCMC_spin::single_spinnergal(arma::mat S, int L)
+{
+  // The random number generator from example: 
+  // https://github.com/anderkve/FYS3150/blob/master/code_examples/random_number_generation/main_basics.cpp 
+  unsigned int seed = chrono::system_clock::now().time_since_epoch().count();
+  mt19937 generator;
+  generator.seed(seed);
+  uniform_int_distribution<int> my_01_pdf(0,L-1);
+  uniform_int_distribution<int> my_02_pdf(0,L-1); // L-1 to keep within range
+
+  int x = my_01_pdf(generator);
+  int y = my_02_pdf(generator);
+  S(x,y) = - S(x,y); // Flipping the one random spin here
+
+  return arma::mat (S);
+}
 
 
+double MCMC_spin::prob_func(double beta, double E_before, double E_after, double Z)
+{
+  // want to calculate the Boltzmann prob. dist.
+  double p_sT = (1/Z)*exp(-beta*(E_after - E_before) );
+  return p_sT;
+}
 
-// Analytical expression of Z for 2D lattice (2x2)
-//ouble MCMC_spin::partition_Z(double beta, double J){
-  //for problem 4 we have the partition function
-  //  double Z = 4 * cosh(8*beta*J) + 12;
-  //  return Z;
-//}
+/*
+// Inspired by the code at page 150 from the course book/pdf
+void MC_sampling(double Z, double beta, double E_s)
+//int initial_n_particles, int max_time,int number_cycles, double decay_probability,int *ncumulative)
+{
+  // Given a system temperature , the probability for the system state  is given by the Boltzmann distribution:
+  double p_sT = (1/Z)*exp(-(beta)*E_s); // E_s = E2 in main, total energy
+
+  // Probability distribution (prob_distr)
+  double expected_E = (E_s)*p_sT; 
+
+
+    int cycles, time, np, n_unstable, particle_limit;
+    long idum;
+    idum=-1; // initialise random number generator
+    // loop over monte carlo cycles
+    // One monte carlo loop is one sample
+    for (cycles = 1; cycles <= number_cycles; cycles++)
+    {
+        n_unstable = initial_n_particles;
+        // accumulate the number of particles per time step per trial
+        ncumulative[0] += initial_n_particles;
+        
+        // loop over each time step
+        for (time=1; time <= max_time; time++)
+        {
+            // for each time step, we check each particle
+            particle_limit = n_unstable;
+            for ( np = 1; np <= particle_limit; np++) 
+            {
+                if( ran0(&idum) <= decay_probability) 
+                {
+                    n_unstable=n_unstable-1;
+                }
+            }
+            ncumulative[time] += n_unstable;
+        }
+    }
+}
+
+
+*/
 

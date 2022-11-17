@@ -74,16 +74,17 @@ int main(){
     double M2 = MCMC_s.tot_magnetboi(S2,L,M);
 
     // The matrix we are doing calculations for (if it is very big we don't wanna print it)
-    if (L =< 10) {
+    if (L <= 10) {
         cout << "Matrix: \n" << S2;}
     
-    cout << "Energy: " << E2 << " J\n";
+    cout << "Total energy: " << E2 << " J\n";
+    /*
     cout << "Energylist:\n";
     for(int i=0; i <tot_energy_pr_atom_list.size(); i++) {
         cout <<tot_energy_pr_atom_list.at(i) <<' '; }
     cout << "\n";
     cout << "Magnetism: " << M2 << " unit\n";
-    
+    */
 
     /*==================================*/
     /*~~~~~       Analytical       ~~~~~*/
@@ -91,7 +92,7 @@ int main(){
     
     // Expected total energy J is the energy constant
     double Z        = analyticalboi.part_func(J, beta);
-    
+
     // Expected total energy
     double exp_E    = analyticalboi.exp_tot_E(J,beta,Z);
     double exp_EE   = analyticalboi.exp_tot_E_sqrd(J,beta,Z);
@@ -102,12 +103,46 @@ int main(){
     double CV       = analyticalboi.spec_heat_cap(N,k_b,T,exp_E,exp_EE);
     // Susceptibility, chi, normailzed to number of spins, N
     double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
-    
+
     // Testing testing 1-2-3
     cout << "exp_E: " << exp_E << "\n";
+    /*
     cout << "exp_M: " << exp_M << "\n";
     cout << "Critical temperature: " << CV << "\n";
     cout << "Chi: " << chi << "\n";
+    */
+
+
+    /////////////////////////////////////////
+    // Running the single_spinnergal function once
+    arma::mat S_new = MCMC_s.single_spinnergal(S2,L);
+    double E3 = MCMC_s.tot_energyboi(S_new,L,E2);
+    double p_sT = prob_func(beta,E2,E3,Z);
+    double E_p_sT = p_sT*E2;
+
+    // Creating a variable to be used for counting Monte Carlo cycles
+    int MC_count = 0;
+    //Checking if the p_sT is less than or else (equal to)
+    while (E_p_st < exp_E) // Må denne gjøres om pga vi aldri får 
+    // nøyaktig lik exp_E
+    {
+        // We spin one
+        arma::mat S_next = MCMC_s.single_spinnergal(S_new,L);
+        // Renaming energy
+        E3 = E_before;
+        // Caldulate the new energy
+        double E_after = MCMC_s.tot_energyboi(S_next,L,E3);
+        // Calculate p_sT
+        double p_sT_next = prob_func(beta,E_before,E_after,Z);
+        // Update values
+        MC_count += 1;
+        E_after = E_before;
+        S_next = S_new;
+        E_p_sT = p_sT*E_before;
+    }
+    // Men hva skjer etter?
+    //    cout << "\n We did " << MC_count << " Monte Carlo cycles to get good agreement with the analytical result.\n";
+    /////////////////////////////////////////
     
 
 return 0;
