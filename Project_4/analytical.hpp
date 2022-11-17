@@ -25,9 +25,9 @@ class analytical{
     double exp_tot_M_sqrd(double J, double beta, double Z);
 
     //Specific heat capacity
-    double spec_heat_cap(int N, double J, double beta, double kb, double T, double exp_E, double exp_EE);
+    double spec_heat_cap(double N, double kb, double T, double exp_E, double exp_EE);
     //Susceptibility
-    double sus_chi(int N, double J, double beta, double kb, double T, double exp_M, double exp_MM);
+    double sus_chi(double N, double kb, double T, double exp_M, double exp_MM);
 
 }; // Classes always end with };
 

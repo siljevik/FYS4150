@@ -22,6 +22,9 @@ arma::mat spinnerboi(arma::mat S, int L);
 // Calculates the total energy of the lattice
 double tot_energyboi(arma::mat S, int L, int E);
 
+// Creates a vector with energy for each atom
+std::vector<double> energy_listboi(arma::mat S, int L);
+
 // Calculates the total magnetism of the lattice
 double tot_magnetboi(arma::mat S, int L, int M);
 

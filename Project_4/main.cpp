@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <chrono>
 #include <random>
+#include<vector>
 
 // including the header and function files
 #include "MCMC_spin.hpp"
@@ -35,7 +36,7 @@ int main(){
     /*~~~~ Constants and Variables ~~~~*/
     /*=================================*/
     // Constants:
-    double const k_b = 1;//1.380649*pow(10.,-23.); // Boltzman constant [ m^2 * kg / (s^2 * K) ]
+    double const k_b = 1;//Boltzman constant = 1, temperature has therefore energy dimension
 
     // Known values
     double s_d = -1; // Spin up
@@ -43,10 +44,10 @@ int main(){
     double T = 1; // Temperature   ----> Can be changed later
     // Matrix with random spin up and downs
     int L = 2; // Lattize size
-    int N = pow(L,2); // number of states 
+    double N = pow(L,2); // number of states 
     int E = 0;
     int M = 0;
-    double J = 1;
+    double J = 1; // Coupling constant = 1
     double beta =1/(T*k_b);
     //cout << "Beta is: " << beta << "\n";
     
@@ -65,13 +66,23 @@ int main(){
     // Calculating the total energy
     double E2 = MCMC_s.tot_energyboi(S2,L,E);
 
+    // Creates a vector with energy for each atom
+    vector<double> tot_energy_pr_atom_list = MCMC_s.energy_listboi(S2,L);
+
+
     // Calculating the total magnetism
     double M2 = MCMC_s.tot_magnetboi(S2,L,M);
 
     // 
     cout << "Matrix: \n" << S2;
+    /*
     cout << "Energy: " << E2 << " J\n";
+    cout << "Energylist:\n";
+    for(int i=0; i <tot_energy_pr_atom_list.size(); i++) {
+        cout <<tot_energy_pr_atom_list.at(i) <<' '; }
+    cout << "\n";
     cout << "Magnetism: " << M2 << " unit\n";
+    */
     
     
 
@@ -89,14 +100,14 @@ int main(){
     double exp_M    = analyticalboi.exp_tot_M(J,beta,Z);
     double exp_MM   = analyticalboi.exp_tot_M_sqrd(J,beta,Z);
     // Specific heat capacity, CV, normalized to number of spins, N
-    double CV       = analyticalboi.spec_heat_cap(N,J,beta,k_b,T,exp_E,exp_EE);
+    double CV       = analyticalboi.spec_heat_cap(N,k_b,T,exp_E,exp_EE);
     // Susceptibility, chi, normailzed to number of spins, N
-    double chi      = analyticalboi.sus_chi(N,J,beta,k_b,T,exp_M,exp_MM);
+    double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
     
     // Testing testing 1-2-3
     cout << "Z: " << Z << "\n";
     cout << "exp_E: " << exp_E << "\n";
-    cout << "exp_E: " << exp_EE << "\n";
+    cout << "exp_EE: " << exp_EE << "\n";
     cout << "exp_M: " << exp_M << "\n";
     cout << "exp_MM: " << exp_MM << "\n";
     cout << "Critical temperature: " << CV << "\n";

@@ -6,7 +6,6 @@
 
 
 #include "analytical.hpp"
-//#include "MCMC_spin.hpp"
 
 using namespace std;
 
@@ -87,12 +86,11 @@ double analytical::exp_tot_M_sqrd(double J, double beta, double Z)
 /*~~~~~ Specific heat capacity ~~~~~*/
 /*==================================*/
 //Specific heat capacity, CV, normalized to number of spins, N:
-double analytical::spec_heat_cap(int N, double J, double beta, double kb, double T, double exp_E, double exp_EE)
+double analytical::spec_heat_cap(double N, double kb, double T, double exp_E, double exp_EE)
 {
     double broek = ( 1/N )*( 1/(kb*T) );
     double variance_E = exp_EE - (exp_E*exp_E);
-    // CV
-    double CV = broek*variance_E;
+    double CV = broek*variance_E; // CV
     return CV;
 }
 
@@ -101,7 +99,7 @@ double analytical::spec_heat_cap(int N, double J, double beta, double kb, double
 /*~~~~~~~~~ Susceptibility ~~~~~~~~~*/
 /*==================================*/
 //Susceptibility, chi, normailzed to number of spins, N:
-double analytical::sus_chi(int N, double J, double beta, double kb, double T, double exp_M, double exp_MM)
+double analytical::sus_chi(double N, double kb, double T, double exp_M, double exp_MM)
 {
     double broek = ( 1/N )*( 1/(kb*T) );
     double variance_M = exp_MM - (exp_M*exp_M);
