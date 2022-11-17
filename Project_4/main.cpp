@@ -73,17 +73,16 @@ int main(){
     // Calculating the total magnetism
     double M2 = MCMC_s.tot_magnetboi(S2,L,M);
 
-    // 
-    cout << "Matrix: \n" << S2;
-    /*
+    // The matrix we are doing calculations for (if it is very big we don't wanna print it)
+    if (L =< 10) {
+        cout << "Matrix: \n" << S2;}
+    
     cout << "Energy: " << E2 << " J\n";
     cout << "Energylist:\n";
     for(int i=0; i <tot_energy_pr_atom_list.size(); i++) {
         cout <<tot_energy_pr_atom_list.at(i) <<' '; }
     cout << "\n";
     cout << "Magnetism: " << M2 << " unit\n";
-    */
-    
     
 
     /*==================================*/
@@ -105,11 +104,8 @@ int main(){
     double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
     
     // Testing testing 1-2-3
-    cout << "Z: " << Z << "\n";
     cout << "exp_E: " << exp_E << "\n";
-    cout << "exp_EE: " << exp_EE << "\n";
     cout << "exp_M: " << exp_M << "\n";
-    cout << "exp_MM: " << exp_MM << "\n";
     cout << "Critical temperature: " << CV << "\n";
     cout << "Chi: " << chi << "\n";
     
