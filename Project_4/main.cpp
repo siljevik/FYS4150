@@ -1,10 +1,10 @@
-//////////////////////////////////
-//
-// Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -larmadillo
-//
-// Run with: ./main.exe
-//
-/////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//                                                                                  //
+// Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -larmadillo     //
+//                                                                                  //
+// Run with: ./main.exe                                                             //
+//                                                                                  //
+//////////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <armadillo>
 #include <cmath>
@@ -15,7 +15,7 @@
 #include<vector>
 
 // including the header and function files
-#include "MCMC_spin.hpp"
+#include "MCMC_spin.hpp" // MCMC = Markov Chain Monte Carlo
 #include "MCMC_spin.cpp"
 #include "analytical.hpp"
 #include "analytical.cpp"
@@ -25,31 +25,25 @@ using namespace std;
 
 int main(){
     
-    // Calling the MCMC_spin class (MCMC = Markov Chain Monte Carlo)
-    //MCMC_spin MCMC_s;
     // Calling the analytical class
     MCMC_spin MCMC_s;
     analytical analyticalboi;
     
-
     /*=================================*/
     /*~~~~ Constants and Variables ~~~~*/
     /*=================================*/
     // Constants:
     double const k_b = 1;//Boltzman constant = 1, temperature has therefore energy dimension
-
-    // Known values
+    // Some known values
     double s_d = -1; // Spin up
     double s_u = 1; // Spin down
     double T = 1; // Temperature   ----> Can be changed later
-    // Matrix with random spin up and downs
     int L = 2; // Lattize size
-    double N = pow(L,2); // number of states 
-    int E = 0;
-    int M = 0;
+    double N = pow(L,2); // Number of states 
+    int E = 0; // Initial energy
+    int M = 0; // Initial magnetism
     double J = 1; // Coupling constant = 1
     double beta =1/(T*k_b);
-    
     // Creating an 'empty' matrix (filled with zeros)
     arma::mat S(L, L);
     
@@ -61,14 +55,10 @@ int main(){
 
     // Filling the matrix up with random spins:
     arma::mat S2 = MCMC_s.spinnerboi(S,L);
-
     // Calculating the total energy
     double E2 = MCMC_s.tot_energyboi(S2,L,E);
-
     // Creates a vector with energy for each atom
     vector<double> tot_energy_pr_atom_list = MCMC_s.energy_listboi(S2,L);
-
-
     // Calculating the total magnetism
     double M2 = MCMC_s.tot_magnetboi(S2,L,M);
 
@@ -79,7 +69,7 @@ int main(){
     cout << "Total energy: " << E2 << " J\n";
     /*
     cout << "Energylist:\n";
-    for(int i=0; i <tot_energy_pr_atom_list.size(); i++) {
+    for(int i=0; i <tot_energy_pr_atom_list.size(); i++) { // To print a vector we must print one at the time
         cout <<tot_energy_pr_atom_list.at(i) <<' '; }
     cout << "\n";
     cout << "Magnetism: " << M2 << " unit\n";
@@ -138,7 +128,7 @@ int main(){
         E_p_sT = p_sT*E_before;
         // Updating values
         MC_count += 1;
-        S_next = S_new;
+        S_new = S_next;
         E_before = E_after;
     }
     // Men hva skjer etter?
@@ -148,15 +138,3 @@ int main(){
 
 return 0;
 }
-/*
-%%%%% NAVN PÅ IKKE-BINÆRE SØSKEN AV MAMMA/PAPPA 
-(Istedet for onkel/tante):
-- tankel
-- onte
-- pibling
-- auncle
-- pappas forvirret søsken
-- mine forelsdres perverse søsken
-- mammas problematiske søsken
-- titti
-*/
