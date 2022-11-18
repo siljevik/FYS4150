@@ -5,6 +5,12 @@
 // Run with: ./main.exe                                                             //
 //                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////
+
+// ./main.exe  <L> <T_start> <T_end> <T_n_steps> <MC_cycles> <MC_cycles_burn_in>
+//
+// ex:
+// ./main.exe  2 1.0 2.4
+
 #include <iostream>
 #include <armadillo>
 #include <cmath>
@@ -23,7 +29,7 @@
 using namespace std;
 
 
-int main(){
+int main(int argc, char* argv[]){
     
     // Calling the analytical class
     MCMC_spin MCMC_s;
@@ -75,9 +81,9 @@ int main(){
     cout << "Magnetism: " << M2 << " unit\n";
     */
 
-    /*==================================*/
-    /*~~~~~       Analytical       ~~~~~*/
-    /*==================================*/
+    /*=====================================*/
+    /*~~~~~       Analytical 2x2      ~~~~~*/
+    /*=====================================*/
     
     // Expected total energy J is the energy constant
     double Z        = analyticalboi.part_func(J, beta);
@@ -121,11 +127,11 @@ int main(){
         // Renaming energy
         
         // Calculate the new energy
-        double E_after = MCMC_s.tot_energyboi(S_next,L,E_before);
+        double E_after = MCMC_s.tot_energyboi(S_next,L,E_before); // Setter inn E (=0) for å sjekke om det kan hjelpe
         // Calculate new p_sT
         double p_sT = MCMC_s.prob_func(beta,E_before,E_after,Z);
         // Calculating E_p_sT
-        E_p_sT = p_sT*E_before;
+        E_p_sT = p_sT*E_after; // E_before
         cout << "\n E_p_sT: " << E_p_sT;
         // Updating values
         MC_count += 1;

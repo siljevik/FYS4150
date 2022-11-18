@@ -165,22 +165,57 @@ double MCMC_spin::tot_magnetboi(arma::mat S, int L, int M)
   return M;
 }
 
-arma::mat MCMC_spin::single_spinnergal(arma::mat S, int L)
+arma::mat MCMC_spin::single_spinnergal(arma::mat S, int L, double boltzman_value)
 {
-  // The random number generator from example: 
-  // https://github.com/anderkve/FYS3150/blob/master/code_examples/random_number_generation/main_basics.cpp 
-  unsigned int seed = chrono::system_clock::now().time_since_epoch().count();
-  mt19937 generator;
-  generator.seed(seed);
-  uniform_int_distribution<int> my_01_pdf(0,L-1);
-  uniform_int_distribution<int> my_02_pdf(0,L-1); // L-1 to keep within range
+  for (int i = 0; i < N; i++)
+  {
+    // The random number generator from example: 
+    // https://github.com/anderkve/FYS3150/blob/master/code_examples/random_number_generation/main_basics.cpp 
+    unsigned int seed = chrono::system_clock::now().time_since_epoch().count();
+    mt19937 generator;
+    generator.seed(seed);
+    uniform_int_distribution<int> my_01_pdf(0,L-1);
+    uniform_int_distribution<int> my_02_pdf(0,L-1); // L-1 to keep within range
+    uniform_int_distribution<double> my_03_pdf(0,1);
+    // Picking random indicies
+    int x = my_01_pdf(generator);
+    int y = my_02_pdf(generator);
+    double r = my_03_pdf(generator);
+    
+    // Change of energy
+    double surr_sum = S(x-1,y)+S(x+1,y)+S(x,y-1)+S(x,y+1);
+    double delta_E = 2*S(x,y)*surr_sum; // Difference between initial and final
+    double boltzman_n = delta_E
 
-  int x = my_01_pdf(generator);
-  int y = my_02_pdf(generator);
-  S(x,y) = - S(x,y); // Flipping the one random spin here
-
+    // Should the spin be flipped? (Mac: alt+7 = |, also, here || means or)
+    if (delta_E < 0 || r <= MCMC_spin::boltzman_factors(boltzman_n))
+    {
+      // Updating energy and magnetism
+      E = MCMC_s.tot_energyboi(S2,L,E);
+      M = MCMC_s.tot_magnetboi(S2,L,M);
+      S(x,y) = - S(x,y); // Flipping the one random spin here
+    }
+  }
   return arma::mat (S);
 }
+
+double MCMC_spin::boltzman_factors(boltzman_n)
+{
+  // Do the map thing
+  vector<double> boltzman_values = {exp(beta*8),exp(beta*4),exp(beta*0),exp(beta*(-4)),exp(beta*(-8))};
+  double boltzman_value = boltzman_values[boltzman_n];
+  
+  boltzman_[8] = exp(beta*8);
+  boltzman_[4] = exp(beta*4);
+  boltzman_[0] = exp(beta*0);
+  boltzman_[-4] = exp(beta*(-4));
+  boltzman_[-8] = exp(beta*(-8));
+  return boltzman_value
+
+}
+
+prob_after/prob_initial
+if A is not r 0 or 1 (generated randombly)
 
 
 double MCMC_spin::prob_func(double beta, double E_before, double E_after, double Z)

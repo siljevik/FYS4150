@@ -15,12 +15,13 @@ private:
 // Nothing to add?
 
 public:
+double T; // Keeping track of the temperature
 
 // Spins the elements in lattice S
 arma::mat spinnerboi(arma::mat S, int L);
 
 // Calculates the total energy of the lattice
-double tot_energyboi(arma::mat S, int L, int E);
+double tot_energyboi(arma::mat S, int L, int E, double T);
 
 // Creates a vector with energy for each atom
 std::vector<double> energy_listboi(arma::mat S, int L);
