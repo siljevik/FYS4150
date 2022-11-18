@@ -6,6 +6,8 @@
 //                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////
 
+
+// Bevause of int argc, char* argv[]
 // ./main.exe  <L> <T_start> <T_end> <T_n_steps> <MC_cycles> <MC_cycles_burn_in>
 //
 // ex:
@@ -19,6 +21,7 @@
 #include <chrono>
 #include <random>
 #include<vector>
+#include <map>
 
 // including the header and function files
 #include "MCMC_spin.hpp" // MCMC = Markov Chain Monte Carlo
@@ -29,7 +32,7 @@
 using namespace std;
 
 
-int main(int argc, char* argv[]){
+int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP parallellisering
     
     // Calling the analytical class
     MCMC_spin MCMC_s;
@@ -42,44 +45,45 @@ int main(int argc, char* argv[]){
     double const k_b = 1;//Boltzman constant = 1, temperature has therefore energy dimension
     // Some known values
     double s_d = -1; // Spin up
+    // mysys.variabel = noe; altså fra class fil
     double s_u = 1; // Spin down
     double T = 1; // Temperature   ----> Can be changed later
     int L = 2; // Lattize size
     double N = pow(L,2); // Number of states 
-    int E = 0; // Initial energy
-    int M = 0; // Initial magnetism
+    double E = 0; // Initial energy
+    double M = 0; // Initial magnetism
     double J = 1; // Coupling constant = 1
     double beta =1/(T*k_b);
     // Creating an 'empty' matrix (filled with zeros)
     arma::mat S(L, L);
+    
     
 
 
     /*=================================*/
     /*~~~~ Markov Chain Monte Calo ~~~~*/
     /*=================================*/
-
+    // Creating the plusone minusone vectors to be used
+    //vector<int> plusone, minusone = MCMC_s.plus_minus_bois(int L);
     // Filling the matrix up with random spins:
-    arma::mat S2 = MCMC_s.spinnerboi(S,L);
+    arma::mat S2                            = MCMC_s.spinnerboi(S,L);
     // Calculating the total energy
-    double E2 = MCMC_s.tot_energyboi(S2,L,E);
+    double E2                               = MCMC_s.tot_energyboi(S2,L,E,T);
     // Creates a vector with energy for each atom
-    vector<double> tot_energy_pr_atom_list = MCMC_s.energy_listboi(S2,L);
+    vector<double> tot_energy_pr_atom_list  = MCMC_s.energy_listboi(S2,L);
     // Calculating the total magnetism
-    double M2 = MCMC_s.tot_magnetboi(S2,L,M);
+    double M2                               = MCMC_s.tot_magnetboi(S2,T,L,M);
 
     // The matrix we are doing calculations for (if it is very big we don't wanna print it)
     if (L <= 10) {
         cout << "Matrix: \n" << S2;}
     
     cout << "Total energy: " << E2 << " J\n";
-    /*
-    cout << "Energylist:\n";
-    for(int i=0; i <tot_energy_pr_atom_list.size(); i++) { // To print a vector we must print one at the time
-        cout <<tot_energy_pr_atom_list.at(i) <<' '; }
-    cout << "\n";
-    cout << "Magnetism: " << M2 << " unit\n";
-    */
+    
+    // Printing Energylist (since it is a vector):
+    //for(int i=0; i <tot_energy_pr_atom_list.size(); i++) { // To print a vector we must print one at the time
+    //    cout <<tot_energy_pr_atom_list.at(i) <<' '; }
+    
 
     /*=====================================*/
     /*~~~~~       Analytical 2x2      ~~~~~*/
@@ -101,29 +105,40 @@ int main(int argc, char* argv[]){
 
     // Testing testing 1-2-3
     cout << "exp_E: " << exp_E << "\n";
+
+
+    double sum_E = 0;
+    int cycles = 100000;
+    double boltzman_n = 0;
+    double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
+    arma::mat S_i(L,L); 
+    // Loop to count MCs
+    for (int no = 0; no < cycles; no++){
+        boltzman_value =
+        arma::mat(S_i = MCMC_s.random_spinnergal(S,T,L,N,E,M,beta,boltzman_value));
+        sum_E += E;
+        double E_avg = sum_E/no; // (i = MC_cycles)
+        cout << no << " " << E_avg;
+        // Plot i som x og E_avg som y
+    }
+
+
     /*
-    cout << "exp_M: " << exp_M << "\n";
-    cout << "Critical temperature: " << CV << "\n";
-    cout << "Chi: " << chi << "\n";
-    */
-
-
-    /////////////////////////////////////////
-    // Running the single_spinnergal function once
-    arma::mat S_new = MCMC_s.single_spinnergal(S2,L);
+    arma::mat S_new = MCMC_s.random_spinnergal(S2,L);
     double E3 = MCMC_s.tot_energyboi(S_new,L,E2);
     double first_p_sT = MCMC_s.prob_func(beta,E2,E3,Z);
     double E_p_sT = first_p_sT*E2;
-
     double E_before = E3;
-    // Creating a variable to be used for counting Monte Carlo cycles
-    int MC_count = 0;
+    
+    
+
+
     //Checking if the p_sT is less than or else (equal to)
     while (E_p_sT > exp_E) // Må denne gjøres om pga vi aldri får 
     // nøyaktig lik exp_E
     {
         // We spin one random atom in the lattice
-        arma::mat S_next = MCMC_s.single_spinnergal(S_new,L);
+        arma::mat S_next = MCMC_s.random_spinnergal(S_new,L);
         // Renaming energy
         
         // Calculate the new energy
@@ -137,10 +152,12 @@ int main(int argc, char* argv[]){
         MC_count += 1;
         S_new = S_next;
         E_before = E_after;
+
+        
     }
-    // Men hva skjer etter?
-    cout << "\n We did " << MC_count << " Monte Carlo cycles to get good agreement with the analytical result.\n";
-    /////////////////////////////////////////
+    */
+
+    
     
 
 return 0;

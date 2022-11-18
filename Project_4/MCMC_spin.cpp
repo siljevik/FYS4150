@@ -6,6 +6,7 @@
 #include <chrono>
 #include <random>
 #include <vector>
+#include <map>
 
 
 #include "MCMC_spin.hpp"
@@ -13,6 +14,27 @@
 
 using namespace std;
 
+/* 
+vector<int> MCMC_spin::plus_minus_bois(int L)
+{
+  // Creating empty vectors to look up indexes so we can look
+  // at neighbours of the states (in case of 'border'-atoms)
+  vector<int> plusone{};
+  vector<int> minusone{};
+  
+  // Then fill up plusone (e.g. [1,2,3, ... , L-1, 0])
+  for (int i = 0; i<L-1; i++){
+    plusone.push_back(i+1);
+  }
+  plusone.push_back(0);
+  // Fill up minusone (e.g. [L-1,0,1,2, ... , L-2])
+  minusone.push_back(L-1);
+  for (int i = 0; i<L-1; i++){
+    minusone.push_back(i);
+  }
+  return minusone, plusone;
+}
+*/
 
 /*===========================================*/
 /*~~~~~~ Generator of spins in lattice ~~~~~~*/
@@ -48,7 +70,7 @@ arma::mat MCMC_spin::spinnerboi(arma::mat S, int L)
 /*==========================================*/
 /*~~~~~ Total energy of the 2D lattice ~~~~~*/
 /*==========================================*/
-double MCMC_spin::tot_energyboi(arma::mat S, int L, int E)
+double MCMC_spin::tot_energyboi(arma::mat S, int L, double E, double T)
 {
   // Creating empty vectors to look up indexes so we can look
   // at neighbours of the states (in case of 'border'-atoms)
@@ -147,10 +169,11 @@ vector<double> MCMC_spin::energy_listboi(arma::mat S, int L)
 }
 
 
+
 /*=============================================*/
 /*~~~~~ Total magnetism of the 2D lattice ~~~~~*/
 /*=============================================*/
-double MCMC_spin::tot_magnetboi(arma::mat S, int L, int M)
+double MCMC_spin::tot_magnetboi(arma::mat S, double T, int L, double M)
 {
   // Looping though the lattice
   for(int i = 0; i<L; i++)
@@ -165,8 +188,14 @@ double MCMC_spin::tot_magnetboi(arma::mat S, int L, int M)
   return M;
 }
 
-arma::mat MCMC_spin::single_spinnergal(arma::mat S, int L, double boltzman_value)
+
+
+/*==================================================*/
+/*~~~~~~ Generator of random spins in lattice ~~~~~~*/
+/*==================================================*/    // & forran variabel oppdaterer også i main()
+arma::mat MCMC_spin::random_spinnergal(arma::mat S, double T, int L, double N, double& E, double& M, double beta, double boltzman_value)
 {
+  // N
   for (int i = 0; i < N; i++)
   {
     // The random number generator from example: 
@@ -180,42 +209,49 @@ arma::mat MCMC_spin::single_spinnergal(arma::mat S, int L, double boltzman_value
     // Picking random indicies
     int x = my_01_pdf(generator);
     int y = my_02_pdf(generator);
+    // Random 0 or 1
     double r = my_03_pdf(generator);
-    
+
     // Change of energy
     double surr_sum = S(x-1,y)+S(x+1,y)+S(x,y-1)+S(x,y+1);
     double delta_E = 2*S(x,y)*surr_sum; // Difference between initial and final
-    double boltzman_n = delta_E
+    double boltzman = MCMC_spin::boltzman_factors(beta,delta_E);
 
     // Should the spin be flipped? (Mac: alt+7 = |, also, here || means or)
-    if (delta_E < 0 || r <= MCMC_spin::boltzman_factors(boltzman_n))
+    if (delta_E <= 0 || r <= boltzman)
     {
+      // Flipping the spin here
+      S(x,y) = - S(x,y); 
       // Updating energy and magnetism
-      E = MCMC_s.tot_energyboi(S2,L,E);
-      M = MCMC_s.tot_magnetboi(S2,L,M);
-      S(x,y) = - S(x,y); // Flipping the one random spin here
+      double E = MCMC_spin::tot_energyboi(S,L,E,T);
+      double M = MCMC_spin::tot_magnetboi(S,L,M,T);
     }
   }
   return arma::mat (S);
 }
+ // expectation values / number of MC cycles
 
-double MCMC_spin::boltzman_factors(boltzman_n)
+
+
+double MCMC_spin::boltzman_factors(double beta,double boltzman_n)
 {
-  // Do the map thing
-  vector<double> boltzman_values = {exp(beta*8),exp(beta*4),exp(beta*0),exp(beta*(-4)),exp(beta*(-8))};
-  double boltzman_value = boltzman_values[boltzman_n];
-  
-  boltzman_[8] = exp(beta*8);
+  // Make it into map????
+  map<double,double> boltzman_;
+  boltzman_[8] = exp(beta*8); // our p_sT
   boltzman_[4] = exp(beta*4);
   boltzman_[0] = exp(beta*0);
   boltzman_[-4] = exp(beta*(-4));
   boltzman_[-8] = exp(beta*(-8));
-  return boltzman_value
+  double boltzman = boltzman_[boltzman_n];
+  return boltzman;
 
 }
 
-prob_after/prob_initial
-if A is not r 0 or 1 (generated randombly)
+//prob_after/prob_initial
+//if A is not r 0 or 1 (generated randombly)
+
+
+
 
 
 double MCMC_spin::prob_func(double beta, double E_before, double E_after, double Z)
@@ -224,47 +260,4 @@ double MCMC_spin::prob_func(double beta, double E_before, double E_after, double
   double p_sT = (1/Z)*exp(-beta*(E_after - E_before) );
   return p_sT;
 }
-
-/*
-// Inspired by the code at page 150 from the course book/pdf
-void MC_sampling(double Z, double beta, double E_s)
-//int initial_n_particles, int max_time,int number_cycles, double decay_probability,int *ncumulative)
-{
-  // Given a system temperature , the probability for the system state  is given by the Boltzmann distribution:
-  double p_sT = (1/Z)*exp(-(beta)*E_s); // E_s = E2 in main, total energy
-
-  // Probability distribution (prob_distr)
-  double expected_E = (E_s)*p_sT; 
-
-
-    int cycles, time, np, n_unstable, particle_limit;
-    long idum;
-    idum=-1; // initialise random number generator
-    // loop over monte carlo cycles
-    // One monte carlo loop is one sample
-    for (cycles = 1; cycles <= number_cycles; cycles++)
-    {
-        n_unstable = initial_n_particles;
-        // accumulate the number of particles per time step per trial
-        ncumulative[0] += initial_n_particles;
-        
-        // loop over each time step
-        for (time=1; time <= max_time; time++)
-        {
-            // for each time step, we check each particle
-            particle_limit = n_unstable;
-            for ( np = 1; np <= particle_limit; np++) 
-            {
-                if( ran0(&idum) <= decay_probability) 
-                {
-                    n_unstable=n_unstable-1;
-                }
-            }
-            ncumulative[time] += n_unstable;
-        }
-    }
-}
-
-
-*/
 
