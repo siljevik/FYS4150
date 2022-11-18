@@ -64,7 +64,7 @@ int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP para
     /*~~~~ Markov Chain Monte Calo ~~~~*/
     /*=================================*/
     // Creating the plusone minusone vectors to be used
-    //vector<int> plusone, minusone = MCMC_s.plus_minus_bois(int L);
+    //vector<int> plusone, minusone         = MCMC_s.plus_minus_bois(int L);
     // Filling the matrix up with random spins:
     arma::mat S2                            = MCMC_s.spinnerboi(S,L);
     // Calculating the total energy
@@ -103,7 +103,7 @@ int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP para
     // Susceptibility, chi, normailzed to number of spins, N
     double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
 
-    // Testing testing 1-2-3
+    // Printing our expected energy for a 2x2 lattice
     cout << "exp_E: " << exp_E << "\n";
 
 
