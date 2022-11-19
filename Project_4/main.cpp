@@ -106,23 +106,25 @@ int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP para
     // Printing our expected energy for a 2x2 lattice
     cout << "exp_E: " << exp_E << "\n";
 
-
-    double sum_E = 0;
-    int cycles = 100000;
-    double boltzman_n = 0;
+    /*====================================*/
+    /*~~~~~       Doing the MC       ~~~~~*/
+    /*====================================*/
+    double sum_E = 0; // For the energies
+    int cycles = 100000; // Choosing how many MC cucles we want to do
+    double boltzman_n = 0; // Just making it 0
     double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
-    arma::mat S_i(L,L); 
+    //arma::mat S_MC(L,L); 
     // Loop to count MCs
     for (int no = 0; no < cycles; no++){
         boltzman_value =
-        arma::mat(S_i = MCMC_s.random_spinnergal(S,T,L,N,E,M,beta,boltzman_value));
+        arma::mat(S_MC = MCMC_s.random_spinnergal(S,T,L,N,E,M,beta,boltzman_value));
         sum_E += E;
         double E_avg = sum_E/no; // (i = MC_cycles)
         cout << no << " " << E_avg;
         // Plot i som x og E_avg som y
     }
 
-
+    // Stuff me might need:
     /*
     arma::mat S_new = MCMC_s.random_spinnergal(S2,L);
     double E3 = MCMC_s.tot_energyboi(S_new,L,E2);
