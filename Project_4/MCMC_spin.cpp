@@ -14,14 +14,14 @@
 
 using namespace std;
 
-/* 
+/*
 vector<int> MCMC_spin::plus_minus_bois(int L)
 {
   // Creating empty vectors to look up indexes so we can look
   // at neighbours of the states (in case of 'border'-atoms)
   vector<int> plusone{};
   vector<int> minusone{};
-  
+
   // Then fill up plusone (e.g. [1,2,3, ... , L-1, 0])
   for (int i = 0; i<L-1; i++){
     plusone.push_back(i+1);
@@ -47,8 +47,8 @@ arma::mat MCMC_spin::spinnerboi(arma::mat S, int L)
   // for the random generating of spin up or down.
   const vector<int> spinlist = {-1,+1};
 
-  // The random number generator from example: 
-  // https://github.com/anderkve/FYS3150/blob/master/code_examples/random_number_generation/main_basics.cpp 
+  // The random number generator from example:
+  // https://github.com/anderkve/FYS3150/blob/master/code_examples/random_number_generation/main_basics.cpp
   unsigned int seed = chrono::system_clock::now().time_since_epoch().count();
   mt19937 generator;
   generator.seed(seed);
@@ -76,7 +76,7 @@ double MCMC_spin::tot_energyboi(arma::mat S, int L, double E, double T)
   // at neighbours of the states (in case of 'border'-atoms)
   vector<int> plusone{};
   vector<int> minusone{};
-  
+
   // Then fill up plusone (e.g. [1,2,3, ... , L-1, 0])
   for (int i = 0; i<L-1; i++){
     plusone.push_back(i+1);
@@ -87,7 +87,7 @@ double MCMC_spin::tot_energyboi(arma::mat S, int L, double E, double T)
   for (int i = 0; i<L-1; i++){
     minusone.push_back(i);
   }
-  
+
   // Looping though the Lattice
   for(int i = 0; i<L; i++)
   { 
@@ -193,6 +193,7 @@ double MCMC_spin::tot_magnetboi(arma::mat S, double T, int L, double M)
 /*==================================================*/
 /*~~~~~~ Generator of random spins in lattice ~~~~~~*/
 /*==================================================*/    // & forran variabel oppdaterer også i main()
+
 arma::mat MCMC_spin::random_spinnergal(arma::mat S, double T, int L, double N, double& E, double& M, double beta, double boltzman_value)
 {
   // N
@@ -205,7 +206,7 @@ arma::mat MCMC_spin::random_spinnergal(arma::mat S, double T, int L, double N, d
     generator.seed(seed);
     uniform_int_distribution<int> my_01_pdf(0,L-1);
     uniform_int_distribution<int> my_02_pdf(0,L-1); // L-1 to keep within range
-    uniform_int_distribution<double> my_03_pdf(0,1);
+    uniform_int_distribution<int> my_03_pdf(0,1);
     // Picking random indicies
     int x = my_01_pdf(generator);
     int y = my_02_pdf(generator);
@@ -233,7 +234,7 @@ arma::mat MCMC_spin::random_spinnergal(arma::mat S, double T, int L, double N, d
 
 
 
-double MCMC_spin::boltzman_factors(double beta,double boltzman_n)
+double MCMC_spin::boltzman_factors(double beta,double delta_E)
 {
   // Make it into map????
   map<double,double> boltzman_;
@@ -242,7 +243,7 @@ double MCMC_spin::boltzman_factors(double beta,double boltzman_n)
   boltzman_[0] = exp(beta*0);
   boltzman_[-4] = exp(beta*(-4));
   boltzman_[-8] = exp(beta*(-8));
-  double boltzman = boltzman_[boltzman_n];
+  double boltzman = boltzman_[delta_E];
   return boltzman;
 
 }

@@ -41,7 +41,7 @@ arma::mat random_spinnergal(arma::mat S, double T, int L, double N, double& E, d
 
 
 // Finding the Boltzman
-double boltzman_factors(double beta,double boltzman_n);
+double boltzman_factors(double beta,double delta_E);
 
 // Finding the probability??????
 double prob_func(double beta, double E_before, double E_after, double Z);
