@@ -44,9 +44,7 @@ int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP para
     // Constants:
     double const k_b = 1;//Boltzman constant = 1, temperature has therefore energy dimension
     // Some known values
-    double s_d = -1; // Spin up
     // mysys.variabel = noe; altså fra class fil
-    double s_u = 1; // Spin down
     double T = 1; // Temperature   ----> Can be changed later
     int L = 2; // Lattize size
     double N = pow(L,2); // Number of states 
@@ -72,7 +70,7 @@ int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP para
     // Creates a vector with energy for each atom
     vector<double> tot_energy_pr_atom_list  = MCMC_s.energy_listboi(S2,L);
     // Calculating the total magnetism
-    double M2                               = MCMC_s.tot_magnetboi(S2,T,L,M);
+    //double M2                               = MCMC_s.tot_magnetboi(S2,T,L,M);
 
     // The matrix we are doing calculations for (if it is very big we don't wanna print it)
     if (L <= 10) {
@@ -99,9 +97,9 @@ int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP para
     double exp_M    = analyticalboi.exp_tot_M(J,beta,Z);
     double exp_MM   = analyticalboi.exp_tot_M_sqrd(J,beta,Z);
     // Specific heat capacity, CV, normalized to number of spins, N
-    double CV       = analyticalboi.spec_heat_cap(N,k_b,T,exp_E,exp_EE);
+    //double CV       = analyticalboi.spec_heat_cap(N,k_b,T,exp_E,exp_EE);
     // Susceptibility, chi, normailzed to number of spins, N
-    double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
+    //double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
 
     // Printing our expected energy for a 2x2 lattice
     cout << "exp_E: " << exp_E << "\n";
