@@ -40,6 +40,8 @@ vector<int> MCMC_spin::plus_minus_bois(int L)
 /*~~~~~~ Generator of spins in lattice ~~~~~~*/
 /*===========================================*/
 // Since we want to return the updated vector
+
+// This is only for making the first matrix
 arma::mat MCMC_spin::spinnerboi(arma::mat S, int L)
 {
   // The spins are either up (+1) or down (-1), and constant 
@@ -73,7 +75,7 @@ arma::mat MCMC_spin::spinnerboi(arma::mat S, int L)
 double MCMC_spin::tot_energyboi(arma::mat S, int L, double E, double T)
 {
   // Creating empty vectors to look up indexes so we can look
-  // at neighbours of the states (in case of 'border'-atoms)
+  // at neighbours of the states (in case of 'border'-states)
   vector<int> plusone{};
   vector<int> minusone{};
 
@@ -97,7 +99,7 @@ double MCMC_spin::tot_energyboi(arma::mat S, int L, double E, double T)
     int moi = minusone[i];
     
     for(int j = 0; j<L; j++){
-      // Placement of the atom we are doing calculations for
+      // Placement of the state we are doing calculations for
       int E_ij = S(i,j);
       
       // Surrounding atoms
@@ -161,6 +163,8 @@ vector<double> MCMC_spin::energy_listboi(arma::mat S, int L)
       
       // Adding all energies to the total energy
       E = (-E_ij*(E_o + E_u + E_v + E_h))/2; // divided by 2 to correct for the doublecounting
+
+      // push the calculated energy into the tot_energy list
       tot_energy_pr_atom_list.push_back(E);
     }
   }
@@ -194,38 +198,41 @@ double MCMC_spin::tot_magnetboi(arma::mat S, double T, int L, double M)
 /*~~~~~~ Generator of random spins in lattice ~~~~~~*/
 /*==================================================*/    // & forran variabel oppdaterer også i main()
 
-arma::mat MCMC_spin::random_spinnergal(arma::mat S, double T, int L, double N, double& E, double& M, double beta, double boltzman_value)
+// We spin the matrix S generated in spinnerboi
+arma::mat MCMC_spin::random_spinnergal(arma::mat S, double T, int L, double N, double& E, double& M, double beta)
 {
   // N
   for (int i = 0; i < N; i++)
   {
-    // The random number generator from example: 
-    // https://github.com/anderkve/FYS3150/blob/master/code_examples/random_number_generation/main_basics.cpp 
+    // The random number generator from example:
+    // https://github.com/anderkve/FYS3150/blob/master/code_examples/random_number_generation/main_basics.cpp
     unsigned int seed = chrono::system_clock::now().time_since_epoch().count();
     mt19937 generator;
     generator.seed(seed);
-    uniform_int_distribution<int> my_01_pdf(0,L-1);
-    uniform_int_distribution<int> my_02_pdf(0,L-1); // L-1 to keep within range
+    uniform_int_distribution<int> my_01_pdf(0,L);
+    uniform_int_distribution<int> my_02_pdf(0,L); // L-1 to keep within range
     uniform_int_distribution<int> my_03_pdf(0,1);
+
     // Picking random indicies
     int x = my_01_pdf(generator);
     int y = my_02_pdf(generator);
+
     // Random 0 or 1
     double r = my_03_pdf(generator);
 
     // Change of energy
-    double surr_sum = S(x-1,y)+S(x+1,y)+S(x,y-1)+S(x,y+1);
-    double delta_E = 2*S(x,y)*surr_sum; // Difference between initial and final
+    int surr_sum = S(x-1,y)+S(x+1,y)+S(x,y-1)+S(x,y+1); // Sum of the surrounding particles
+    int delta_E = 2*S(x,y)*surr_sum; // Difference between initial and final
     double boltzman = MCMC_spin::boltzman_factors(beta,delta_E);
 
     // Should the spin be flipped? (Mac: alt+7 = |, also, here || means or)
     if (delta_E <= 0 || r <= boltzman)
     {
       // Flipping the spin here
-      S(x,y) = - S(x,y); 
+      S(x,y) = - S(x,y);
       // Updating energy and magnetism
-      double E = MCMC_spin::tot_energyboi(S,L,E,T);
-      double M = MCMC_spin::tot_magnetboi(S,L,M,T);
+      E = MCMC_spin::tot_energyboi(S,L,E,T);
+      M = MCMC_spin::tot_magnetboi(S,L,M,T);
     }
   }
   return arma::mat (S);
@@ -234,10 +241,10 @@ arma::mat MCMC_spin::random_spinnergal(arma::mat S, double T, int L, double N, d
 
 
 
-double MCMC_spin::boltzman_factors(double beta,double delta_E)
+double MCMC_spin::boltzman_factors(double beta,int delta_E)
 {
   // Make it into map????
-  map<double,double> boltzman_;
+  map<int,double> boltzman_;
   boltzman_[8] = exp(beta*8); // our p_sT
   boltzman_[4] = exp(beta*4);
   boltzman_[0] = exp(beta*0);
@@ -249,7 +256,7 @@ double MCMC_spin::boltzman_factors(double beta,double delta_E)
 }
 
 //prob_after/prob_initial
-//if A is not r 0 or 1 (generated randombly)
+//if A is not r 0 or 1 (generated randomly)
 
 
 

@@ -37,11 +37,11 @@ std::vector<double> energy_listboi(arma::mat S, int L);
 double tot_magnetboi(arma::mat S, double T, int L, double M);
 
 // Spins a single random atom in the lattice
-arma::mat random_spinnergal(arma::mat S, double T, int L, double N, double& E, double& M, double beta, double boltzman_value);
+arma::mat random_spinnergal(arma::mat S, double T, int L, double N, double& E, double& M, double beta);
 
 
 // Finding the Boltzman
-double boltzman_factors(double beta,double delta_E);
+double boltzman_factors(double beta,int delta_E);
 
 // Finding the probability??????
 double prob_func(double beta, double E_before, double E_after, double Z);
