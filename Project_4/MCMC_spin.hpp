@@ -36,12 +36,11 @@ std::vector<double> energy_listboi(arma::mat S, int L);
 // Calculates the total magnetism of the lattice
 double tot_magnetboi(arma::mat S, double T, int L, double M);
 
-// Spins a single random atom in the lattice
-arma::mat random_spinnergal(arma::mat S, double T, int L, double N, double& E, double& M, double beta, double boltzman_value);
-
-
 // Finding the Boltzman
-double boltzman_factors(double beta,double boltzman_n);
+double boltzman_factors(double beta,int delta_E);
+
+// Spins a single random atom in the lattice
+arma::mat random_spinnergal(arma::mat& S, double T, int L, int N, double& E, double& M, double beta);
 
 // Finding the probability??????
 double prob_func(double beta, double E_before, double E_after, double Z);

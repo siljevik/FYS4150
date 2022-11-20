@@ -32,25 +32,26 @@
 using namespace std;
 
 
-int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP parallellisering
-    
+int main()
+{ 
+    //int argc, char* argv[]){    // Finnes eksempler på git i openMP parallellisering
     // Calling the analytical class
     MCMC_spin MCMC_s;
-    analytical analyticalboi;
-    
+    //analytical analyticalboi;
+
     /*=================================*/
     /*~~~~ Constants and Variables ~~~~*/
     /*=================================*/
     // Constants:
     double const k_b = 1;//Boltzman constant = 1, temperature has therefore energy dimension
     // Some known values
-    // mysys.variabel = noe; altså fra class fil
-    double T = 1; // Temperature   ----> Can be changed later
+    // mysys.variabel = noe; altså fra class fil 
+    double T = 1.0; // Temperature   ----> Can be changed later
     int L = 2; // Lattize size
-    double N = pow(L,2); // Number of states 
+    int N = L*L; // Number of states 
     double E = 0; // Initial energy
     double M = 0; // Initial magnetism
-    double J = 1; // Coupling constant = 1
+    // double J = 1; // Coupling constant = 1
     double beta =1/(T*k_b);
     // Creating an 'empty' matrix (filled with zeros)
     arma::mat S(L, L);
@@ -70,22 +71,25 @@ int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP para
     // Creates a vector with energy for each atom
     vector<double> tot_energy_pr_atom_list  = MCMC_s.energy_listboi(S2,L);
     // Calculating the total magnetism
-    //double M2                               = MCMC_s.tot_magnetboi(S2,T,L,M);
+    // double M2                               = MCMC_s.tot_magnetboi(S2,T,L,M);
 
     // The matrix we are doing calculations for (if it is very big we don't wanna print it)
     if (L <= 10) {
         cout << "Matrix: \n" << S2;}
     
     cout << "Total energy: " << E2 << " J\n";
-    
+
     // Printing Energylist (since it is a vector):
     //for(int i=0; i <tot_energy_pr_atom_list.size(); i++) { // To print a vector we must print one at the time
     //    cout <<tot_energy_pr_atom_list.at(i) <<' '; }
-    
+
+
 
     /*=====================================*/
     /*~~~~~       Analytical 2x2      ~~~~~*/
     /*=====================================*/
+    
+    /*
     
     // Expected total energy J is the energy constant
     double Z        = analyticalboi.part_func(J, beta);
@@ -97,31 +101,35 @@ int main(){ //int argc, char* argv[]){ // Finnes eksempler på git i openMP para
     double exp_M    = analyticalboi.exp_tot_M(J,beta,Z);
     double exp_MM   = analyticalboi.exp_tot_M_sqrd(J,beta,Z);
     // Specific heat capacity, CV, normalized to number of spins, N
-    //double CV       = analyticalboi.spec_heat_cap(N,k_b,T,exp_E,exp_EE);
+    
+    // double CV       = analyticalboi.spec_heat_cap(N,k_b,T,exp_E,exp_EE);
     // Susceptibility, chi, normailzed to number of spins, N
-    //double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
+    // double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
 
     // Printing our expected energy for a 2x2 lattice
     cout << "exp_E: " << exp_E << "\n";
-
+    
+    */
+    
     /*====================================*/
     /*~~~~~       Doing the MC       ~~~~~*/
     /*====================================*/
     double sum_E = 0; // For the energies
-    int cycles = 100000; // Choosing how many MC cucles we want to do
-    double boltzman_n = 0; // Just making it 0
-    double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
-    //arma::mat S_MC(L,L); 
+    int cycles = 10; // Choosing how many MC cucles we want to do
+    //double boltzman_n = 0; // Just making it 0
+    // double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
+    //arma::mat S_MC(L,L);
+    
     // Loop to count MCs
-    for (int no = 0; no < cycles; no++){
-        boltzman_value =
-        arma::mat(S_MC = MCMC_s.random_spinnergal(S,T,L,N,E,M,beta,boltzman_value));
-        sum_E += E;
-        double E_avg = sum_E/no; // (i = MC_cycles)
+    for (int no = 1; no < cycles; no++){
+        arma::mat S_MC      = MCMC_s.random_spinnergal(S,T,L,N,E,M,beta);
+        sum_E               += E;
+        double E_avg        = sum_E/no;
+
         cout << no << " " << E_avg;
         // Plot i som x og E_avg som y
     }
-
+    
     // Stuff me might need:
     /*
     arma::mat S_new = MCMC_s.random_spinnergal(S2,L);
