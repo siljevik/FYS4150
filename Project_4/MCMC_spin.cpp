@@ -93,45 +93,6 @@ double MCMC_spin::tot_energyboi(arma::mat S, int L, double E, double T,vector<in
 }
 
 
-/////////////////////////////// SILJE STRIKES AGAIN /////////////////////////////// 
-/*==========================================================*/
-/*~~~~~ List of energy for each atom in the 2D lattice ~~~~~*/
-/*==========================================================*/
-/*vector<double> MCMC_spin::energy_listboi(arma::mat S, int L, vector<int> plusone, vector<int> minusone)
-{
-  vector<double> tot_energy_pr_atom_list{}; // For the degeneracy
-  double E; // Energy per atom
-  
-  // Looping though the Lattice
-  for(int i = 0; i<L; i++)
-  { 
-    // Making the plusone and minusone in the x-directions to 
-    // speed up the code a little bit
-    int poi = plusone[i];
-    int moi = minusone[i];
-    
-    for(int j = 0; j<L; j++)
-    {
-      // Placement of the atom we are doing calculations for
-      int E_ij = S(i,j);
-      
-      // Surrounding atoms
-      int E_o = S(i,minusone[j]);   //over
-      int E_u = S(i,plusone[j]);   //under
-      int E_v = S(moi,j);   //v for left (NO)
-      int E_h = S(poi,j);    //h for right (NO)
-      
-      // Adding all energies to the total energy
-      E = (-E_ij*(E_o + E_u + E_v + E_h))/2; // divided by 2 to correct for the doublecounting
-
-      // push the calculated energy into the tot_energy list
-      tot_energy_pr_atom_list.push_back(E);
-    }
-  }
-  //cout << "Energy list: " << tot_energy_pr_atom_list;
-  return tot_energy_pr_atom_list;
-}*/
-/////////////////////////////// SILJE STRIKES AGAIN /////////////////////////////// 
 
 
 /*=============================================*/
