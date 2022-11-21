@@ -10,7 +10,7 @@
 #ifndef __MCMC_spin_hpp__   
 #define __MCMC_spin_hpp__
 
-class MCMC_spin 
+class MCMC_spin
 {
 private:
 // Nothing to add?

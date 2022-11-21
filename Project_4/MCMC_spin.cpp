@@ -214,18 +214,16 @@ double MCMC_spin::boltzman_factors(double beta,int delta_E)
 /*~~~~~~ Generator of random spins in lattice ~~~~~~*/
 /*==================================================*/    // & forran variabel oppdaterer også i main()
 
-// We spin the matrix S generated in spinnerboi
+// Implementing a Metropolis algorithm as random_spinnergal
 arma::mat MCMC_spin::random_spinnergal(arma::mat& S, double T, int L, int N, double& E, double& M, double beta)
 {
-  for (int i = 0; i <= N; i++)
-  {
     // The random number generator from example:
     // https://github.com/anderkve/FYS3150/blob/master/code_examples/random_number_generation/main_basics.cpp
     unsigned int seed = chrono::system_clock::now().time_since_epoch().count();
     mt19937 generator;
     generator.seed(seed);
-    uniform_int_distribution<int> my_01_pdf(0,L);
-    uniform_int_distribution<int> my_02_pdf(0,L); // L-1 to keep within range
+    uniform_int_distribution<int> my_01_pdf(0,(L-1) );
+    uniform_int_distribution<int> my_02_pdf(0,(L-1) ); // L-1 to keep within range
     uniform_int_distribution<int> my_03_pdf(0,1);
 
     // Picking random indicies
@@ -233,49 +231,65 @@ arma::mat MCMC_spin::random_spinnergal(arma::mat& S, double T, int L, int N, dou
     int y = my_02_pdf(generator);
 
     // Random 0 or 1
-    double r = my_03_pdf(generator);
-    
+    int r = my_03_pdf(generator);
+
+    /*============================================*/
+    /*= Repeating the success from tot_energyboi =*/
+    /*============================================*/
+
     // Creating empty vectors to look up indexes so we can look
     // at neighbours of the states (in case of 'border'-atoms)
     vector<int> plusone{};
     vector<int> minusone{};
 
-    // For the degeneracy
-    vector<double> tot_energy_pr_atom_list{};
-
-    // Energy per atom
-    double E;
-    
     // Then fill up plusone (e.g. [1,2,3, ... , L-1, 0])
     for (int i = 0; i<L-1; i++){
       plusone.push_back(i+1);
-    }
+    }// end of for loop(i)
+
     plusone.push_back(0);
+
     // Fill up minusone (e.g. [L-1,0,1,2, ... , L-2])
     minusone.push_back(L-1);
     for (int i = 0; i<L-1; i++){
       minusone.push_back(i);
-    }
+    }// end of for loop(i)
 
     // Change of energy
-    int surr_sum = S(x-1,y)+S(x+1,y)+S(x,y-1)+S(x,y+1); // Sum of the surrounding particles
+    for(int j = 0; j < L; j++)
+    {
+    // Same as earlier, we speed up the code by looking in the "x-direction"
+    // of the plu- and minusone vectors
+    int poi = plusone[j];
+    int moi = minusone[j];
+
+    for(int k = 0; k < L; k++)
+    {
+
+    int surr_sum = S(moi,y)+S(poi,y)+S(x,minusone[k])+S(x,plusone[k]); // Sum of the surrounding particles
     int delta_E = 2*S(x,y)*surr_sum; // Difference between initial and final
     double boltzman = MCMC_spin::boltzman_factors(beta,delta_E);
 
-    // Should the spin be flipped? (Mac: alt+7 = |, also, here || means or)
+// Should the spin be flipped? (Mac: alt+7 = |, also, here || means or)
     if (delta_E <= 0 || r <= boltzman)
     {
       // Flipping the spin here
       S(x,y) = - S(x,y);
       // Updating energy and magnetism
-      E = MCMC_spin::tot_energyboi(S,L,E,T);
+      //E = MCMC_spin::tot_energyboi(S,L,E,T);
+	E = delta_E;
       M = MCMC_spin::tot_magnetboi(S,L,M,T);
-    }
-  }
-  return arma::mat (S);
-}
- // expectation values / number of MC cycles
 
+    }// end of if statement
+
+
+    } // end of for loop(k)
+  }// end of for loop(j)
+
+  return arma::mat (S);
+
+}// end of spinnergal
+ // expectation values / number of MC cycles
 
 
 
