@@ -39,17 +39,16 @@ int main()
     MCMC_spin MCMC_s;
     analytical analyticalboi;
 
-    /*=================================*/
-    /*~~~~ Constants and Variables ~~~~*/
-    /*=================================*/
+    /*====================================*/
+    /*~~~~ Constants, Variables, etc. ~~~~*/
+    /*====================================*/
     // Constants:
     double const k_b = 1;//Boltzman constant = 1, temperature has therefore energy dimension
     // Some known values
     // mysys.variabel = noe; altså fra class fil
     double T = 1.0; // Temperature   ----> Can be changed later
     int L = 2; // Lattize size
-
-    int N = L*L; // Number of states
+    int N = L*L; // Number of states/elements
     double E = 0; // Initial energy
     double M = 0; // Initial magnetism
     double J = 1.0; // Coupling constant = 1
@@ -57,25 +56,41 @@ int main()
     // Creating an 'empty' matrix (filled with zeros)
     arma::mat S(L, L);
 
+    ////////////
+    // Creating an empty list to fill with energies per atom from the lattice/matrix S
+    vector<double> list_Es  = {};
+    /////////
+    
+    // Creating empty vectors to look up indexes so we can look
+    // at neighbours of the states (in case of 'border'-states)
+    vector<int> plusone{};
+    vector<int> minusone{};
+    // Then fill up plusone (e.g. [1,2,3, ... , L-1, 0])
+    for (int i = 0; i<L-1; i++){plusone.push_back(i+1);}
+    plusone.push_back(0);
+    // Fill up minusone (e.g. [L-1,0,1,2, ... , L-2])
+    minusone.push_back(L-1);
+    for (int i = 0; i<L-1; i++){minusone.push_back(i);}
+
+
 
     /*=================================*/
     /*~~~~ Markov Chain Monte Calo ~~~~*/
     /*=================================*/
-    // Creating the plusone minusone vectors to be used
-    //vector<int> plusone, minusone         = MCMC_s.plus_minus_bois(int L);
     // Filling the matrix up with random spins:
     arma::mat S2                            = MCMC_s.spinnerboi(S,L);
     // Calculating the total energy
-    double E2                               = MCMC_s.tot_energyboi(S2,L,E,T);
+    double E2                               = MCMC_s.tot_energyboi(S2,L,E,T,plusone,minusone,list_Es);
+    for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";}
     // Creates a vector with energy for each atom
-    vector<double> tot_energy_pr_atom_list  = MCMC_s.energy_listboi(S2,L);
+    //vector<double> tot_energy_pr_atom_list  =MCMC_s.energy_listboi(S2,L,plusone,minusone);
     // Calculating the total magnetism
     // double M2                               = MCMC_s.tot_magnetboi(S2,T,L,M);
 
     // The matrix we are doing calculations for (if it is very big we don't wanna print it)
     if (L <= 10) {
         cout << "Matrix: \n" 		<< S2;}
-    	cout << "Total energy: " 	<< E2 << " J\n";
+    cout << "Total energy: " 	<< E2 << " J\n";
 
     // Printing Energylist (since it is a vector):
     //for(int i=0; i <tot_energy_pr_atom_list.size(); i++) { // To print a vector we must print one at the time
@@ -103,54 +118,58 @@ int main()
     double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
 
     // Printing our expected energy and exp_M for a 2x2 lattice
-    cout << "Analytical results:"	<< "\n";
-    cout << "<epsilon>: "		<< exp_E/N 	<< "\n";
-    cout << "<|m|>: "			<< exp_M/N 	<< "\n";
-    cout << "CV: "			<< CV 		<< "\n";
-    cout << "X: "			<< chi 		<< endl;
+    //cout << "Analytical results:"	<< "\n";
+    //cout << "<epsilon>: "		<< exp_E/N 	<< "\n";
+    //cout << "<|m|>: "			<< exp_M/N 	<< "\n";
+    //cout << "CV: "			<< CV 		<< "\n";
+    //cout << "X: "			<< chi 		<< endl;
+
+
 
     /*====================================*/
     /*~~~~~       Doing the MC       ~~~~~*/
     /*====================================*/
 
-
     double sum_E = 0; // Initial energy sum
     double sum_e = 0; // initial energy per spin sum
 
-    int cycles = 100; // Choosing how many MC cucles we want to do
+    int cycles = 10; // Choosing how many MC cucles we want to do
     //double boltzman_n = 0; // Just making it 0
     // double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
     //arma::mat S_MC(L,L);
 
     // Loop to count MCs
-    for (int no = 0; no < cycles; no++){
-       	arma::mat S_MC      = MCMC_s.random_spinnergal(S2,T,L,N,E,M,beta);
-	if (L <= 10) {
-        cout << "Matrix: \n"            << S_MC;}
+    for (int no = 0; no < cycles; no++)
+    {
+       	arma::mat S_MC      = MCMC_s.random_spinnergal(S2,T,L,N,E,M,beta,plusone,minusone);
+        if (L <= 10) 
+        {
+            cout << "Matrix: \n" << S_MC;
+        }
 
-
-	double new_E 	    = MCMC_s.tot_energyboi(S_MC, L, E, T );
-	double new_exp_E    = new_E/N; // energy pr. spin
-
-//	cout << "new_E: " << new_E << "\n";
-
+        vector<double> list_Es_new = {};
+        
+        double new_E 	    = MCMC_s.tot_energyboi(S_MC, L, E, T,plusone,minusone,list_Es_new);
+        //cout << new_E;
+        for(int i=0;i<L;i++){cout << list_Es_new[i] <<"\n";}
+        double new_exp_E    = new_E/N; // energy pr. spin
+        //	cout << "new_E: " << new_E << "\n";
         sum_E               += new_E;
-	sum_e     	    += new_E/N;
-	double new_M		    = MCMC_s.tot_magnetboi(S_MC, T, L, M);
-	double new_exp_m	    = new_M/N; // magnetization per spin.
-
-//	cout <<"new_M: " << new_M << "\n";
+        sum_e     	        += new_E/N;
+        double new_M		= MCMC_s.tot_magnetboi(S_MC, T, L, M);
+        double new_exp_m	= new_M/N; // magnetization per spin.
+        //	cout <<"new_M: " << new_M << "\n";
         double E_avg        = sum_E/cycles; // mean energy
-	double e_avg 	    = sum_e/cycles; // mean energy per spin
-
-//	cout << "Current sum E: " << sum_E << "\n";
-    //    cout <<"Cycle number:" << no << " and avg. E:" << E_avg << endl;
-        // Plot i som x og E_avg som y
-// now we print the results for the averge
-    cout << "mean energy(E): " << E_avg << "\n";
-    cout << "mean energy(e): " << e_avg << "\n";
-    cout << "=======================" << endl;
-}// end of for loop(no)
+        double e_avg 	    = sum_e/cycles; // mean energy per spin
+        //	cout << "Current sum E: " << sum_E << "\n";
+        //    cout <<"Cycle number:" << no << " and avg. E:" << E_avg << endl;
+        
+        // Plot no som x og E_avg som y
+        // now we print the results for the averge
+        //cout << "mean energy(E): " << E_avg << " and " << no <<"\n";
+        //cout << "mean energy(e): " << e_avg << "\n";
+        //cout << "=======================" << endl;
+    }// end of for loop(no = cycles)
 
 
 
