@@ -81,7 +81,7 @@ int main()
     arma::mat S2                            = MCMC_s.spinnerboi(S,L);
     // Calculating the total energy
     double E2                               = MCMC_s.tot_energyboi(S2,L,E,T,plusone,minusone,list_Es);
-    for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";}
+    for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";} // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Creates a vector with energy for each atom
     //vector<double> tot_energy_pr_atom_list  =MCMC_s.energy_listboi(S2,L,plusone,minusone);
     // Calculating the total magnetism
@@ -89,8 +89,8 @@ int main()
 
     // The matrix we are doing calculations for (if it is very big we don't wanna print it)
     if (L <= 10) {
-        cout << "Matrix: \n" 		<< S2;}
-    cout << "Total energy: " 	<< E2 << " J\n";
+        cout << "Matrix: \n" 		<< S2;}         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    cout << "Total energy: " 	<< E2 << " J\n";    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // Printing Energylist (since it is a vector):
     //for(int i=0; i <tot_energy_pr_atom_list.size(); i++) { // To print a vector we must print one at the time
@@ -144,14 +144,14 @@ int main()
        	arma::mat S_MC      = MCMC_s.random_spinnergal(S2,T,L,N,E,M,beta,plusone,minusone);
         if (L <= 10) 
         {
-            cout << "Matrix: \n" << S_MC;
+            cout << "Matrix: \n" << S_MC;           // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         }
 
         vector<double> list_Es_new = {};
         
         double new_E 	    = MCMC_s.tot_energyboi(S_MC, L, E, T,plusone,minusone,list_Es_new);
         //cout << new_E;
-        for(int i=0;i<L;i++){cout << list_Es_new[i] <<"\n";}
+        for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         double new_exp_E    = new_E/N; // energy pr. spin
         //	cout << "new_E: " << new_E << "\n";
         sum_E               += new_E;
