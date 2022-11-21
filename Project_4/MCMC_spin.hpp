@@ -37,6 +37,7 @@ double tot_energyboi(arma::mat S, int L, double E, double T, std::vector<int> pl
 
 // Calculates the total magnetism of the lattice
 double tot_magnetboi(arma::mat S, double T, int L, double M);
+double tot_magnetboi_abs(arma::mat S, double T, int L, double M_abs);
 
 // Finding the Boltzman
 double boltzman_factors(double beta,int delta_E);

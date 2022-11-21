@@ -56,11 +56,14 @@ int main()
     // Creating an 'empty' matrix (filled with zeros)
     arma::mat S(L, L);
 
+    // Creating a matrix with all up-spins
+    arma::mat S_all_up(L,L);
+    S_all_up.fill(1);
     ////////////
     // Creating an empty list to fill with energies per atom from the lattice/matrix S
     vector<double> list_Es  = {};
     /////////
-    
+
     // Creating empty vectors to look up indexes so we can look
     // at neighbours of the states (in case of 'border'-states)
     vector<int> plusone{};
@@ -81,17 +84,18 @@ int main()
     arma::mat S2                            = MCMC_s.spinnerboi(S,L);
     // Calculating the total energy
     double E2                               = MCMC_s.tot_energyboi(S2,L,E,T,plusone,minusone,list_Es);
-    for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";} // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//    for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";} // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Creates a vector with energy for each atom
     //vector<double> tot_energy_pr_atom_list  =MCMC_s.energy_listboi(S2,L,plusone,minusone);
     // Calculating the total magnetism
     // double M2                               = MCMC_s.tot_magnetboi(S2,T,L,M);
 
     // The matrix we are doing calculations for (if it is very big we don't wanna print it)
+/*
     if (L <= 10) {
         cout << "Matrix: \n" 		<< S2;}         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     cout << "Total energy: " 	<< E2 << " J\n";    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+*/
     // Printing Energylist (since it is a vector):
     //for(int i=0; i <tot_energy_pr_atom_list.size(); i++) { // To print a vector we must print one at the time
     //    cout <<tot_energy_pr_atom_list.at(i) <<' '; }
@@ -130,10 +134,24 @@ int main()
     /*~~~~~       Doing the MC       ~~~~~*/
     /*====================================*/
 
+    // Initialize width and precision of the datafile
+    int width = 15;
+    int prec = 6;
+
+    //open datafile to fill
+    ofstream datafile;
+    datafile.open("equilibrium_time_T_1_0.txt", ofstream::out | ofstream::trunc);
+
+    datafile << setw(width) << "MC-cycles" << setw(width)
+             << "<epsilon>" << setw(width)
+             << "<|m|>"     << setw(width)
+             << endl;
+
     double sum_E = 0; // Initial energy sum
     double sum_e = 0; // initial energy per spin sum
 
-    int cycles = 10; // Choosing how many MC cucles we want to do
+    int cycles = 15000; // Choosing how many MC cucles we want to do
+    vector<int> cycle_nr = {};
     //double boltzman_n = 0; // Just making it 0
     // double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
     //arma::mat S_MC(L,L);
@@ -141,72 +159,43 @@ int main()
     // Loop to count MCs
     for (int no = 0; no < cycles; no++)
     {
-       	arma::mat S_MC      = MCMC_s.random_spinnergal(S2,T,L,N,E,M,beta,plusone,minusone);
-        if (L <= 10) 
+       	arma::mat S_MC      = MCMC_s.random_spinnergal(S_all_up,T,L,N,E,M,beta,plusone,minusone);
+/*
+        if (L <= 10)
         {
             cout << "Matrix: \n" << S_MC;           // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         }
-
+*/
         vector<double> list_Es_new = {};
-        
+
         double new_E 	    = MCMC_s.tot_energyboi(S_MC, L, E, T,plusone,minusone,list_Es_new);
         //cout << new_E;
-        for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   //     for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         double new_exp_E    = new_E/N; // energy pr. spin
         //	cout << "new_E: " << new_E << "\n";
-        sum_E               += new_E;
+        sum_E               	+= new_E;
         sum_e     	        += new_E/N;
-        double new_M		= MCMC_s.tot_magnetboi(S_MC, T, L, M);
-        double new_exp_m	= new_M/N; // magnetization per spin.
+        double new_M		= MCMC_s.tot_magnetboi_abs(S_MC, T, L, M);
+        double exp_m	    	= abs(new_M/N); // magnetization per spin
         //	cout <<"new_M: " << new_M << "\n";
-        double E_avg        = sum_E/cycles; // mean energy
-        double e_avg 	    = sum_e/cycles; // mean energy per spin
+        double E_avg        	= sum_E/cycles; // mean energy
+        double e_avg 	    	= sum_e/cycles; // mean energy per spin
         //	cout << "Current sum E: " << sum_E << "\n";
         //    cout <<"Cycle number:" << no << " and avg. E:" << E_avg << endl;
-        
+
         // Plot no som x og E_avg som y
         // now we print the results for the averge
         //cout << "mean energy(E): " << E_avg << " and " << no <<"\n";
         //cout << "mean energy(e): " << e_avg << "\n";
         //cout << "=======================" << endl;
+        cycle_nr.push_back(no);
+        // we want to write the values in our datafile
+        datafile << setw(width) << setprecision(prec) << cycle_nr[no]
+                << setw(width) << setprecision(prec) << e_avg
+                << setw(width) << setprecision(prec) << exp_m
+                << endl;
     }// end of for loop(no = cycles)
-
-
-
-
-
- // Stuff me might need:
-    /*
-    arma::mat S_new = MCMC_s.random_spinnergal(S2,L);
-    double E3 = MCMC_s.tot_energyboi(S_new,L,E2);
-    double first_p_sT = MCMC_s.prob_func(beta,E2,E3,Z);
-    double E_p_sT = first_p_sT*E2;
-    double E_before = E3;
-
-    //Checking if the p_sT is less than or else (equal to)
-    while (E_p_sT > exp_E) // Må denne gjøres om pga vi aldri får 
-    // nøyaktig lik exp_E
-    {
-        // We spin one random atom in the lattice
-        arma::mat S_next = MCMC_s.random_spinnergal(S_new,L);
-        // Renaming energy
-        
-        // Calculate the new energy
-        double E_after = MCMC_s.tot_energyboi(S_next,L,E_before); // Setter inn E (=0) for å sjekke om det kan hjelpe
-        // Calculate new p_sT
-        double p_sT = MCMC_s.prob_func(beta,E_before,E_after,Z);
-        // Calculating E_p_sT
-        E_p_sT = p_sT*E_after; // E_before
-        cout << "\n E_p_sT: " << E_p_sT;
-        // Updating values
-        MC_count += 1;
-        S_new = S_next;
-        E_before = E_after;
-
-
-    }
-    */
-
+    datafile.close();
 
 return 0;
 }
