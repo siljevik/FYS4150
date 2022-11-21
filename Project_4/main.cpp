@@ -113,27 +113,50 @@ int main()
     /*~~~~~       Doing the MC       ~~~~~*/
     /*====================================*/
 
-/*
+
     double sum_E = 0; // Initial energy sum
-    int cycles = 15; // Choosing how many MC cucles we want to do
+    double sum_e = 0; // initial energy per spin sum
+
+    int cycles = 100; // Choosing how many MC cucles we want to do
     //double boltzman_n = 0; // Just making it 0
     // double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
     //arma::mat S_MC(L,L);
 
     // Loop to count MCs
     for (int no = 0; no < cycles; no++){
-        arma::mat S_MC      = MCMC_s.random_spinnergal(S,T,L,N,E,M,beta);
-//	&E 		    = tot_E;
-        sum_E               += E;
-        double E_avg        = sum_E/cycles;
-	cout << "Current sum E: " << sum_E << "\n";
+       	arma::mat S_MC      = MCMC_s.random_spinnergal(S2,T,L,N,E,M,beta);
+	if (L <= 10) {
+        cout << "Matrix: \n"            << S_MC;}
+
+
+	double new_E 	    = MCMC_s.tot_energyboi(S_MC, L, E, T );
+	double new_exp_E    = new_E/N; // energy pr. spin
+
+//	cout << "new_E: " << new_E << "\n";
+
+        sum_E               += new_E;
+	sum_e     	    += new_E/N;
+	double new_M		    = MCMC_s.tot_magnetboi(S_MC, T, L, M);
+	double new_exp_m	    = new_M/N; // magnetization per spin.
+
+//	cout <<"new_M: " << new_M << "\n";
+        double E_avg        = sum_E/cycles; // mean energy
+	double e_avg 	    = sum_e/cycles; // mean energy per spin
+
+//	cout << "Current sum E: " << sum_E << "\n";
     //    cout <<"Cycle number:" << no << " and avg. E:" << E_avg << endl;
         // Plot i som x og E_avg som y
-    }
-*/
+// now we print the results for the averge
+    cout << "mean energy(E): " << E_avg << "\n";
+    cout << "mean energy(e): " << e_avg << "\n";
+    cout << "=======================" << endl;
+}// end of for loop(no)
 
 
-    // Stuff me might need:
+
+
+
+ // Stuff me might need:
     /*
     arma::mat S_new = MCMC_s.random_spinnergal(S2,L);
     double E3 = MCMC_s.tot_energyboi(S_new,L,E2);

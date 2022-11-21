@@ -277,8 +277,8 @@ arma::mat MCMC_spin::random_spinnergal(arma::mat& S, double T, int L, int N, dou
       S(x,y) = - S(x,y);
       // Updating energy and magnetism
       //E = MCMC_spin::tot_energyboi(S,L,E,T);
-	E = delta_E;
-      M = MCMC_spin::tot_magnetboi(S,L,M,T);
+	E += (double) delta_E;
+      	M += (double) 2*S(x,y);
 
     }// end of if statement
 
