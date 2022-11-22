@@ -57,31 +57,31 @@ filename_4 = 'random_time_T_2_4.txt'
 
 # For the initially ordered lattice for temperature T = 1.0 J/kB
 for line_1 in open(filename_1, 'r'):
-    rows_1 = [i for i in line_1.split()]
-    x_1.append(rows_1[0])
-    y_1.append(int(rows_1[1]))
-    z_1.append(int(rows_1[2]))
+    cols_1 = [i for i in line_1.split()]
+    x_1.append(cols_1[0])
+    y_1.append(int(cols_1[1]))
+    z_1.append(int(cols_1[2]))
 
 # For the initially ordered lattice for temperature T = 2.4 J/kB
 for line_2 in open(filename_2, 'r'):
-    rows_2 = [i for i in line_2.split()]
-    x_2.append(rows_2[0])
-    y_2.append(int(rows_2[1]))
-    z_2.append(int(rows_2[2]))
+    cols_2 = [i for i in line_2.split()]
+    x_2.append(cols_2[0])
+    y_2.append(int(cols_2[1]))
+    z_2.append(int(cols_2[2]))
 
 # For the initially unordered lattice for temperature T = 1.0 J/kB
 for line_3 in open(filename_3, 'r'):
-    rows_3 = [i for i in line_3.split()]
-    x_3.append(rows_3[0])
-    y_3.append(int(rows_3[1]))
-    z_3.append(int(rows_3[2]))
+    cols_3 = [i for i in line_3.split()]
+    x_3.append(cols_3[0])
+    y_3.append(int(cols_3[1]))
+    z_3.append(int(cols_3[2]))
 
 # For the initially unordered lattice for temperature T = 2.4 J/kB
 for line_4 in open(filename_4, 'r'):
-    rows_4 = [i for i in line_4.split()]
-    x_4.append(rows_4[0])
-    y_4.append(int(rows_4[1]))
-    z_4.append(int(rows_4[2]))
+    cols_4 = [i for i in line_4.split()]
+    x_4.append(cols_4[0])
+    y_4.append(int(cols_4[1]))
+    z_4.append(int(cols_4[2]))
 
 
 
@@ -91,7 +91,7 @@ for line_4 in open(filename_4, 'r'):
 
 # PLOT 1: Energy development of an ordered lattice
 plt.plot(np.asarray(x_1,float), np.asarray(y_1,float), color='orange', label='T = 1.0 J/kB')
-plt.plot(np.asarray(x_2,float), np.asarray(y_2,float), color='sandybrown', label='T = 2.4 J/kB')
+plt.plot(np.asarray(x_2,float), np.asarray(y_2,float), color='sandybcoln', label='T = 2.4 J/kB')
 plt.title('Energy development of an unordered lattice \n over Monte Carlo cycles')
 plt.xlabel('Number of Monte Carlo cycles')
 plt.ylabel('<ϵ>')
