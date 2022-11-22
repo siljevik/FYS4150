@@ -45,9 +45,6 @@ double boltzman_factors(double beta,int delta_E);
 // Spins a single random atom in the lattice
 arma::mat random_spinnergal(arma::mat& S, double T, int L, int N, double& E, double& M, double beta, std::vector<int> plusone, std::vector<int> minusone);
 
-// Finding the probability??????
-double prob_func(double beta, double E_before, double E_after, double Z);
-
 
 }; // Classes always end with };
 
