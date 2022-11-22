@@ -64,32 +64,34 @@ arma::mat MCMC_spin::spinnerboi(arma::mat S, int L)
 /*==========================================*/
 double MCMC_spin::tot_energyboi(arma::mat S, int L, double E, double T,vector<int> plusone, vector<int> minusone, vector<double>& list_Es)
 {
+  int new_energy = 0;
   // Looping though the Lattice
   for(int i = 0; i<L; i++)
   { 
     // Making the plusone and minusone in the x-directions to 
     // speed up the code a little bit
+    
     int poi = plusone[i];
     int moi = minusone[i];
     
     for(int j = 0; j<L; j++){
       // Placement of the state we are doing calculations for
-      int E_ij = S(i,j);
+      double E_ij = S(i,j);
 
       // Surrounding atoms
-      int E_o = S(i,minusone[j]);   //over
-      int E_u = S(i,plusone[j]);   //under
-      int E_v = S(moi,j);   //v for left (NO)
-      int E_h = S(poi,j);    //h for right (NO)
+      double E_o = S(i,minusone[j]);   //over
+      double E_u = S(i,plusone[j]);   //under
+      double E_v = S(moi,j);   //v for left (NO)
+      double E_h = S(poi,j);    //h for right (NO)
       
       // Adding all energies to the total energy
-      E += (-E_ij*(E_o + E_u + E_v + E_h))/2; // divided by 2 to correct for the doublecounting
+      new_energy += -(E_ij*(E_o + E_u + E_v + E_h))/2; // divided by 2 to correct for the doublecounting
       // Adding the calculated energy into the list_Es
-      list_Es.push_back(E);
+      list_Es.push_back(new_energy);
     }
   }
   //cout << "Energy list: " << tot_energy_pr_atom_list;
-  return E;
+  return new_energy;
 }
 
 

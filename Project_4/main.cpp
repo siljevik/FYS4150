@@ -47,7 +47,7 @@ int main()
     // Some known values
     // mysys.variabel = noe; altså fra class fil
     double T = 1.0; // Temperature   ----> Can be changed later
-    int L = 2; // Lattize size
+    int L = 20; // Lattize size
     int N = L*L; // Number of states/elements
     double E_empty = 0; // Initial energy
     double M_empty = 0; // Initial magnetism
@@ -55,14 +55,8 @@ int main()
     double beta =1/(T*k_b);
     // Creating an 'empty' matrix (filled with zeros)
     arma::mat S_empty(L, L);
-
-    // Creating a matrix with all up-spins
-    arma::mat S_all_up(L,L);
-    S_all_up.fill(1);
-    ////////////
     // Creating an empty list to fill with energies per atom from the lattice/matrix S
     vector<double> list_Es  = {};
-    /////////
 
     // Creating empty vectors to look up indexes so we can look
     // at neighbours of the states (in case of 'border'-states)
@@ -78,8 +72,11 @@ int main()
     /*=================================*/
     /*~~~~ Markov Chain Monte Calo ~~~~*/
     /*=================================*/
-    // Filling the matrix up with random spins:
-    arma::mat S     = MCMC_s.spinnerboi(S_empty,L);
+    // We use this if we want an initial lattice with all spins up.
+    arma::mat S = S_empty.fill(1); // Initially ORDERED
+    // .. if not, we fill it up with random spins:
+    //arma::mat S     = MCMC_s.spinnerboi(S_empty,L); // Initially UNORDERED
+
     // Calculating the total energy
     double E        = MCMC_s.tot_energyboi(S,L,E_empty,T,plusone,minusone,list_Es);
     // Calculating the total magnetism
@@ -106,12 +103,12 @@ int main()
     double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
 
     //* ~~~~ Printing the analyticals ~~~~ *//
-    cout << "\nAnalytical results: \n";
+    /*cout << "\nAnalytical results: \n";
     cout << "\nExpected energy: " << exp_E;
     cout << "\n<epsilon>: "	<< exp_E/N;
     cout << "\n<|m|>: "		<< exp_M/N;
     cout << "\nCV: "		<< CV;
-    cout << "\nX: "			<< chi << endl;
+    cout << "\nX: "			<< chi << endl;*/
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 
@@ -120,56 +117,66 @@ int main()
     /*====================================*/
 
     // Initialize width and precision of the datafile
-    int width = 15;
-    int prec = 6;
+    int width = 15;                     /*====================================*//*====================================*//*====================================*/
+    int prec = 6;                       /*====================================*//*====================================*//*====================================*/
 
     //open datafile to fill
     ofstream datafile;
     datafile.open("equilibrium_time_T_1_0.txt", ofstream::out | ofstream::trunc);
+    //datafile.open("equilibrium_time_T_2_4.txt", ofstream::out | ofstream::trunc);
+    //datafile.open("random_time_T_1_0.txt", ofstream::out | ofstream::trunc);
+    //datafile.open("random_time_T_2_4.txt", ofstream::out | ofstream::trunc);
 
-    datafile << setw(width) << "MC-cycles" << setw(width)
-             << "<epsilon>" << setw(width)
-             << "<|m|>"     << setw(width)
-             << endl;
+    //Header of txt-file
+    datafile << "MC-cycles" << " " << "<epsilon>" << " " << "<|m|>" << endl; 
 
     double sum_E = 0; // Initial energy sum
     double sum_e = 0; // initial energy per spin sum
-    int cycles = 15000; // Choosing how many MC cucles we want to do
-    vector<int> cycle_nr = {};
+    int cycles = 8000;//pow(10,8); // Choosing how many MC cucles we want to do
+    
 
     // Loop to count MCs
     for (int no = 0; no < cycles; no++)
     {
-       	arma::mat S_MC = MCMC_s.random_spinnergal(S_all_up,T,L,N,E,M,beta,plusone,minusone);
+        // Cycle number
+        int cycle = no + 1;
+        // Empty vector for the new_E below
         vector<double> list_Es_new = {};
+
+        arma::mat S_MC      = MCMC_s.random_spinnergal(S,T,L,N,E,M,beta,plusone,minusone);
+        //cout << "\nEnergy before tot_energyboi" << E;
+        
         double new_E 	    = MCMC_s.tot_energyboi(S_MC, L, E, T,plusone,minusone,list_Es_new);
-        cout << "new_E: "<<new_E;
-        for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        double new_exp_E    = new_E/N; // energy pr. spin
-        cout << "new_E: " << new_E << "\n";
-        sum_E               += new_E;
-        sum_e     	        += new_E/N;
+        
+        sum_E               += new_E;   //energy pr lattice (for avg)
+        sum_e     	        += new_E/N; //energy pr spin (for avg)
+        double E_avg        = sum_E/cycle; // mean energy///////////////////////////////
+        double e_avg 	    = sum_e/cycle; // mean energy per spin
+        cout << "\ne_avg: " << E_avg << " exp_E: " << exp_E;
+        
+
+
         double new_M		= MCMC_s.tot_magnetboi_abs(S_MC, T, L, M);
-        double exp_m	    	= abs(new_M/N); // magnetization per spin
-        //	cout <<"new_M: " << new_M << "\n";
-        double E_avg        	= sum_E/cycles; // mean energy
-        double e_avg 	    	= sum_e/cycles; // mean energy per spin
-        cout << "\nCurrent sum E: " << sum_E << "\n";
-        //cout <<"Cycle number:" << no << " and avg. E:" << E_avg << endl;
+        double exp_m	    = abs(new_M/N); // magnetization per spin
+       
+        
+
+
+        //cout << "\nsum_E: " << sum_E << "\n";
+        
 
         // Plot no som x og E_avg som y
         // now we print the results for the averge
-        cout << "mean energy(E): " << E_avg << " and cycle # " << no <<"\n";
-        cout << "mean energy(e): " << e_avg << "\n";
-        cout << "=======================" << endl;
+        //cout << "mean energy(E): " << E_avg << " and cycle # " << no <<"\n";
+        //cout << "mean energy(e): " << e_avg << "\n";
+        //cout << "=======================" << endl;
 
-        /*cycle_nr.push_back(no);
-        // we want to write the values in our datafile
-        datafile << setw(width) << setprecision(prec) << cycle_nr[no]
-                << setw(width) << setprecision(prec) << e_avg
-                << setw(width) << setprecision(prec) << exp_m
-                << endl;*/
+        // Writing the values in the datafile
+        datafile << cycle << " "<< e_avg << " " << exp_m << endl;
+
         }// end of for loop(no = cycles)
+
+
     datafile.close();
 
 
