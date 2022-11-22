@@ -114,6 +114,21 @@ double MCMC_spin::tot_magnetboi(arma::mat S, double T, int L, double M)
 }
 
 
+double MCMC_spin::tot_magnetboi_abs(arma::mat S, double T, int L, double M_abs)
+{
+  // Looping though the lattice
+  for(int i = 0; i<L; i++)
+  { 
+    for(int j = 0; j<L; j++)
+    {
+      // Each spin
+      int M_ij = abs( S(i,j));
+      // Adding all spins to the total magnetism
+      M_abs += abs(M_ij);
+    }
+  }
+  return M_abs;
+}
 
 double MCMC_spin::boltzman_factors(double beta,int delta_E)
 {
@@ -149,7 +164,11 @@ arma::mat MCMC_spin::random_spinnergal(arma::mat& S, double T, int L, int N, dou
   int delta_E = 2*(-S(x,y))*surr_sum; 
 
   double boltzman = MCMC_spin::boltzman_factors(beta,delta_E);
+<<<<<<< HEAD
   //cout <<"\n delta_E: "<<delta_E<<" boltzman: "<<boltzman<<"\n";
+=======
+//  cout <<"\n delta_E: "<<delta_E<<" boltzman: "<<boltzman<<"\n";
+>>>>>>> 2e571d17cde3ebae7240f265945871e2e4de27f8
   
   // Should the spin be flipped? (Mac: alt+7 = |, also, here || means or)
   if (delta_E <= 0 || r <= boltzman)
