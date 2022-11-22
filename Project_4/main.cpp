@@ -82,21 +82,8 @@ int main()
     arma::mat S     = MCMC_s.spinnerboi(S_empty,L);
     // Calculating the total energy
     double E        = MCMC_s.tot_energyboi(S,L,E_empty,T,plusone,minusone,list_Es);
-//    for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";} // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Creates a vector with energy for each atom
-    //vector<double> tot_energy_pr_atom_list  =MCMC_s.energy_listboi(S2,L,plusone,minusone);
     // Calculating the total magnetism
     double M        = MCMC_s.tot_magnetboi(S,T,L,M_empty);
-
-    // The matrix we are doing calculations for (if it is very big we don't wanna print it)
-/*
-    if (L <= 10) {
-        cout << "Matrix: \n" 		<< S2;}         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    cout << "Total energy: " 	<< E2 << " J\n";    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-    // Printing Energylist (since it is a vector):
-    //for(int i=0; i <tot_energy_pr_atom_list.size(); i++) {cout <<tot_energy_pr_atom_list.at(i) <<' '; }
-
 
 
     /*============================================*/
@@ -118,14 +105,14 @@ int main()
     // Susceptibility, chi, normailzed to number of spins, N
     double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
 
-    // Printing our expected energy and exp_M for a 2x2 lattice
-    cout << "Analytical results: \n";
-    cout << "Expected energy: " << exp_E;
-    cout << "\n<epsilon>: "	<< exp_E/N 	<< "\n";
-    cout << "<|m|>: "		<< exp_M/N 	<< "\n";
-    cout << "CV: "			<< CV 		<< "\n";
-    cout << "X: "			<< chi 		<< endl;
-
+    //* ~~~~ Printing the analyticals ~~~~ *//
+    cout << "\nAnalytical results: \n";
+    cout << "\nExpected energy: " << exp_E;
+    cout << "\n<epsilon>: "	<< exp_E/N;
+    cout << "\n<|m|>: "		<< exp_M/N;
+    cout << "\nCV: "		<< CV;
+    cout << "\nX: "			<< chi << endl;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 
     /*====================================*/
@@ -147,12 +134,8 @@ int main()
 
     double sum_E = 0; // Initial energy sum
     double sum_e = 0; // initial energy per spin sum
-
     int cycles = 15000; // Choosing how many MC cucles we want to do
     vector<int> cycle_nr = {};
-    //double boltzman_n = 0; // Just making it 0
-    //double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
-    //arma::mat S_MC(L,L);
 
     // Loop to count MCs
     for (int no = 0; no < cycles; no++)
@@ -185,9 +168,13 @@ int main()
         datafile << setw(width) << setprecision(prec) << cycle_nr[no]
                 << setw(width) << setprecision(prec) << e_avg
                 << setw(width) << setprecision(prec) << exp_m
-                << endl;
+                << endl;*/
         }// end of for loop(no = cycles)
-    datafile.close();*/
+    datafile.close();
+
+
+
+
+    // end of main
     return 0;
-    }
 }
