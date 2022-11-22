@@ -75,39 +75,25 @@ int main()
     minusone.push_back(L-1);
     for (int i = 0; i<L-1; i++){minusone.push_back(i);}
 
-
-
     /*=================================*/
     /*~~~~ Markov Chain Monte Calo ~~~~*/
     /*=================================*/
     // Filling the matrix up with random spins:
     arma::mat S     = MCMC_s.spinnerboi(S_empty,L);
     // Calculating the total energy
-<<<<<<< HEAD
-    double E        = MCMC_s.tot_energyboi(S,L,E_empty,T,plusone,minusone,list_Es);
-    for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";} // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-=======
     double E2                               = MCMC_s.tot_energyboi(S2,L,E,T,plusone,minusone,list_Es);
 //    for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";} // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Creates a vector with energy for each atom
     //vector<double> tot_energy_pr_atom_list  =MCMC_s.energy_listboi(S2,L,plusone,minusone);
->>>>>>> 2e571d17cde3ebae7240f265945871e2e4de27f8
     // Calculating the total magnetism
     double M        = MCMC_s.tot_magnetboi(S,T,L,M_empty);
 
     // The matrix we are doing calculations for (if it is very big we don't wanna print it)
-<<<<<<< HEAD
-    if (L <= 10) {cout << "Matrix: \n"<< S;}         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    cout << "Total energy: " 	<< E << " J\n";     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-=======
 /*
     if (L <= 10) {
         cout << "Matrix: \n" 		<< S2;}         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     cout << "Total energy: " 	<< E2 << " J\n";    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
->>>>>>> 2e571d17cde3ebae7240f265945871e2e4de27f8
     // Printing Energylist (since it is a vector):
     //for(int i=0; i <tot_energy_pr_atom_list.size(); i++) {cout <<tot_energy_pr_atom_list.at(i) <<' '; }
 
@@ -162,36 +148,15 @@ int main()
     double sum_E = 0; // Initial energy sum
     double sum_e = 0; // initial energy per spin sum
 
-<<<<<<< HEAD
-    double cycles = 10; // Choosing how many MC cucles we want to do
-=======
     int cycles = 15000; // Choosing how many MC cucles we want to do
     vector<int> cycle_nr = {};
     //double boltzman_n = 0; // Just making it 0
     // double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
     //arma::mat S_MC(L,L);
->>>>>>> 2e571d17cde3ebae7240f265945871e2e4de27f8
 
     // Loop to count MCs
     for (int no = 0; no < cycles; no++)
     {
-<<<<<<< HEAD
-        // To keep track of energies for each element in lattice
-        vector<double> list_Es_new = {};
-        // Doing a randomized spin
-       	arma::mat S_MC      = MCMC_s.random_spinnergal(S,T,L,N,E,M,beta,plusone,minusone);
-
-        if (L <= 1) {cout << "Matrix: \n" << S_MC;}           // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
-        double new_E 	    = MCMC_s.tot_energyboi(S_MC, L, E, T,plusone,minusone,list_Es_new);
-        cout << "\n new_E HERE: "<< new_E ;
-        // for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
-        double new_exp_E    = new_E/N; // energy pr. spin
-        //	cout << "new_E: " << new_E << "\n";
-        sum_E               += new_E;
-        cout << "\n sum_E HERE: "<< new_E << "\n";
-=======
        	arma::mat S_MC      = MCMC_s.random_spinnergal(S_all_up,T,L,N,E,M,beta,plusone,minusone);
 /*
         if (L <= 10)
@@ -206,8 +171,7 @@ int main()
    //     for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         double new_exp_E    = new_E/N; // energy pr. spin
         //	cout << "new_E: " << new_E << "\n";
-        sum_E               	+= new_E;
->>>>>>> 2e571d17cde3ebae7240f265945871e2e4de27f8
+        sum_E               += new_E;
         sum_e     	        += new_E/N;
         double new_M		= MCMC_s.tot_magnetboi_abs(S_MC, T, L, M);
         double exp_m	    	= abs(new_M/N); // magnetization per spin
@@ -222,53 +186,7 @@ int main()
         //cout << "mean energy(E): " << E_avg << " and " << no <<"\n";
         //cout << "mean energy(e): " << e_avg << "\n";
         //cout << "=======================" << endl;
-<<<<<<< HEAD
-    }
 
-
-
-    // after all calculations, we compare the expected(analytical) result with our simulated result
-    cout << "\n Expected energy: " << exp_E;
-    cout << "\n Energy after " << cycles << " Monte Carlo Cycles: " << sum_E << "\n";
-    cout << "Hello world!:D";
-
-
-
-
-
- // Stuff me might need:
-    /*
-    arma::mat S_new = MCMC_s.random_spinnergal(S2,L);
-    double E3 = MCMC_s.tot_energyboi(S_new,L,E2);
-    double first_p_sT = MCMC_s.prob_func(beta,E2,E3,Z);
-    double E_p_sT = first_p_sT*E2;
-    double E_before = E3;
-
-    //Checking if the p_sT is less than or else (equal to)
-    while (E_p_sT > exp_E) // Må denne gjøres om pga vi aldri får 
-    // nøyaktig lik exp_E
-    {
-        // We spin one random atom in the lattice
-        arma::mat S_next = MCMC_s.random_spinnergal(S_new,L);
-        // Renaming energy
-        
-        // Calculate the new energy
-        double E_after = MCMC_s.tot_energyboi(S_next,L,E_before); // Setter inn E (=0) for å sjekke om det kan hjelpe
-        // Calculate new p_sT
-        double p_sT = MCMC_s.prob_func(beta,E_before,E_after,Z);
-        // Calculating E_p_sT
-        E_p_sT = p_sT*E_after; // E_before
-        cout << "\n E_p_sT: " << E_p_sT;
-        // Updating values
-        MC_count += 1;
-        S_new = S_next;
-        E_before = E_after;
-
-
-    }
-    */
-
-=======
         cycle_nr.push_back(no);
         // we want to write the values in our datafile
         datafile << setw(width) << setprecision(prec) << cycle_nr[no]
@@ -277,7 +195,6 @@ int main()
                 << endl;
     }// end of for loop(no = cycles)
     datafile.close();
->>>>>>> 2e571d17cde3ebae7240f265945871e2e4de27f8
 
 return 0;
 }
