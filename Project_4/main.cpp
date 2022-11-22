@@ -81,7 +81,7 @@ int main()
     // Filling the matrix up with random spins:
     arma::mat S     = MCMC_s.spinnerboi(S_empty,L);
     // Calculating the total energy
-    double E2                               = MCMC_s.tot_energyboi(S2,L,E,T,plusone,minusone,list_Es);
+    double E        = MCMC_s.tot_energyboi(S,L,E_empty,T,plusone,minusone,list_Es);
 //    for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";} // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Creates a vector with energy for each atom
     //vector<double> tot_energy_pr_atom_list  =MCMC_s.energy_listboi(S2,L,plusone,minusone);
@@ -151,26 +151,19 @@ int main()
     int cycles = 15000; // Choosing how many MC cucles we want to do
     vector<int> cycle_nr = {};
     //double boltzman_n = 0; // Just making it 0
-    // double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
+    //double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
     //arma::mat S_MC(L,L);
 
     // Loop to count MCs
     for (int no = 0; no < cycles; no++)
     {
-       	arma::mat S_MC      = MCMC_s.random_spinnergal(S_all_up,T,L,N,E,M,beta,plusone,minusone);
-/*
-        if (L <= 10)
-        {
-            cout << "Matrix: \n" << S_MC;           // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        }
-*/
+       	arma::mat S_MC = MCMC_s.random_spinnergal(S_all_up,T,L,N,E,M,beta,plusone,minusone);
         vector<double> list_Es_new = {};
-
         double new_E 	    = MCMC_s.tot_energyboi(S_MC, L, E, T,plusone,minusone,list_Es_new);
-        //cout << new_E;
-   //     for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        cout << "new_E: "<<new_E;
+        for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         double new_exp_E    = new_E/N; // energy pr. spin
-        //	cout << "new_E: " << new_E << "\n";
+        cout << "new_E: " << new_E << "\n";
         sum_E               += new_E;
         sum_e     	        += new_E/N;
         double new_M		= MCMC_s.tot_magnetboi_abs(S_MC, T, L, M);
@@ -178,23 +171,23 @@ int main()
         //	cout <<"new_M: " << new_M << "\n";
         double E_avg        	= sum_E/cycles; // mean energy
         double e_avg 	    	= sum_e/cycles; // mean energy per spin
-        //	cout << "Current sum E: " << sum_E << "\n";
-        //    cout <<"Cycle number:" << no << " and avg. E:" << E_avg << endl;
+        cout << "\nCurrent sum E: " << sum_E << "\n";
+        //cout <<"Cycle number:" << no << " and avg. E:" << E_avg << endl;
 
         // Plot no som x og E_avg som y
         // now we print the results for the averge
-        //cout << "mean energy(E): " << E_avg << " and " << no <<"\n";
-        //cout << "mean energy(e): " << e_avg << "\n";
-        //cout << "=======================" << endl;
+        cout << "mean energy(E): " << E_avg << " and cycle # " << no <<"\n";
+        cout << "mean energy(e): " << e_avg << "\n";
+        cout << "=======================" << endl;
 
-        cycle_nr.push_back(no);
+        /*cycle_nr.push_back(no);
         // we want to write the values in our datafile
         datafile << setw(width) << setprecision(prec) << cycle_nr[no]
                 << setw(width) << setprecision(prec) << e_avg
                 << setw(width) << setprecision(prec) << exp_m
                 << endl;
-    }// end of for loop(no = cycles)
-    datafile.close();
-
-return 0;
+        }// end of for loop(no = cycles)
+    datafile.close();*/
+    return 0;
+    }
 }
