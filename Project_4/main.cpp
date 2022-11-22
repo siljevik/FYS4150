@@ -49,12 +49,12 @@ int main()
     double T = 1.0; // Temperature   ----> Can be changed later
     int L = 2; // Lattize size
     int N = L*L; // Number of states/elements
-    double E = 0; // Initial energy
-    double M = 0; // Initial magnetism
+    double E_empty = 0; // Initial energy
+    double M_empty = 0; // Initial magnetism
     double J = 1.0; // Coupling constant = 1
     double beta =1/(T*k_b);
     // Creating an 'empty' matrix (filled with zeros)
-    arma::mat S(L, L);
+    arma::mat S_empty(L, L);
 
     ////////////
     // Creating an empty list to fill with energies per atom from the lattice/matrix S
@@ -78,35 +78,32 @@ int main()
     /*~~~~ Markov Chain Monte Calo ~~~~*/
     /*=================================*/
     // Filling the matrix up with random spins:
-    arma::mat S2                            = MCMC_s.spinnerboi(S,L);
+    arma::mat S     = MCMC_s.spinnerboi(S_empty,L);
     // Calculating the total energy
-    double E2                               = MCMC_s.tot_energyboi(S2,L,E,T,plusone,minusone,list_Es);
+    double E        = MCMC_s.tot_energyboi(S,L,E_empty,T,plusone,minusone,list_Es);
     for(int k=0;k<N-1;k++){cout<<list_Es[k]<<"\n";} // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Creates a vector with energy for each atom
-    //vector<double> tot_energy_pr_atom_list  =MCMC_s.energy_listboi(S2,L,plusone,minusone);
+    
     // Calculating the total magnetism
-    // double M2                               = MCMC_s.tot_magnetboi(S2,T,L,M);
+    double M        = MCMC_s.tot_magnetboi(S,T,L,M_empty);
 
     // The matrix we are doing calculations for (if it is very big we don't wanna print it)
-    if (L <= 10) {
-        cout << "Matrix: \n" 		<< S2;}         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    cout << "Total energy: " 	<< E2 << " J\n";    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    if (L <= 10) {cout << "Matrix: \n"<< S;}         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    cout << "Total energy: " 	<< E << " J\n";     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // Printing Energylist (since it is a vector):
-    //for(int i=0; i <tot_energy_pr_atom_list.size(); i++) { // To print a vector we must print one at the time
-    //    cout <<tot_energy_pr_atom_list.at(i) <<' '; }
+    //for(int i=0; i <tot_energy_pr_atom_list.size(); i++) {cout <<tot_energy_pr_atom_list.at(i) <<' '; }
 
 
 
-    /*=====================================*/
-    /*~~~~~       Analytical 2x2      ~~~~~*/
-    /*=====================================*/
+    /*============================================*/
+    /*~~~~~      Analytical 2x2 lattice      ~~~~~*/
+    /*============================================*/
 
     // Expected total energy J is the energy constant
     double Z        = analyticalboi.part_func(J, beta);
 
     // Expected total energy
-    double exp_E    = analyticalboi.exp_tot_E(J,beta,Z);
+    double exp_E    = analyticalboi.exp_tot_E(J,beta,Z); // Forventingsverdi for total energi
     double exp_EE   = analyticalboi.exp_tot_E_sqrd(J,beta,Z);
     // Expected total magentization
     double exp_M    = analyticalboi.exp_tot_M(J,beta,Z);
@@ -118,11 +115,12 @@ int main()
     double chi      = analyticalboi.sus_chi(N,k_b,T,exp_M,exp_MM);
 
     // Printing our expected energy and exp_M for a 2x2 lattice
-    //cout << "Analytical results:"	<< "\n";
-    //cout << "<epsilon>: "		<< exp_E/N 	<< "\n";
-    //cout << "<|m|>: "			<< exp_M/N 	<< "\n";
-    //cout << "CV: "			<< CV 		<< "\n";
-    //cout << "X: "			<< chi 		<< endl;
+    cout << "Analytical results: \n";
+    cout << "Expected energy: " << exp_E;
+    cout << "\n<epsilon>: "	<< exp_E/N 	<< "\n";
+    cout << "<|m|>: "		<< exp_M/N 	<< "\n";
+    cout << "CV: "			<< CV 		<< "\n";
+    cout << "X: "			<< chi 		<< endl;
 
 
 
@@ -133,28 +131,26 @@ int main()
     double sum_E = 0; // Initial energy sum
     double sum_e = 0; // initial energy per spin sum
 
-    int cycles = 10; // Choosing how many MC cucles we want to do
-    //double boltzman_n = 0; // Just making it 0
-    // double boltzman_value = MCMC_s.boltzman_factors(beta,boltzman_n);
-    //arma::mat S_MC(L,L);
+    double cycles = 10; // Choosing how many MC cucles we want to do
 
     // Loop to count MCs
     for (int no = 0; no < cycles; no++)
     {
-       	arma::mat S_MC      = MCMC_s.random_spinnergal(S2,T,L,N,E,M,beta,plusone,minusone);
-        if (L <= 10) 
-        {
-            cout << "Matrix: \n" << S_MC;           // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        }
-
+        // To keep track of energies for each element in lattice
         vector<double> list_Es_new = {};
+        // Doing a randomized spin
+       	arma::mat S_MC      = MCMC_s.random_spinnergal(S,T,L,N,E,M,beta,plusone,minusone);
+
+        if (L <= 1) {cout << "Matrix: \n" << S_MC;}           // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         double new_E 	    = MCMC_s.tot_energyboi(S_MC, L, E, T,plusone,minusone,list_Es_new);
-        //cout << new_E;
-        for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        cout << "\n new_E HERE: "<< new_E ;
+        // for(int i=0;i<N;i++){cout << list_Es_new[i] <<"\n";}// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
         double new_exp_E    = new_E/N; // energy pr. spin
         //	cout << "new_E: " << new_E << "\n";
         sum_E               += new_E;
+        cout << "\n sum_E HERE: "<< new_E << "\n";
         sum_e     	        += new_E/N;
         double new_M		= MCMC_s.tot_magnetboi(S_MC, T, L, M);
         double new_exp_m	= new_M/N; // magnetization per spin.
@@ -169,7 +165,14 @@ int main()
         //cout << "mean energy(E): " << E_avg << " and " << no <<"\n";
         //cout << "mean energy(e): " << e_avg << "\n";
         //cout << "=======================" << endl;
-    }// end of for loop(no = cycles)
+    }
+
+
+
+    // after all calculations, we compare the expected(analytical) result with our simulated result
+    cout << "\n Expected energy: " << exp_E;
+    cout << "\n Energy after " << cycles << " Monte Carlo Cycles: " << sum_E << "\n";
+    cout << "Hello world!:D";
 
 
 

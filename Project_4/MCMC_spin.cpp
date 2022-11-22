@@ -94,7 +94,6 @@ double MCMC_spin::tot_energyboi(arma::mat S, int L, double E, double T,vector<in
 
 
 
-
 /*=============================================*/
 /*~~~~~ Total magnetism of the 2D lattice ~~~~~*/
 /*=============================================*/
@@ -150,7 +149,7 @@ arma::mat MCMC_spin::random_spinnergal(arma::mat& S, double T, int L, int N, dou
   int delta_E = 2*(-S(x,y))*surr_sum; 
 
   double boltzman = MCMC_spin::boltzman_factors(beta,delta_E);
-  cout <<"\n delta_E: "<<delta_E<<" boltzman: "<<boltzman<<"\n";
+  //cout <<"\n delta_E: "<<delta_E<<" boltzman: "<<boltzman<<"\n";
   
   // Should the spin be flipped? (Mac: alt+7 = |, also, here || means or)
   if (delta_E <= 0 || r <= boltzman)
@@ -158,7 +157,7 @@ arma::mat MCMC_spin::random_spinnergal(arma::mat& S, double T, int L, int N, dou
     // Flipping the spin here
     S(x,y) = - S(x,y);
     // Updating energy and magnetism
-    //E = MCMC_spin::tot_energyboi(S,L,E,T);
+    // E = MCMC_spin::tot_energyboi(S,L,E,T);
     E += (double) delta_E;
     M += (double) 2*S(x,y);
   }
