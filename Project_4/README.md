@@ -7,6 +7,7 @@ The topic of this project is the Ising model in two dimensions. We will use this
 - The Markov Chain Monte Carlo method for sampling from probability distributions of many variables, and how the resulting samples can be used to approximate probability distributions and expectation values for derived quantities.
 - Using parallelization to speed up our code.
 
+
 ## C++ Code 
 
 ### main.cpp
@@ -16,14 +17,19 @@ Run with: ./main.exe
 ### MCMC_spin.hpp
 Header file for the Markov Chain Monte Carlo simulations. 
 
+
 ### MCMC_spin.cpp
 Function file for the Markov Chain Monte Carlo simulations.
+
 
 ### analytical.hpp
 Header file for the analytical calculations.
 
+
 ### analytical.cpp
 Function file for the analytical calculations.
+
+
 
 ## Plotting
 
@@ -42,4 +48,24 @@ To create two plots:
 
 ### problem_6.py
 Creates histograms based on the same .txt files as for problem_5a_plotterboi.py of the generated ϵ samples, using bin width 100.
+
+### Data (.txt) files
+All the .txt files are data-files created with main.cpp, with the content described under problem_5a_plotterboi.py above.
+- random_time_T_2_4.txt
+- random_time_T_1_0.txt
+- equilibrium_time_T_2_4.txt
+- equilibrium_time_T_1_0.txt
+
+### Figure (.svg) files
+the .svg files created in problem_5a_plotterboi:
+- ordered_epsilon.svg
+- ordered_m.svg
+- unordered_epsilon.svg
+- unordered_m.svg
+
+The .svg files created in 
+- prob6_T_1_ord.svg
+- prob6_T_2_4_ord.svg
+- prob6_T_1_unord.svg
+- prob6_T_2_4_unord.svg
 
