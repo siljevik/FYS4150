@@ -5,7 +5,6 @@
 ## This Python code uses the .txt-files:
 ##   - equilibrium_time_T_1_0.txt
 ##   - equilibrium_time_T_2_4.txt
-## or the txt-files
 ##   - random_time_T_1_0.txt
 ##   - random_time_T_1_4.txt
 ## where all files has these placements:
