@@ -12,6 +12,7 @@ The topic of this project is the Ising model in two dimensions. We will use this
 
 ### main.cpp
 Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -larmadillo
+
 Run with: ./main.exe      
 
 ### MCMC_spin.hpp
