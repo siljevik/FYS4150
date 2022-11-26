@@ -8,7 +8,7 @@ The topic of this project is the Ising model in two dimensions. We will use this
 - Using parallelization to speed up our code.
 
 
-## ~*~ C++ Code ~*~ 
+## ~ * ~   C++ Code   ~ * ~ 
 
 ### main.cpp
 Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -larmadillo
@@ -34,7 +34,7 @@ Function file for the analytical calculations.
 Attempt too parallelize the code, but didn't finish due to time constraints.
 
 
-## ~*~ Plotting ~*~
+## ~ * ~   Plotting   ~ * ~
 
 ### problem_5a_plotterboi.py
 This Python code uses the .txt-files:
