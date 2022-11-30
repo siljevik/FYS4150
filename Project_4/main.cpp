@@ -134,8 +134,18 @@ int main()
     double sum_e = 0; // initial energy per spin sum
     int cycles = 8000;//pow(10,8); // Choosing how many MC cucles we want to do
     
+    // Used for problem 5c: Empty vector which will be filled in the Monte Carlo loop under
+    vector<double> list_es_all = {};
+    vector<double> list_es_after = {};
+    double es = 0;
+    int n = 0;
+    double es_after = 0;
+    int n_after = 0;
+    
 
-    // Loop to count MCs
+    /*============================================*/
+    /*~~~~~       THE MONTE CARLO LOOP       ~~~~~*/
+    /*============================================*/
     for (int no = 0; no < cycles; no++)
     {
         // Cycle number
@@ -150,37 +160,43 @@ int main()
         
         sum_E               += new_E;   //energy pr lattice (for avg)
         sum_e     	        += new_E/N; //energy pr spin (for avg)
-        double E_avg        = sum_E/cycle; // mean energy///////////////////////////////
-        double e_avg 	    = sum_e/cycle; // mean energy per spin
-        cout << "\ne_avg: " << E_avg << " exp_E: " << exp_E;
-        
-
-
+        double E_avg        = sum_E/cycle; // mean energy
+        double e_avg 	    = sum_e/cycle; // mean energy per spin, used in the txt file
         double new_M		= MCMC_s.tot_magnetboi_abs(S_MC, T, L, M);
-        double exp_m	    = abs(new_M/N); // magnetization per spin
-       
-        
-
-
-        //cout << "\nsum_E: " << sum_E << "\n";
-        
-
-        // Plot no som x og E_avg som y
-        // now we print the results for the averge
-        //cout << "mean energy(E): " << E_avg << " and cycle # " << no <<"\n";
-        //cout << "mean energy(e): " << e_avg << "\n";
-        //cout << "=======================" << endl;
+        double exp_m	    = abs(new_M/N); // magnetization per spin; used in the txt file
 
         // Writing the values in the datafile
         datafile << cycle << " "<< e_avg << " " << exp_m << endl;
 
-        }// end of for loop(no = cycles)
+        // For problem 5c
+        list_es_all.push_back(e_avg);
+        n += 1;
+        if (no > 4000) 
+        { 
+            list_es_after.push_back(e_avg); 
+            n_after += 1;
+        }
 
+    }
 
     datafile.close();
 
 
+    // For problem 5c:
+    for (double l : list_es_all)
+    {
+        es += l;
+        cout<<"\n"<<l;
+    }
+    for (double k : list_es_after)
+    {
+        es_after += k;
+    }
 
+    double avg_e_all = es/list_es_all.size();
+    double avg_e_after = es_after/list_es_after.size();
+    cout << "\n avg_e_all: " << avg_e_all;
+    cout << "\n avg_e_after: " << avg_e_after;
 
     // end of main
     return 0;

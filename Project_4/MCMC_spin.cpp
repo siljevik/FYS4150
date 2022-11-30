@@ -190,13 +190,3 @@ arma::mat MCMC_spin::random_spinnergal(arma::mat& S, double T, int L, int N, dou
 //if A is not r 0 or 1 (generated randomly)
 ////////////////////////////////////////////
 
-
-
-double MCMC_spin::prob_func(double beta, double E_before, double E_after, double Z)
-{
-  // want to calculate the Boltzmann prob. dist.
-  double p_sT = (1/Z)*exp(-beta*(E_after - E_before) );
-  return p_sT;
-}
-
-
