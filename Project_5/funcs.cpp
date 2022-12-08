@@ -60,6 +60,7 @@ void Header::matrix_filler(int M, double r_val){
 	int L = pow( (M-2), 2);
 	// start out with two empty matrices A and B
 	arma::mat A(L,L, arma::fill::zeros);
+	arma::mat B(L,L, arma::fill::zeros);
 
 	// Defining vector containing value r
 	arma::vec r_outer_diagonal( (M-2)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
@@ -72,10 +73,12 @@ void Header::matrix_filler(int M, double r_val){
 	// want to insert the diaginal matrices containing r into A and B
 	A.diag(M-2) = -r_outer_diagonal;
 	A.diag(2-M) = -r_outer_diagonal;
+	B.diag(M-2) = r_outer_diagonal;
+	B.diag(2-M) = r_outer_diagonal;
 
 	// Checkpoint
-	std::cout << "Adding outer diagonal to A: " << "\n";
-	std::cout << A << std::endl;
+	std::cout << "Adding outer diagonal to B: " << "\n";
+	std::cout << B << std::endl;
 
 
 	// inner diagonal vectors containng r and for each 3rd position,0.
@@ -96,23 +99,28 @@ void Header::matrix_filler(int M, double r_val){
 
 	A.diag(1)  = -r_inner_diagonal;
 	A.diag(-1) = -r_inner_diagonal;
+        B.diag(1)  = r_inner_diagonal;
+        B.diag(-1) = r_inner_diagonal;
 
 	// Checkpoint
-	std::cout << "Adding the r_inner_diagonal to A: " << "\n";
-	std::cout << A	<< std::endl;
+	std::cout << "Adding the r_inner_diagonal to B: " << "\n";
+	std::cout << B	<< std::endl;
 
 	// Defining two vectos with cx_vec for the sake of complex numbers.
 	arma::vec a_vec(L, arma::fill::none);
+	arma::vec b_vec(L, arma::fill::none);
 	a_vec.fill(5);
+	b_vec.fill(77);
 
-	std::cout << "Diagonal vector a: " << "\n";
-	std::cout << a_vec << std::endl;
+	std::cout << "Diagonal vector b: " << "\n";
+	std::cout << b_vec << std::endl;
 
 	// Adding the a and b vectors to the A and B matrices
 	A.diag(0) = a_vec;
+	B.diag(0) = b_vec;
 
-	std::cout << "Matrix A " << "\n";
-	A.print();
+	std::cout << "Matrix B " << "\n";
+	B.print();
 }
 
 /*================================================*/
@@ -121,6 +129,7 @@ void Header::matrix_filler(int M, double r_val){
 // FROM PROBLEM 2: Now you are ready to write a function for your program 
 // that, using inputs M, h,  and the matrix V as input, can fill two  
 // matrices A and B and  according to the above pattern (point before this one)
+
 void Header::diagonal_fill_AB(int M, int h, arma::mat V,arma::mat & A, arma::mat & B){
 	// Making the vector
 	arma::vec un_vec = vector_filler(V);
@@ -148,7 +157,7 @@ void Header::diagonal_fill_AB(int M, int h, arma::mat V,arma::mat & A, arma::mat
 		// Calculating a_k and b_k ----- SHOULD WE USE INT??? IDK
 		int a_k = 1 + (4*r) + (i_comp*trekant_t/2)*vij;
 		int b_k = 1 - (4*r) - (i_comp*trekant_t/2)*vij;
-		
+
 		A(k,k) = a_k;
 		B(k,k) = b_k;
 	}
