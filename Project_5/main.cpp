@@ -11,25 +11,14 @@ int main(){
 
 	Header head;
 
-	int M = 3; // M-2
-	// cx_mat
-	arma::mat A(M,M,arma::fill::randn);
-	arma::mat B = A + A;
-
-	arma::cx_mat X(A,B);
-	/*cout << A << endl;
-	cout << B << endl;
-	cout << X << endl;*/
-
-	//cx_double
-	X(1,2) = arma::cx_double(2.0, 3.0);
-
-	cout << X << endl;
-	cout << X(1,2) << endl;
-
+	int M = 5; // M-2
+	std::complex<double> r_val = 1.0;
 	// Define an empty vector that goes through a function that returns
 	// a full vector dependent on indices (i,j) that we can run through with a loop
+	cout << "Testing with matrix filled with ones for problem 2:" << endl;
 	cout << head.indextranslator(M) << endl;
+
+	head.matrixfiller(M,r_val);
  return 0;
 
 }

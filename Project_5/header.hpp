@@ -9,6 +9,7 @@ class Header
 	public:
 
 	arma::vec indextranslator(int M);
+	void matrixfiller(int M, std::complex<double> r_val);
 
 }; // end of class Header
 
