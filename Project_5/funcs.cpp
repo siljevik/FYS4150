@@ -114,3 +114,44 @@ void Header::matrix_filler(int M, double r_val){
 	std::cout << "Matrix A " << "\n";
 	A.print();
 }
+
+/*================================================*/
+/*~~~~~~~~   Diagonal filler of A and B   ~~~~~~~~*/
+/*================================================*/
+// FROM PROBLEM 2: Now you are ready to write a function for your program 
+// that, using inputs M, h,  and the matrix V as input, can fill two  
+// matrices A and B and  according to the above pattern (point before this one)
+void Header::diagonal_fill_AB(int M, int h, arma::mat V,arma::mat & A, arma::mat & B){
+	// Making the vector
+	arma::vec un_vec = vector_filler(V);
+	// Calling i and j with the extension _plc to not confuse place i with
+	// the complex number i.
+	int i_plc;
+	int j_plc;
+
+	////////////////////////////////////////////////
+	// For testing, matrisen lages i problem 5
+	arma::mat V(M,M, arma::fill::ones);
+	cout << "\n Matrix V: \n" << V ;
+	//v_ij = V(i,j) -- V er matrise, vij er element i matrise
+	////////////////////////////////////////////////
+
+	int length_ks = pow((M-2),2)
+	for(int k = 0; k < length_ks; k++)
+	{
+		//Finding the indices i and j
+		index_translator(V, k, & i_plc, & j_plc);
+		// vij is element place (i,j) in matrix V
+		int vij = V(i_plc,j_plc);
+		// Complex number i
+		arma::cx_double i_comp = 1i;
+		// Calculating a_k and b_k ----- SHOULD WE USE INT??? IDK
+		int a_k = 1 + (4*r) + (i_comp*trekant_t/2)*vij;
+		int b_k = 1 - (4*r) - (i_comp*trekant_t/2)*vij;
+		
+		A(k,k) = a_k;
+		B(k,k) = b_k;
+	}
+	cout << "\n Matrix A: \n" << A;
+	cout << "\n Matrix B: \n" << B;
+}

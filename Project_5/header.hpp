@@ -24,6 +24,8 @@ class Header
 
 	void matrix_filler(int M, double r_val);
 
+	void diagonal_fill_AB(int M, int h, arma::mat V,arma::mat & A, arma::mat & B);
+
 }; // end of class Header
 
 #endif
