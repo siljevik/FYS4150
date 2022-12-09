@@ -22,7 +22,7 @@ class Header
 	void index_translator(int M, int k, int & i, int & j);
 
 
-	void matrix_filler(int M, std::complex<double> r_val);
+	void matrix_filler(int M, double r_val);
 
 	void diagonal_fill_AB(int M, int h, arma::mat V,arma::mat & A, arma::mat & B);
 
