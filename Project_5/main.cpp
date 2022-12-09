@@ -33,9 +33,7 @@ int main(){
 
 	head.matrix_filler(M,r_val);
 
-	diagonal_fill_AB(int M, int h, int dt, V, & A,& B)
-
-
+	diagonal_fill_AB(M, h, dt, V, & A, & B);
 
  	return 0;
 
