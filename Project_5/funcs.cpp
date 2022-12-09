@@ -129,15 +129,15 @@ void Header::matrix_filler(int M, double r_val){
 // FROM PROBLEM 2: Now you are ready to write a function for your program 
 // that, using inputs M, h,  and the matrix V as input, can fill two  
 // matrices A and B and  according to the above pattern (point before this one)
-
-void Header::diagonal_fill_AB(int M, int h, arma::mat V,arma::mat & A, arma::mat & B){
+void Header::diagonal_fill_AB(int M, int h, int dt, arma::mat V,arma::mat & A, arma::mat & B){
 	// Making the vector
 	arma::vec un_vec = vector_filler(V);
 	// Calling i and j with the extension _plc to not confuse place i with
 	// the complex number i.
 	int i_plc;
 	int j_plc;
-
+	arma::cx_double icx = 1i;
+	arma::cx_double r = (icx*dt)/(2*(h^2));
 	////////////////////////////////////////////////
 	// For testing, matrisen lages i problem 5
 	arma::mat V(M,M, arma::fill::ones);
@@ -148,16 +148,20 @@ void Header::diagonal_fill_AB(int M, int h, arma::mat V,arma::mat & A, arma::mat
 	int length_ks = pow((M-2),2)
 	for(int k = 0; k < length_ks; k++)
 	{
+		// h = step size x and y direction
+		// trekant_t = timstep
 		//Finding the indices i and j
 		index_translator(V, k, & i_plc, & j_plc);
 		// vij is element place (i,j) in matrix V
 		int vij = V(i_plc,j_plc);
 		// Complex number i
-		arma::cx_double i_comp = 1i;
-		// Calculating a_k and b_k ----- SHOULD WE USE INT??? IDK
-		int a_k = 1 + (4*r) + (i_comp*trekant_t/2)*vij;
-		int b_k = 1 - (4*r) - (i_comp*trekant_t/2)*vij;
+		
 
+		// WHAT IS dt?!
+		// Calculating a_k and b_k ----- SHOULD WE USE INT??? IDK
+		int a_k = 1 + (4*r) + (icx*dt/2)*vij;
+		int b_k = 1 - (4*r) - (icx*dt/2)*vij;
+		
 		A(k,k) = a_k;
 		B(k,k) = b_k;
 	}
