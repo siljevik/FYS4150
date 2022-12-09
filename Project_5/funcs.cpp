@@ -15,24 +15,26 @@ using namespace std;
 /*===================================*/
 /*~~~~~~     Vector Filler     ~~~~~~*/
 /*===================================*/
-arma::vec Header::vectorfiller(int M){
-    // defining an empty vector
+arma::vec Header::vector_filler(int M){
+    // Defining an empty vector
     std::vector<double> un_vec;
-	// test values
+	//////////// For code testing ////////////
 	int L = pow( (M-2), 2);
 	std::cout << "Length: " << L << std::endl;
 	arma::mat uij(L,L,arma::fill::ones);
 	std::cout << uij << std::endl;
+	/////////////////////////////////////////
     
 	// fill the vector with vectors
-        for(int i = 0; i < M-2; i++){
-			int column = i;
-			for(int j = 0; j < M-2; j++){
-				//append uij values into the uij_vec vector which will be appended into un_vec
-                un_vec.push_back(uij(column,j));
-            }//end of j-loop
-        }// end of i-loop
-    return un_vec;
+    for(int i = 0; i < M-2; i++){
+		int column = i;
+		for(int j = 0; j < M-2; j++){
+			// Append uij values into the uij_vec vector which will be appended 
+			// into un_vec
+            un_vec.push_back(uij(column,j));
+        }//end of j-loop
+    }// end of i-loop
+    return un_vec; // Returns the vector
 }
 
 
@@ -40,9 +42,9 @@ arma::vec Header::vectorfiller(int M){
 /*======================================*/
 /*~~~~~~     Index Translator     ~~~~~~*/
 /*======================================*/
-void Header::index_translator(int M, int k, int & i, int & j);{
+void Header::index_translator(int M, int k, int & i, int & j){
 	// Test
-	int column_from_k = (k+1)/(M-2); // int/int will make 5/2 = 2, or 7/6 = 0
+	int column_from_k = (k+1)/(M-2); // int/int will make 5/2 = 2, or 6/7 = 0
 	i = k-(column_from_k*(M-2))+1;
 	j = column_in_k + 1;
 }
@@ -52,7 +54,7 @@ void Header::index_translator(int M, int k, int & i, int & j);{
 /*===================================*/
 /*~~~~~~     Matrix Filler     ~~~~~~*/
 /*===================================*/
-void Header::matrixfiller(int M, arma::cx_double r_val){
+void Header::matrix_filler(int M, arma::cx_double r_val){
 
 	// For making the matrices we want to use sp_cx_mat, as it is ideal for storing huge matrices containing mostly zeroes.
 	int L = pow( (M-2), 2);

@@ -17,12 +17,12 @@ class Header
 
 	public:
 
-	arma::vec vectorfiller(int M);
+	arma::vec vector_filler(int M);
 
 	void index_translator(int M, int k, int & i, int & j);
 
 
-	void matrixfiller(int M, std::complex<double> r_val);
+	void matrix_filler(int M, std::complex<double> r_val);
 
 }; // end of class Header
 

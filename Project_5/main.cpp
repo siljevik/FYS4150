@@ -11,14 +11,17 @@ int main(){
 
 	Header head;
 
-	int M = 5; // M-2
+	/*====================================*/
+    /*~~~~ Constants, Variables, etc. ~~~~*/
+    /*====================================*/
+	int M = 5; // M-2 = 3 Here
 	std::complex<double> r_val = 1.0;
 	// Define an empty vector that goes through a function that returns
 	// a full vector dependent on indices (i,j) that we can run through with a loop
 	cout << "Testing with matrix filled with ones for problem 2:" << endl;
-	cout << head.indextranslator(M) << endl;
+	cout << head.index_translator(M) << endl;
 
-	head.matrixfiller(M,r_val);
+	head.matrix_filler(M,r_val);
  return 0;
 
 }
