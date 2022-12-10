@@ -10,14 +10,14 @@
 #include <armadillo>
 #include <vector>
 
-#include "header.hpp"
+#include "funcs.hpp"
 #include "funcs.cpp"
 
 using namespace std;
 
 int main(){
 
-	Header head;
+	funcs funcs;
 
 	/*====================================*/
     /*~~~~ Constants, Variables, etc. ~~~~*/
@@ -26,13 +26,14 @@ int main(){
 	double h = 1;
 	double dt = 1;
 	double r_val = 1.0;
+	int L = pow(M-2,2);
 
-	/*===========================================*/
-    /*~~~~ Making matrices filled with zeros ~~~~*/
-    /*===========================================*/
-	arma::mat V(M, 		    M, 	   	    arma::fill::ones);
-	arma::mat A(pow(M-2,2), pow(M-2,2), arma::fill::zeros);
-	arma::mat B(pow(M-2,2), pow(M-2,2), arma::fill::zeros);
+	/*====================================================*/
+    /*~~~~ Making matrices filled with ones and zeros ~~~~*/
+    /*====================================================*/
+	arma::mat V(M, M, arma::fill::ones);
+	arma::mat A(L, L, arma::fill::zeros);
+	arma::mat B(L, L, arma::fill::zeros);
 
 	// Define an empty vector that goes through a function that returns
 	// a full vector dependent on indices (i,j) that we can run through with a loop
@@ -42,11 +43,11 @@ int main(){
 
 
 	////////////// SILJE TESTYTESTS //////////////
-	cout << "A:\n" << A;
+	//cout << "A:\n" << A;
 	//////////////////////////////////////////////
 	//head.matrix_filler(M,r_val);
-
-	//diagonal_fill_AB(M, h, dt, V, & A, & B);
-
+	funcs.matrix_filler( M, r_val, L, A, B);
+	funcs.diagonal_fill_AB(M, h, dt, L, V, A, B);
+	arma::vec b = funcs.Bu_b(M, L, V, B);
  	return 0;
 }

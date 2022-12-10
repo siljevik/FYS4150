@@ -8,21 +8,21 @@
 #include <vector>
 #include <map>
 
-#include "header.hpp"
+#include "funcs.hpp"
 
 using namespace std;
 
 /*===================================*/
 /*~~~~~~     Vector Filler     ~~~~~~*/
 /*===================================*/
-arma::vec Header::vector_filler(int M, arma::mat V){
+arma::vec funcs::vector_filler(int M, arma::mat V){
     // Defining an empty vector
-    arma::vec un_vec;
+    arma::vec un_vec(M-2, arma::fill::none);
 	//////////// For code testing ////////////
-	int L = pow( (M-2), 2);
-	std::cout << "Length: " << L << std::endl;
-	arma::mat uij(L,L,arma::fill::ones);
-	std::cout << uij << std::endl;
+	//int L = pow( (M-2), 2);
+	//std::cout << "Length: " << L << std::endl;
+	//arma::mat uij(L,L,arma::fill::ones);
+	//std::cout << uij << std::endl;
 	/////////////////////////////////////////
 
 	// fill the vector with vectors
@@ -32,7 +32,8 @@ arma::vec Header::vector_filler(int M, arma::mat V){
 			// Append uij values into the uij_vec vector which will be appended
 			// into un_vec
             //un_vec.insert(uij(column,j));
-			un_vec.fill(uij(column,j));
+			//un_vec.fill(V(column,j));
+			un_vec(column, arma::fill::value(V(column,j)));
         }//end of j-loop
     }// end of i-loop
     return un_vec; // Returns the vector
@@ -43,7 +44,7 @@ arma::vec Header::vector_filler(int M, arma::mat V){
 /*======================================*/
 /*~~~~~~     Index Translator     ~~~~~~*/
 /*======================================*/
-void Header::index_translator(int M, int k, int & i, int & j){
+void funcs::index_translator(int M, int k, int & i, int & j){
 	// Test
 	int column_from_k = (k+1)/(M-2); // int/int will make 5/2 = 2, or 6/7 = 0
 	i = k-(column_from_k*(M-2))+1;
@@ -55,13 +56,7 @@ void Header::index_translator(int M, int k, int & i, int & j){
 /*===================================*/
 /*~~~~~~     Matrix Filler     ~~~~~~*/
 /*===================================*/
-void Header::matrix_filler(int M, double r_val){
-
-	// For making the matrices we want to use sp_cx_mat, as it is ideal for storing huge matrices containing mostly zeroes.
-	int L = pow( (M-2), 2);
-	// start out with two empty matrices A and B
-	arma::mat A(L,L, arma::fill::zeros);
-	arma::mat B(L,L, arma::fill::zeros);
+void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat & B){
 
 	// Defining vector containing value r
 	arma::vec r_outer_diagonal( (M-2)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
@@ -71,7 +66,7 @@ void Header::matrix_filler(int M, double r_val){
 	std::cout << "Outer diagonal vector: " << "\n";
 	std::cout << r_outer_diagonal << std::endl;
 
-	// want to insert the diaginal matrices containing r into A and B
+	// Want to insert the diaginal matrices containing r into A and B
 	A.diag(M-2) = -r_outer_diagonal;
 	A.diag(2-M) = -r_outer_diagonal;
 	B.diag(M-2) = r_outer_diagonal;
@@ -82,7 +77,7 @@ void Header::matrix_filler(int M, double r_val){
 	std::cout << B << std::endl;
 
 
-	// inner diagonal vectors containng r and for each 3rd position,0.
+	// Inner diagonal vectors containng r and for each 3rd position,0.
     arma::vec r_inner_diagonal( (M-1)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
 	r_inner_diagonal.fill(r_val);
 	for(int k=0; k < (M-1)*(M-3); k++){
@@ -106,20 +101,20 @@ void Header::matrix_filler(int M, double r_val){
 	std::cout << B	<< std::endl;
 
 	// Defining two vectos with cx_vec for the sake of complex numbers.
-	arma::vec a_vec(L, arma::fill::none);
-	arma::vec b_vec(L, arma::fill::none);
-	a_vec.fill(5);
-	b_vec.fill(77);
+	//arma::vec a_vec(L, arma::fill::none);
+	//arma::vec b_vec(L, arma::fill::none);
+	//a_vec.fill(5);
+	//b_vec.fill(77);
 
-	std::cout << "Diagonal vector b: " << "\n";
-	std::cout << b_vec << std::endl;
+	//std::cout << "Diagonal vector b: " << "\n";
+	//std::cout << b_vec << std::endl;
 
 	// Adding the a and b vectors to the A and B matrices
-	A.diag(0) = a_vec;
-	B.diag(0) = b_vec;
+	//A.diag(0) = a_vec;
+	//B.diag(0) = b_vec;
 
-	std::cout << "Matrix B " << "\n";
-	B.print();
+	//std::cout << "Matrix B " << "\n";
+	//B.print();
 }
 
 /*================================================*/
@@ -128,7 +123,7 @@ void Header::matrix_filler(int M, double r_val){
 // FROM PROBLEM 2: Now you are ready to write a function for your program 
 // that, using inputs M, h,  and the matrix V as input, can fill two  
 // matrices A and B and  according to the above pattern (point before this one)
-void Header::diagonal_fill_AB(int M, double h, double dt, arma::mat V,arma::mat & A, arma::mat & B){
+void funcs::diagonal_fill_AB(int M, double h, double dt, int L, arma::mat V,arma::mat & A, arma::mat & B){
 	// Making the vector
 	arma::vec un_vec = vector_filler(M,V);
 	// Calling i and j with the extension _plc to not confuse place i with
@@ -137,26 +132,15 @@ void Header::diagonal_fill_AB(int M, double h, double dt, arma::mat V,arma::mat 
 	int j_plc;
 	double icx = 1;
 	double r = (icx*dt)/(2*(pow(h,2)));
-	////////////////////////////////////////////////
-	// For testing, matrisen lages i problem 5
-	//arma::mat V(M,M, arma::fill::ones);
-	//cout << "\n Matrix V: \n" << V ;
-	//v_ij = V(i,j) -- V er matrise, vij er element i matrise
-	////////////////////////////////////////////////
 
-	int length_ks = pow((M-2),2);
-	for(int k = 0; k < length_ks; k++)
+	for(int k = 0; k < L; k++)
 	{
-		// h = step size x and y direction
-		// trekant_t = timstep
 		//Finding the indices i and j
 		index_translator(M, k, i_plc, j_plc); // don't use the & when using the function
 		// vij is element place (i,j) in matrix V
 		int vij = V(i_plc,j_plc);
 		// Complex number i
 		
-
-		// WHAT IS dt?!
 		// Calculating a_k and b_k ----- SHOULD WE USE INT??? IDK
 		int a_k = 1 + (4*r) + ((icx*dt)/2)*vij;
 		int b_k = 1 - (4*r) - ((icx*dt)/2)*vij;
@@ -166,4 +150,19 @@ void Header::diagonal_fill_AB(int M, double h, double dt, arma::mat V,arma::mat 
 	}
 	cout << "\n Matrix A: \n" << A;
 	cout << "\n Matrix B: \n" << B;
+}
+
+
+
+/*==============================================*/
+/*~~~~~~~~   Calculating the Bu^n = b   ~~~~~~~~*/
+/*==============================================*/
+arma::vec funcs::Bu_b(int M, int L, arma::mat V, arma::mat B)
+{
+	// Random vector
+	arma::vec un_vec = vector_filler(M,V);
+	cout << "Vector: " << un_vec;//size(un_vec);
+	//We need to transpose the vector (flip it 90 degrees)
+	arma::vec b = B*trans(un_vec);
+	return b;
 }
