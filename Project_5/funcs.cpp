@@ -15,9 +15,9 @@ using namespace std;
 /*===================================*/
 /*~~~~~~     Vector Filler     ~~~~~~*/
 /*===================================*/
-arma::vec Header::vector_filler(int M){
+arma::vec Header::vector_filler(int M, arma::mat V){
     // Defining an empty vector
-    std::vector<double> un_vec;
+    arma::vec un_vec;
 	//////////// For code testing ////////////
 	int L = pow( (M-2), 2);
 	std::cout << "Length: " << L << std::endl;
@@ -31,7 +31,8 @@ arma::vec Header::vector_filler(int M){
 		for(int j = 0; j < M-2; j++){
 			// Append uij values into the uij_vec vector which will be appended
 			// into un_vec
-            un_vec.push_back(uij(column,j));
+            //un_vec.insert(uij(column,j));
+			un_vec.fill(uij(column,j));
         }//end of j-loop
     }// end of i-loop
     return un_vec; // Returns the vector
@@ -82,16 +83,14 @@ void Header::matrix_filler(int M, double r_val){
 
 
 	// inner diagonal vectors containng r and for each 3rd position,0.
-        arma::vec r_inner_diagonal( (M-1)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
+    arma::vec r_inner_diagonal( (M-1)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
 	r_inner_diagonal.fill(r_val);
-
-        for(int k=0; k < (M-1)*(M-3); k++)
+	for(int k=0; k < (M-1)*(M-3); k++){
+        if( (k+1)%3 == 0 )
         {
-                if( (k+1)%3 == 0 )
-                {
-                        r_inner_diagonal[k] = 0;
-                } // end of if-statement
-        }// end of k-loop
+            r_inner_diagonal[k] = 0;
+        } // end of if-statement
+    }// end of k-loop
 
 	// Checkpoint
 	std::cout << "r_inner_diagonal vector: " << "\n" ;
@@ -99,8 +98,8 @@ void Header::matrix_filler(int M, double r_val){
 
 	A.diag(1)  = -r_inner_diagonal;
 	A.diag(-1) = -r_inner_diagonal;
-        B.diag(1)  = r_inner_diagonal;
-        B.diag(-1) = r_inner_diagonal;
+    B.diag(1)  =  r_inner_diagonal;
+    B.diag(-1) =  r_inner_diagonal;
 
 	// Checkpoint
 	std::cout << "Adding the r_inner_diagonal to B: " << "\n";
@@ -129,29 +128,29 @@ void Header::matrix_filler(int M, double r_val){
 // FROM PROBLEM 2: Now you are ready to write a function for your program 
 // that, using inputs M, h,  and the matrix V as input, can fill two  
 // matrices A and B and  according to the above pattern (point before this one)
-void Header::diagonal_fill_AB(int M, int h, int dt, arma::cx_mat V,arma::cx_mat & A, arma::cx_mat & B){
+void Header::diagonal_fill_AB(int M, int h, double dt, arma::mat V,arma::mat & A, arma::mat & B){
 	// Making the vector
-	arma::vec un_vec = vector_filler(V);
+	arma::vec un_vec = vector_filler(M,V);
 	// Calling i and j with the extension _plc to not confuse place i with
 	// the complex number i.
 	int i_plc;
 	int j_plc;
-	arma::cx_double icx = 1i;
-	arma::cx_double r = (icx*dt)/(2*(h^2));
+	double icx = 1;
+	double r = (icx*dt)/(2*(h^2));
 	////////////////////////////////////////////////
 	// For testing, matrisen lages i problem 5
-	arma::mat V(M,M, arma::fill::ones);
-	cout << "\n Matrix V: \n" << V ;
+	//arma::mat V(M,M, arma::fill::ones);
+	//cout << "\n Matrix V: \n" << V ;
 	//v_ij = V(i,j) -- V er matrise, vij er element i matrise
 	////////////////////////////////////////////////
 
-	int length_ks = pow((M-2),2)
+	int length_ks = pow((M-2),2);
 	for(int k = 0; k < length_ks; k++)
 	{
 		// h = step size x and y direction
 		// trekant_t = timstep
 		//Finding the indices i and j
-		index_translator(V, k, & i_plc, & j_plc);
+		index_translator(M, k, i_plc, j_plc); // don't use the & when using the function
 		// vij is element place (i,j) in matrix V
 		int vij = V(i_plc,j_plc);
 		// Complex number i
@@ -159,8 +158,8 @@ void Header::diagonal_fill_AB(int M, int h, int dt, arma::cx_mat V,arma::cx_mat 
 
 		// WHAT IS dt?!
 		// Calculating a_k and b_k ----- SHOULD WE USE INT??? IDK
-		int a_k = 1 + (4*r) + (icx*dt/2)*vij;
-		int b_k = 1 - (4*r) - (icx*dt/2)*vij;
+		int a_k = 1 + (4*r) + ((icx*dt)/2)*vij;
+		int b_k = 1 - (4*r) - ((icx*dt)/2)*vij;
 		
 		A(k,k) = a_k;
 		B(k,k) = b_k;
