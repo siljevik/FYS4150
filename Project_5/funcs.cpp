@@ -33,7 +33,7 @@ arma::vec funcs::vector_filler(int M, arma::mat V){
 			// into un_vec
             //un_vec.insert(uij(column,j));
 			//un_vec.fill(V(column,j));
-			un_vec(column) = V(column,j);
+			un_vec(column+j) = V(column,j);
         }//end of j-loop
     }// end of i-loop
     return un_vec; // Returns the vector
