@@ -128,7 +128,7 @@ void Header::matrix_filler(int M, double r_val){
 // FROM PROBLEM 2: Now you are ready to write a function for your program 
 // that, using inputs M, h,  and the matrix V as input, can fill two  
 // matrices A and B and  according to the above pattern (point before this one)
-void Header::diagonal_fill_AB(int M, int h, double dt, arma::mat V,arma::mat & A, arma::mat & B){
+void Header::diagonal_fill_AB(int M, double h, double dt, arma::mat V,arma::mat & A, arma::mat & B){
 	// Making the vector
 	arma::vec un_vec = vector_filler(M,V);
 	// Calling i and j with the extension _plc to not confuse place i with
@@ -136,7 +136,7 @@ void Header::diagonal_fill_AB(int M, int h, double dt, arma::mat V,arma::mat & A
 	int i_plc;
 	int j_plc;
 	double icx = 1;
-	double r = (icx*dt)/(2*(h^2));
+	double r = (icx*dt)/(2*(pow(h,2)));
 	////////////////////////////////////////////////
 	// For testing, matrisen lages i problem 5
 	//arma::mat V(M,M, arma::fill::ones);
