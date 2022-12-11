@@ -25,7 +25,7 @@ arma::cx_vec funcs::vector_filler(int M, arma::cx_mat V){
     arma::cx_vec un_vec(pow(M-2,2), arma::fill::none);
 
 	// fill the vector with vectors
-    for(int i_p = 0; i_p < M-2; i++){
+    for(int i_p = 0; i_p < M-2; i_p++){
 		int column = i_p;
 		int c = column*(M-2);
 		for(int j = 0; j < M-2; j++){
@@ -132,7 +132,7 @@ void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L
 	// the complex number i.
 	int i_plc;
 	int j_plc;
-	arma::cx_double icx = 1i;
+	arma::cx_double icx = i;
 	arma::cx_double r = (icx*dt)/(2*(pow(h,2)));
 
 	for(int k = 0; k < L; k++)
