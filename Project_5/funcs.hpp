@@ -21,25 +21,26 @@ class funcs
 
 	public:
 
-	arma::vec vector_filler(int M, arma::mat V);
+	arma::cx_vec vector_filler(int M, arma::cx_mat V);
 
-	void index_translator(int M, int k, int & i, int & j);
+	void index_translator(int M, int k, int & i_p, int & j);
 
-	void matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat & B);
+	void matrix_filler(int M, arma::cx_double r_val, int L, arma::cx_mat & A, arma::cx_mat & B);
 
-	void diagonal_fill_AB(int M, double h, double dt, int L, arma::mat V,arma::mat & A, arma::mat & B);
+	void diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L, arma::cx_mat V,arma::cx_mat & A, arma::cx_mat & B);
 
-	arma::vec Bu_b(int M, int L, arma::mat V, arma::mat B);
+	arma::cx_vec Bu_b(int M, int L, arma::cx_mat V, arma::cx_mat B);
 
-	arma::vec Au_b(arma::mat A, arma::vec b);
+	arma::cx_vec Au_b(arma::cx_mat A, arma::cx_vec b);
 
-	void initial_u(int M, double h, int L, arma::vec u_0);
+	//void initial_u(int M, arma::cx_double h, int L, arma::cx_vec u_0);
 
 }; // end of class Header
 
 #endif
 
 /*
+     _  _   ___  ___   ___  _  _
     |,\/,| |[_' |[_]) |[_]) \\//
     ||\/|| |[_, ||'\, ||'\,  ||
 

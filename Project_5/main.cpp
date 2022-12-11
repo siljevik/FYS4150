@@ -24,19 +24,20 @@ int main(){
     /*~~~~ Constants, Variables, etc. ~~~~*/
     /*====================================*/
 	int 	M = 5; 			// M-2 = 3 Here
-	double 	h = 1/M; 		// Stepsize (since x_max and y_max will be 1 due to boudary conditions)
-	double 	T = 100;			// Total time (T timeunits?? s??)
-	double 	dt = 1;			// Timestep (T timeunits?? s??)
-	double 	r_val = 1.0; 	// SANDER: wat the heck is this?
 	int 	L = pow(M-2,2); // Length of A and B  (LxL)
+	arma::cx_double 	h = 1/M; 		// Stepsize (since x_max and y_max will be 1 due to boudary conditions)
+	arma::cx_double 	T = 100;			// Total time (T timeunits?? s??)
+	arma::cx_double 	dt = 1;			// Timestep (T timeunits?? s??)
+	arma::cx_double 	r_val = 1.0; 	// SANDER: wat the heck is this?
+	
 
 	/*====================================================*/
     /*~~~~ Making matrices filled with ones and zeros ~~~~*/
     /*====================================================*/
-	arma::mat U_n(M,M, arma::fill::zeros); 	// Matrix with elements u_ij (Space where particles move?)
-	arma::mat V(M, M, arma::fill::ones);	// Matrix with elements v_ij (Potentials)
-	arma::mat A(L, L, arma::fill::zeros);
-	arma::mat B(L, L, arma::fill::zeros);
+	arma::cx_mat U_n(M,M, arma::fill::zeros); 	// Matrix with elements u_ij (Space where particles move?)
+	arma::cx_mat V(M, M, arma::fill::ones);	// Matrix with elements v_ij (Potentials)
+	arma::cx_mat A(L, L, arma::fill::zeros);
+	arma::cx_mat B(L, L, arma::fill::zeros);
 
 	// Define an empty vector that goes through a function that returns
 	// a full vector dependent on indices (i,j) that we can run through with a loop
@@ -49,8 +50,8 @@ int main(){
 	////////////// SILJE TESTYTESTS //////////////
 	funcs.matrix_filler( M, r_val, L, A, B);
 	funcs.diagonal_fill_AB(M, h, dt, L, V, A, B);
-	arma::vec b = funcs.Bu_b(M, L, V, B);
-	arma::vec u_n_one = funcs.Au_b(A,b);
+	arma::cx_vec b = funcs.Bu_b(M, L, V, B);
+	arma::cx_vec u_n_one = funcs.Au_b(A,b);
 
 
  	return 0;

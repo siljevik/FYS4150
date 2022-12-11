@@ -20,13 +20,13 @@ using namespace std;
 /*===================================*/
 /*~~~~~~     Vector Filler     ~~~~~~*/     // Problem 2.1
 /*===================================*/
-arma::vec funcs::vector_filler(int M, arma::mat V){
+arma::cx_vec funcs::vector_filler(int M, arma::cx_mat V){
     // Defining an empty vector
-    arma::vec un_vec(pow(M-2,2), arma::fill::none);
+    arma::cx_vec un_vec(pow(M-2,2), arma::fill::none);
 
 	// fill the vector with vectors
-    for(int i = 0; i < M-2; i++){
-		int column = i;
+    for(int i_p = 0; i_p < M-2; i++){
+		int column = i_p;
 		int c = column*(M-2);
 		for(int j = 0; j < M-2; j++){
 			// Append uij values into the uij_vec vector which will be appended
@@ -44,10 +44,10 @@ arma::vec funcs::vector_filler(int M, arma::mat V){
 /*======================================*/
 /*~~~~~~     Index Translator     ~~~~~~*/     // Problem 2.1
 /*======================================*/
-void funcs::index_translator(int M, int k, int & i, int & j){
+void funcs::index_translator(int M, int k, int & i_p, int & j){
 	// Test
 	int column_from_k = (k+1)/(M-2); // int/int will make 5/2 = 2, or 6/7 = 0
-	i = k-(column_from_k*(M-2))+1;
+	i_p = k-(column_from_k*(M-2))+1;
 	j = column_from_k + 1;
 }
 
@@ -56,10 +56,10 @@ void funcs::index_translator(int M, int k, int & i, int & j){
 /*===================================*/
 /*~~~~~~     Matrix Filler     ~~~~~~*/      // Problem 2.2
 /*===================================*/
-void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat & B){
+void funcs::matrix_filler(int M, arma::cx_double r_val, int L, arma::cx_mat & A, arma::cx_mat & B){
 
 	// Defining vector containing value r
-	arma::vec r_outer_diagonal( (M-2)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
+	arma::cx_vec r_outer_diagonal( (M-2)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
 	r_outer_diagonal.fill( r_val );
 
 	// Checkpoint
@@ -78,7 +78,7 @@ void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat &
 
 
 	// Inner diagonal vectors containng r and for each 3rd position,0.
-    arma::vec r_inner_diagonal( (M-1)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
+    arma::cx_vec r_inner_diagonal( (M-1)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
 	r_inner_diagonal.fill(r_val);
 	for(int k=0; k < (M-1)*(M-3); k++){
         if( (k+1)%3 == 0 )
@@ -125,27 +125,27 @@ void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat &
 // FROM PROBLEM 2: Now you are ready to write a function for your program 
 // that, using inputs M, h,  and the matrix V as input, can fill two  
 // matrices A and B and  according to the above pattern (point before this one)
-void funcs::diagonal_fill_AB(int M, double h, double dt, int L, arma::mat V,arma::mat & A, arma::mat & B){
+void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L, arma::cx_mat V,arma::cx_mat & A, arma::cx_mat & B){
 	// Making the vector
-	arma::vec un_vec = vector_filler(M,V);
+	arma::cx_vec un_vec = vector_filler(M,V);
 	// Calling i and j with the extension _plc to not confuse place i with
 	// the complex number i.
 	int i_plc;
 	int j_plc;
-	double icx = 1;
-	double r = (icx*dt)/(2*(pow(h,2)));
+	arma::cx_double icx = 1i;
+	arma::cx_double r = (icx*dt)/(2*(pow(h,2)));
 
 	for(int k = 0; k < L; k++)
 	{
 		//Finding the indices i and j
 		index_translator(M, k, i_plc, j_plc); // don't use the & when using the function
 		// vij is element place (i,j) in matrix V
-		int vij = V(i_plc,j_plc);
+		arma::cx_double vij = V(i_plc,j_plc);
 		// Complex number i
 		
 		// Calculating a_k and b_k ----- SHOULD WE USE INT??? IDK
-		int a_k = 1 + (4*r) + ((icx*dt)/2)*vij;
-		int b_k = 1 - (4*r) - ((icx*dt)/2)*vij;
+		arma::cx_double a_k = 1 + (4*r) + ((icx*dt)./2)*vij;
+		arma::cx_double b_k = 1 - (4*r) - ((icx*dt)./2)*vij;
 		
 		A(k,k) = a_k;
 		B(k,k) = b_k;
@@ -159,13 +159,13 @@ void funcs::diagonal_fill_AB(int M, double h, double dt, int L, arma::mat V,arma
 /*=====================================================*/
 /*~~~~~~~~   Calculating b from the Bu^n = b   ~~~~~~~~*/      // Problem 3.1
 /*=====================================================*/
-arma::vec funcs::Bu_b(int M, int L, arma::mat V, arma::mat B)
+arma::cx_vec funcs::Bu_b(int M, int L, arma::cx_mat V, arma::cx_mat B)
 {
 	// Random vector
-	arma::vec un_vec = vector_filler(M,V);
+	arma::cx_vec un_vec = vector_filler(M,V);
 	//cout << "Vector un_vec in Bu_b: \n" << un_vec;//size(un_vec);
 	//We need to transpose the vector (flip it 90 degrees)
-	arma::vec b = B*un_vec;
+	arma::cx_vec b = B*un_vec;
 	cout << "\n\n VECTOR b: \n" << b;
 	return b;
 }
@@ -175,10 +175,10 @@ arma::vec funcs::Bu_b(int M, int L, arma::mat V, arma::mat B)
 /*=======================================================*/
 /*~~~~~~~~   Calculating the X from the AX = b   ~~~~~~~~*/     // Problem 3.2
 /*=======================================================*/
-arma::vec funcs::Au_b(arma::mat A, arma::vec b)
+arma::cx_vec funcs::Au_b(arma::cx_mat A, arma::cx_vec b)
 {
 	// Using Armadillo solve to solve for x in the 
-	arma::vec X = solve(A, b);
+	arma::cx_vec X = solve(A, b);
 	cout << "\n Vector u^(n+1): \n" << X;
 	return X;
 }
@@ -188,7 +188,8 @@ arma::vec funcs::Au_b(arma::mat A, arma::vec b)
 /*===================================*/
 /*~~~~~~~~   Initial state   ~~~~~~~~*/     // Problem 4
 /*===================================*/
-void funcs::initial_u(int M, double h, int L, arma::vec U_0) // U_0 er initial matrix (hvor partiklene er????????????? halp)
+/*
+void funcs::initial_u(int M, double h, int L, arma::cx_vec U_0) // U_0 er initial matrix (hvor partiklene er????????????? halp)
 {	// =========================================================================  //
 	// Denne er ikke helt ferdig SOS
 	// - Vet ikke hva x_c og y_c er (centre of initial wave packet???)
@@ -197,20 +198,20 @@ void funcs::initial_u(int M, double h, int L, arma::vec U_0) // U_0 er initial m
 	// ========================================================================= //
 
 	// Declearing our variables here as doubles.
-	double x_c, y_c; // coordinates of centre of initial wave packet
-	double sigma_x, sigma_y; // Initial width of wave packet in x/y-direction
-	double p_x, p_y; // Wave packet momenta
+	arma::cx_double x_c, y_c; // coordinates of centre of initial wave packet
+	arma::cx_double sigma_x, sigma_y; // Initial width of wave packet in x/y-direction
+	arma::cx_double p_x, p_y; // Wave packet momenta
 
 	// Since we will use the positions in calculations, we need y and x to be 
 	// of the double-type variable
-	for (double y = 0; y < M; y+=h){ // Since y_j = j*h;
+	for (arma::cx_double y = 0; y < M; y+=h){ // Since y_j = j*h;
 		// To save time, let's do the y-calculations before next for-loop
-		double division_y = ((y-y_c)^2)/(2*sigma_y^2);
-		double ip_y = p_y*(y-y_c);//multiply with i (as in sqrt(-1))
+		arma::cx_double division_y = ((y-y_c)^2)/(2*sigma_y^2);
+		arma::cx_double ip_y = p_y*(y-y_c);//multiply with i (as in sqrt(-1))
 
-		for (double x = 0; x < M; x+=h){ // Since x_i = i*h;
-			double division_x = ((x-x_c)^2)/(2*sigma_x^2);
-			double ip_x = p_x*(x-x_c);//multiply with i (as in sqrt(-1))
+		for (arma::cx_double x = 0; x < M; x+=h){ // Since x_i = i*h;
+			arma::cx_double division_x = ((x-x_c)^2)/(2*sigma_x^2);
+			arma::cx_double ip_x = p_x*(x-x_c);//multiply with i (as in sqrt(-1))
 
 			// Unnormalized Gaussian wave packet -- Wave function then?
 			U_0(x,y) = exp(-(division_x)-(division_y)+(ip_x)+(ip_y));
@@ -218,7 +219,28 @@ void funcs::initial_u(int M, double h, int L, arma::vec U_0) // U_0 er initial m
 	} // End of y-loop
 
 }
+*/
 
+
+
+/*=======================================*/
+/*~~~~~~~~   Initial potential   ~~~~~~~~*/     // Problem 5
+/*=======================================*/
+/*
+void funcs::initial_V()
+{
+	// IDK WHAT I'M DOING HALP
+
+	// Code here
+	arma::cx_double wt = 0.02; 		// Wall thickness
+	arma::cx_double x_c = 0.5; 		// x-centre position
+	arma::cx_double y_c = 0.5;		// y-centre
+	arma::cx_double wts_y = 0.05; 	// Thickness of wall piece separating the two slits (y-distance between the inner edges of the two slits)
+	arma::cx_double so_y = 0.05; 	// Slit opening (y-direction)
+	// Ensure that the slit setup is symmetric around y_c (wall between slits in the middle of y_c)
+
+}
+*/
 
 // Fight Bugs                      |     |
 //                                 \\_V_//
