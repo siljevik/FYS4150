@@ -17,25 +17,20 @@ using namespace std;
 /*===================================*/
 arma::vec funcs::vector_filler(int M, arma::mat V){
     // Defining an empty vector
-    arma::vec un_vec(M-2, arma::fill::none);
-	//////////// For code testing ////////////
-	//int L = pow( (M-2), 2);
-	//std::cout << "Length: " << L << std::endl;
-	//arma::mat uij(L,L,arma::fill::ones);
-	//std::cout << uij << std::endl;
-	/////////////////////////////////////////
+    arma::vec un_vec(pow(M-2,2), arma::fill::none);
 
 	// fill the vector with vectors
     for(int i = 0; i < M-2; i++){
 		int column = i;
+		int c = column*(M-2);
 		for(int j = 0; j < M-2; j++){
 			// Append uij values into the uij_vec vector which will be appended
 			// into un_vec
-            //un_vec.insert(uij(column,j));
-			//un_vec.fill(V(column,j));
-			un_vec(column+j) = V(column,j);
+			int plc = c+j;
+			un_vec(plc) = V(column,j);
         }//end of j-loop
     }// end of i-loop
+	cout << "Vector un_vec in vector_filler: \n" << un_vec;
     return un_vec; // Returns the vector
 }
 
@@ -63,8 +58,8 @@ void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat &
 	r_outer_diagonal.fill( r_val );
 
 	// Checkpoint
-	std::cout << "Outer diagonal vector: " << "\n";
-	std::cout << r_outer_diagonal << std::endl;
+	//std::cout << "Outer diagonal vector: " << "\n";
+	//std::cout << r_outer_diagonal << std::endl;
 
 	// Want to insert the diaginal matrices containing r into A and B
 	A.diag(M-2) = -r_outer_diagonal;
@@ -73,8 +68,8 @@ void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat &
 	B.diag(2-M) = r_outer_diagonal;
 
 	// Checkpoint
-	std::cout << "Adding outer diagonal to B: " << "\n";
-	std::cout << B << std::endl;
+	//std::cout << "Adding outer diagonal to B: " << "\n";
+	//std::cout << B << std::endl;
 
 
 	// Inner diagonal vectors containng r and for each 3rd position,0.
@@ -88,8 +83,8 @@ void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat &
     }// end of k-loop
 
 	// Checkpoint
-	std::cout << "r_inner_diagonal vector: " << "\n" ;
-	std::cout << r_inner_diagonal	<< std::endl;
+	//std::cout << "r_inner_diagonal vector: " << "\n" ;
+	//std::cout << r_inner_diagonal	<< std::endl;
 
 	A.diag(1)  = -r_inner_diagonal;
 	A.diag(-1) = -r_inner_diagonal;
@@ -97,8 +92,8 @@ void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat &
     B.diag(-1) =  r_inner_diagonal;
 
 	// Checkpoint
-	std::cout << "Adding the r_inner_diagonal to B: " << "\n";
-	std::cout << B	<< std::endl;
+	//std::cout << "Adding the r_inner_diagonal to B: " << "\n";
+	//std::cout << B	<< std::endl;
 
 	// Defining two vectos with cx_vec for the sake of complex numbers.
 	//arma::vec a_vec(L, arma::fill::none);
@@ -148,21 +143,33 @@ void funcs::diagonal_fill_AB(int M, double h, double dt, int L, arma::mat V,arma
 		A(k,k) = a_k;
 		B(k,k) = b_k;
 	}
-	cout << "\n Matrix A: \n" << A;
+	//cout << "\n Matrix A: \n" << A;
 	cout << "\n Matrix B: \n" << B;
 }
 
 
 
-/*==============================================*/
-/*~~~~~~~~   Calculating the Bu^n = b   ~~~~~~~~*/
-/*==============================================*/
+/*=====================================================*/
+/*~~~~~~~~   Calculating b from the Bu^n = b   ~~~~~~~~*/
+/*=====================================================*/
 arma::vec funcs::Bu_b(int M, int L, arma::mat V, arma::mat B)
 {
 	// Random vector
 	arma::vec un_vec = vector_filler(M,V);
-	cout << "Vector: " << un_vec;//size(un_vec);
+	//cout << "Vector un_vec in Bu_b: \n" << un_vec;//size(un_vec);
 	//We need to transpose the vector (flip it 90 degrees)
-	arma::vec b = B*trans(un_vec);
+	arma::vec b = B*un_vec;
+	cout << "\n\n VECTOR b: \n" << b;
 	return b;
+}
+
+/*=======================================================*/
+/*~~~~~~~~   Calculating the X from the AX = b   ~~~~~~~~*/
+/*=======================================================*/
+arma::vec funcs::Au_b(arma::mat A, arma::vec b)
+{
+	// Using Armadillo solve to solve for x in the 
+	arma::vec X = solve(A, b);
+	cout << "\n Vector u^(n+1): \n" << X;
+	return X;
 }

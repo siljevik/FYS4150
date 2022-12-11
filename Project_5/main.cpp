@@ -37,7 +37,7 @@ int main(){
 
 	// Define an empty vector that goes through a function that returns
 	// a full vector dependent on indices (i,j) that we can run through with a loop
-	cout << "Testing with matrix filled with ones for problem 2:" << endl;
+	//cout << "Vector V: \n" << V;
 	//cout << head.index_translator(M) << endl;
 
 
@@ -49,5 +49,6 @@ int main(){
 	funcs.matrix_filler( M, r_val, L, A, B);
 	funcs.diagonal_fill_AB(M, h, dt, L, V, A, B);
 	arma::vec b = funcs.Bu_b(M, L, V, B);
+	arma::vec u_n_one = funcs.Au_b(A,b);
  	return 0;
 }
