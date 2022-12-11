@@ -1,3 +1,6 @@
+// =================================== //
+// See bottom for christmas miracle <3 //
+// =================================== //
 #include <iostream>
 #include <armadillo>
 #include <cmath>
@@ -185,11 +188,14 @@ arma::vec funcs::Au_b(arma::mat A, arma::vec b)
 /*===================================*/
 /*~~~~~~~~   Initial state   ~~~~~~~~*/     // Problem 4
 /*===================================*/
-void funcs::initial_u(int M, double h, int L, arma::vec u_0)
-{
-	// ====================================== //
+void funcs::initial_u(int M, double h, int L, arma::vec U_0) // U_0 er initial matrix (hvor partiklene er????????????? halp)
+{	// =========================================================================  //
 	// Denne er ikke helt ferdig SOS
-	// ====================================== //
+	// - Vet ikke hva x_c og y_c er (centre of initial wave packet???)
+	// - Vet ikke hva sigma_x/y er (initial widths of the wave peacket???)
+	// - Vet ikke hva p_x/y er heller (Wave packet momenta?? hææææææææææææææææææ)
+	// ========================================================================= //
+
 	// Declearing our variables here as doubles.
 	double x_c, y_c; // coordinates of centre of initial wave packet
 	double sigma_x, sigma_y; // Initial width of wave packet in x/y-direction
@@ -197,18 +203,41 @@ void funcs::initial_u(int M, double h, int L, arma::vec u_0)
 
 	// Since we will use the positions in calculations, we need y and x to be 
 	// of the double-type variable
-	for (double y = 0; y < M; y+=h){
+	for (double y = 0; y < M; y+=h){ // Since y_j = j*h;
 		// To save time, let's do the y-calculations before next for-loop
 		double division_y = ((y-y_c)^2)/(2*sigma_y^2);
 		double ip_y = p_y*(y-y_c);//multiply with i (as in sqrt(-1))
 
-		for (double x = 0; x < M; x+=h){
+		for (double x = 0; x < M; x+=h){ // Since x_i = i*h;
 			double division_x = ((x-x_c)^2)/(2*sigma_x^2);
 			double ip_x = p_x*(x-x_c);//multiply with i (as in sqrt(-1))
 
 			// Unnormalized Gaussian wave packet -- Wave function then?
-			u_0(x,y) = exp(-(division_x)-(division_y)+(ip_x)+(ip_y));
+			U_0(x,y) = exp(-(division_x)-(division_y)+(ip_x)+(ip_y));
 		} // End of x-loop
 	} // End of y-loop
 
 }
+
+
+// Fight Bugs                      |     |
+//                                 \\_V_//
+//                                 \/=|=\/
+//                                  [=v=]
+//                                __\___/_____
+//                               /..[  _____  ]
+//                              /_  [ [  M /] ]
+//                             /../.[ [ M /@] ]
+//                            <-->[_[ [M /@/] ]
+//                           /../ [.[ [ /@/ ] ]
+//      _________________]\ /__/  [_[ [/@/ C] ]
+//     <_________________>>0---]  [=\ \@/ C / /
+//        ___      ___   ]/000o   /__\ \ C / /
+//           \    /              /....\ \_/ /
+//        ....\||/....           [___/=\___/
+//       .    .  .    .          [...] [...]
+//      .      ..      .         [___/ \___]
+//      .    0 .. 0    .         <---> <--->
+//   /\/\.    .  .    ./\/\      [..]   [..]
+//  / / / .../|  |\... \ \ \    _[__]   [__]_
+// / / /       \/       \ \ \  [____>   <____]
