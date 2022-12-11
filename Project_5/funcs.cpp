@@ -12,8 +12,10 @@
 
 using namespace std;
 
+
+
 /*===================================*/
-/*~~~~~~     Vector Filler     ~~~~~~*/
+/*~~~~~~     Vector Filler     ~~~~~~*/     // Problem 2.1
 /*===================================*/
 arma::vec funcs::vector_filler(int M, arma::mat V){
     // Defining an empty vector
@@ -37,7 +39,7 @@ arma::vec funcs::vector_filler(int M, arma::mat V){
 
 
 /*======================================*/
-/*~~~~~~     Index Translator     ~~~~~~*/
+/*~~~~~~     Index Translator     ~~~~~~*/     // Problem 2.1
 /*======================================*/
 void funcs::index_translator(int M, int k, int & i, int & j){
 	// Test
@@ -49,7 +51,7 @@ void funcs::index_translator(int M, int k, int & i, int & j){
 
 
 /*===================================*/
-/*~~~~~~     Matrix Filler     ~~~~~~*/
+/*~~~~~~     Matrix Filler     ~~~~~~*/      // Problem 2.2
 /*===================================*/
 void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat & B){
 
@@ -112,8 +114,10 @@ void funcs::matrix_filler(int M, double r_val, int L, arma::mat & A, arma::mat &
 	//B.print();
 }
 
+
+
 /*================================================*/
-/*~~~~~~~~   Diagonal filler of A and B   ~~~~~~~~*/
+/*~~~~~~~~   Diagonal filler of A and B   ~~~~~~~~*/     // Problem 2.3
 /*================================================*/
 // FROM PROBLEM 2: Now you are ready to write a function for your program 
 // that, using inputs M, h,  and the matrix V as input, can fill two  
@@ -150,7 +154,7 @@ void funcs::diagonal_fill_AB(int M, double h, double dt, int L, arma::mat V,arma
 
 
 /*=====================================================*/
-/*~~~~~~~~   Calculating b from the Bu^n = b   ~~~~~~~~*/
+/*~~~~~~~~   Calculating b from the Bu^n = b   ~~~~~~~~*/      // Problem 3.1
 /*=====================================================*/
 arma::vec funcs::Bu_b(int M, int L, arma::mat V, arma::mat B)
 {
@@ -163,8 +167,10 @@ arma::vec funcs::Bu_b(int M, int L, arma::mat V, arma::mat B)
 	return b;
 }
 
+
+
 /*=======================================================*/
-/*~~~~~~~~   Calculating the X from the AX = b   ~~~~~~~~*/
+/*~~~~~~~~   Calculating the X from the AX = b   ~~~~~~~~*/     // Problem 3.2
 /*=======================================================*/
 arma::vec funcs::Au_b(arma::mat A, arma::vec b)
 {
@@ -172,4 +178,37 @@ arma::vec funcs::Au_b(arma::mat A, arma::vec b)
 	arma::vec X = solve(A, b);
 	cout << "\n Vector u^(n+1): \n" << X;
 	return X;
+}
+
+
+
+/*===================================*/
+/*~~~~~~~~   Initial state   ~~~~~~~~*/     // Problem 4
+/*===================================*/
+void funcs::initial_u(int M, double h, int L, arma::vec u_0)
+{
+	// ====================================== //
+	// Denne er ikke helt ferdig SOS
+	// ====================================== //
+	// Declearing our variables here as doubles.
+	double x_c, y_c; // coordinates of centre of initial wave packet
+	double sigma_x, sigma_y; // Initial width of wave packet in x/y-direction
+	double p_x, p_y; // Wave packet momenta
+
+	// Since we will use the positions in calculations, we need y and x to be 
+	// of the double-type variable
+	for (double y = 0; y < M; y+=h){
+		// To save time, let's do the y-calculations before next for-loop
+		double division_y = ((y-y_c)^2)/(2*sigma_y^2);
+		double ip_y = p_y*(y-y_c);//multiply with i (as in sqrt(-1))
+
+		for (double x = 0; x < M; x+=h){
+			double division_x = ((x-x_c)^2)/(2*sigma_x^2);
+			double ip_x = p_x*(x-x_c);//multiply with i (as in sqrt(-1))
+
+			// Unnormalized Gaussian wave packet -- Wave function then?
+			u_0(x,y) = exp(-(division_x)-(division_y)+(ip_x)+(ip_y));
+		} // End of x-loop
+	} // End of y-loop
+
 }
