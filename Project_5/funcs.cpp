@@ -1,6 +1,6 @@
-// =================================== //
-// See bottom for christmas miracle <3 //
-// =================================== //
+// =========================== //
+// See bottom for a good laugh //
+// =========================== //
 #include <iostream>
 #include <armadillo>
 #include <cmath>
