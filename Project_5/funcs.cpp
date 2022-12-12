@@ -132,8 +132,8 @@ void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L
 	// the complex number i.
 	int i_plc;
 	int j_plc;
-	arma::cx_double icx = i;
-	arma::cx_double r = (icx*dt)/(2*(pow(h,2)));
+	arma::cx_double icx = sqrt(-1);
+	arma::cx_double r = (icx*dt)/(2.0*(pow(h,2)));
 
 	for(int k = 0; k < L; k++)
 	{
@@ -144,8 +144,8 @@ void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L
 		// Complex number i
 		
 		// Calculating a_k and b_k ----- SHOULD WE USE INT??? IDK
-		arma::cx_double a_k = 1 + (4*r) + ((icx*dt)./2)*vij;
-		arma::cx_double b_k = 1 - (4*r) - ((icx*dt)./2)*vij;
+		arma::cx_double a_k = 1.0 + (4.0*r) + ((icx*dt)/2.0)*vij;
+		arma::cx_double b_k = 1.0 - (4.0*r) - ((icx*dt)/2.0)*vij;
 		
 		A(k,k) = a_k;
 		B(k,k) = b_k;
@@ -188,7 +188,6 @@ arma::cx_vec funcs::Au_b(arma::cx_mat A, arma::cx_vec b)
 /*===================================*/
 /*~~~~~~~~   Initial state   ~~~~~~~~*/     // Problem 4
 /*===================================*/
-/*
 void funcs::initial_u(int M, double h, int L, arma::cx_vec U_0) // U_0 er initial matrix (hvor partiklene er????????????? halp)
 {	// =========================================================================  //
 	// Denne er ikke helt ferdig SOS
@@ -219,14 +218,14 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec U_0) // U_0 er initia
 	} // End of y-loop
 
 }
-*/
+
 
 
 
 /*=======================================*/
 /*~~~~~~~~   Initial potential   ~~~~~~~~*/     // Problem 5
 /*=======================================*/
-/*
+
 void funcs::initial_V()
 {
 	// IDK WHAT I'M DOING HALP
@@ -240,7 +239,7 @@ void funcs::initial_V()
 	// Ensure that the slit setup is symmetric around y_c (wall between slits in the middle of y_c)
 
 }
-*/
+
 
 // Fight Bugs                      |     |
 //                                 \\_V_//

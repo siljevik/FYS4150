@@ -30,6 +30,26 @@ int main(){
 	arma::cx_double 	dt = 1;			// Timestep (T timeunits?? s??)
 	arma::cx_double 	r_val = 1.0; 	// SANDER: wat the heck is this?
 	
+	////////////////////////////////////////////////////////////
+	// Values that sould've been in a txt document or something
+	// Will put into txt document if time
+	arma::cx_double wt = 0.02; 		// Wall thickness
+	arma::cx_double x_c = 0.5; 		// x-centre position
+	arma::cx_double y_c = 0.5;		// y-centre
+	arma::cx_double wts_y = 0.05; 	// Thickness of wall piece separating the two slits (y-distance between the inner edges of the two slits)
+	arma::cx_double so_y = 0.05; 	// Slit opening (y-direction)
+	// From problem 7:
+	arma::cx_double h = 0.005;
+	arma::cx_double dt = 2.5*10;
+	arma::cx_double sigma_x = 0.05;
+	arma::cx_double sigma_y = 0.05;
+	arma::cx_double p_x = 200;
+	arma::cx_double p_y = 0;
+	arma::cx_double v_0 = 0; 
+	// Ensure that the slit setup is symmetric around y_c (wall between slits in the middle of y_c)
+	//////////////////////////////////////////////////////////////
+
+
 
 	/*====================================================*/
     /*~~~~ Making matrices filled with ones and zeros ~~~~*/
@@ -56,6 +76,8 @@ int main(){
 
  	return 0;
 }
+
+
 
 
 
