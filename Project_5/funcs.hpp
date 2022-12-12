@@ -21,20 +21,23 @@ class funcs
 
 	public:
 
-	arma::cx_vec vector_filler(int M, arma::cx_mat V);
+	arma::cx_vec vector_filler(int M, arma::sp_cx_mat V);
 
 	void index_translator(int M, int k, int & i_p, int & j);
 
-	void matrix_filler(int M, arma::cx_double r_val, int L, arma::cx_mat & A, arma::cx_mat & B);
+	void matrix_filler(int M, arma::cx_double r_val, int L, arma::sp_cx_mat & A, arma::sp_cx_mat & B);
 
-	void diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L, arma::cx_mat V,arma::cx_mat & A, arma::cx_mat & B);
+	void diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L, arma::sp_cx_mat V,
+				arma::sp_cx_mat & A, arma::sp_cx_mat & B);
 
-	arma::cx_vec Bu_b(int M, int L, arma::cx_mat V, arma::cx_mat B);
+	arma::cx_vec Bu_b(int M, int L, arma::sp_cx_mat V, arma::sp_cx_mat B);
 
-	arma::cx_vec Au_b(arma::cx_mat A, arma::cx_vec b);
+	arma::cx_vec Au_b(arma::sp_cx_mat A, arma::cx_vec b);
 
-	//void initial_u(int M, arma::cx_double h, int L, arma::cx_vec u_0);
+	void initial_u(int M, double h, int L, arma::cx_vec U_0, arma::cx_double x_c, arma::cx_double y_c,
+                arma::cx_double sigma_x, arma::cx_double sigma_y, arma::cx_double p_x, arma::cx_double p_y);
 
+	void initial_V();
 }; // end of class Header
 
 #endif
