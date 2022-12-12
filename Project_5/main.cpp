@@ -23,7 +23,7 @@ int main(){
 	/*====================================*/
     /*~~~~ Constants, Variables, etc. ~~~~*/
     /*====================================*/
-	int 	M = 5; 			// M-2 = 3 Here (LxL)
+	//int 	M = 5; 			// M-2 = 3 Here (LxL)
 	//arma::cx_double 	h = 1/M; 		// Stepsize (since x_max and y_max will be 1 due to boudary conditions)
 	//arma::cx_double 	T = 100;			// Total time (T timeunits?? s??)
 	//arma::cx_double 	dt = 1;			// Timestep (T timeunits?? s??)
@@ -40,7 +40,7 @@ int main(){
 	arma::cx_double wts_y = 0.05; 	// Thickness of wall piece separating the two slits (y-distance between the inner edges of the two slits)
 	arma::cx_double so_y = 0.05; 	// Slit opening (y-direction)
 	// === From problem 7: === //
-	arma::cx_double h = 0.005;
+	arma::cx_double h_cx = 0.005;
 	arma::cx_double dt = 2.5*pow(10,-5);
 	arma::cx_double T = 0.008;
 	arma::cx_double sigma_x = 0.05;
@@ -49,20 +49,22 @@ int main(){
 	arma::cx_double p_y = 0;
 	arma::cx_double v_0 = 0;
 	/////////////////////////////
-	//arma::cx_double M_cx = 1/h; // Test?
-	//int M = int (M_cx);
+	// Stuff we find using the information above
+	double h = h_cx.real();
+	arma::cx_double M_cx = 1/h; // Test?
+	int M = M_cx.real();
 	
 	int L = pow(M-2,2); // Length of A and B 
 	// Testing for r = (i*dt)/(2.0*(h^2))
-	arma::cx_double 	r_val = (0,(dt)/(2.0*(h*h)));
+	arma::cx_double 	r_val= (sqrt(-1))*(dt)/(2.0*(h*h));
 
 	/*====================================================*/
     /*~~~~ Making matrices filled with ones and zeros ~~~~*/
     /*====================================================*/
-	arma::sp_cx_mat U_n(M,M, arma::fill::zeros); 	// Matrix with elements u_ij (Space where particles move?)
-	arma::sp_cx_mat V(M, M, arma::fill::none);	// Matrix with elements v_ij (Potentials)
-	arma::sp_cx_mat A(L, L, arma::fill::zeros);
-	arma::sp_cx_mat B(L, L, arma::fill::zeros);
+	arma::cx_mat U_n(M,M, arma::fill::zeros); 	// Matrix with elements u_ij (Space where particles move?)
+	arma::cx_mat V(M, M, arma::fill::none);	// Matrix with elements v_ij (Potentials)
+	arma::cx_mat A(L, L, arma::fill::zeros);
+	arma::cx_mat B(L, L, arma::fill::zeros);
 
 	// Define an empty vector that goes through a function that returns
 	// a full vector dependent on indices (i,j) that we can run through with a loop
@@ -74,7 +76,7 @@ int main(){
 
 	////////////// SILJE TESTYTESTS //////////////
 	funcs.matrix_filler( M, r_val, L, A, B);
-	funcs.diagonal_fill_AB(M, h, dt, L, V, A, B);
+	funcs.diagonal_fill_AB(M, h_cx, dt, L, V, A, B);
 	arma::cx_vec b = funcs.Bu_b(M, L, V, B);
 	arma::cx_vec u_n_one = funcs.Au_b(A,b);
 

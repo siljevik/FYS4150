@@ -20,7 +20,7 @@ using namespace std;
 /*===================================*/
 /*~~~~~~     Vector Filler     ~~~~~~*/     // Problem 2.1
 /*===================================*/
-arma::cx_vec funcs::vector_filler(int M, arma::sp_cx_mat V){
+arma::cx_vec funcs::vector_filler(int M, arma::cx_mat V){
     // Defining an empty vector
     arma::cx_vec un_vec(pow(M-2,2), arma::fill::none);
 
@@ -56,7 +56,7 @@ void funcs::index_translator(int M, int k, int & i_p, int & j){
 /*===================================*/
 /*~~~~~~     Matrix Filler     ~~~~~~*/      // Problem 2.2
 /*===================================*/
-void funcs::matrix_filler(int M, arma::cx_double r_val, int L, arma::sp_cx_mat & A, arma::sp_cx_mat & B){
+void funcs::matrix_filler(int M, arma::cx_double r_val, int L, arma::cx_mat & A, arma::cx_mat & B){
 
 	// Defining vector containing value r
 	arma::cx_vec r_outer_diagonal( (M-2)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
@@ -125,7 +125,7 @@ void funcs::matrix_filler(int M, arma::cx_double r_val, int L, arma::sp_cx_mat &
 // FROM PROBLEM 2: Now you are ready to write a function for your program 
 // that, using inputs M, h,  and the matrix V as input, can fill two  
 // matrices A and B and  according to the above pattern (point before this one)
-void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L, arma::sp_cx_mat V,arma::sp_cx_mat & A, arma::sp_cx_mat & B){
+void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L, arma::cx_mat V,arma::cx_mat & A, arma::cx_mat & B){
 	// Making the vector
 	arma::cx_vec un_vec = vector_filler(M,V);
 	// Calling i and j with the extension _plc to not confuse place i with
@@ -159,7 +159,7 @@ void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L
 /*=====================================================*/
 /*~~~~~~~~   Calculating b from the Bu^n = b   ~~~~~~~~*/      // Problem 3.1
 /*=====================================================*/
-arma::cx_vec funcs::Bu_b(int M, int L, arma::sp_cx_mat V, arma::sp_cx_mat B)
+arma::cx_vec funcs::Bu_b(int M, int L, arma::cx_mat V, arma::cx_mat B)
 {
 	// Random vector
 	arma::cx_vec un_vec = vector_filler(M,V);
@@ -175,7 +175,7 @@ arma::cx_vec funcs::Bu_b(int M, int L, arma::sp_cx_mat V, arma::sp_cx_mat B)
 /*=======================================================*/
 /*~~~~~~~~   Calculating the X from the AX = b   ~~~~~~~~*/     // Problem 3.2
 /*=======================================================*/
-arma::cx_vec funcs::Au_b(arma::sp_cx_mat A, arma::cx_vec b)
+arma::cx_vec funcs::Au_b(arma::cx_mat A, arma::cx_vec b)
 {
 	// Using Armadillo solve to solve for x in the
 	arma::cx_vec X = solve(A, b);
@@ -195,15 +195,15 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec U_0, arma::cx_double 
 	//arma::cx_double x_c, y_c; // coordinates of centre of initial wave packet
 	//arma::cx_double sigma_x, sigma_y; // Initial width of wave packet in x/y-direction
 	//arma::cx_double p_x, p_y; // Wave packet momenta
-
+	double M_d = (double)M;
 	// Since we will use the positions in calculations, we need y and x to be 
 	// of the double-type variable
-	for (arma::cx_double y = 0; y < M; y+=h){ // Since y_j = j*h;
+	for (double y = 0; y < M_d; y+=h){ // Since y_j = j*h;
 		// To save time, let's do the y-calculations before next for-loop
 		arma::cx_double division_y = (pow((y-y_c),2))/(2.0*pow(sigma_y, 2));
 		arma::cx_double ip_y = p_y*(y-y_c);//multiply with i (as in sqrt(-1))
 
-		for (arma::cx_double x = 0; x < M; x+=h){ // Since x_i = i*h;
+		for (double x = 0; x < M_d; x+=h){ // Since x_i = i*h;
 			arma::cx_double division_x = (pow((x-x_c),2))/(2.0*pow(sigma_x, 2));
 			arma::cx_double ip_x = p_x*(x-x_c);//multiply with i (as in sqrt(-1))
 
@@ -221,36 +221,44 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec U_0, arma::cx_double 
 /*~~~~~~~~   Initial potential   ~~~~~~~~*/     // Problem 5
 /*=======================================*/
 
-void funcs::double_slit(arma::cx_double h, arma::cx_double v0, arma::sp_cx_mat V)
+void funcs::double_slit(arma::cx_double h_cx, arma::cx_double v0, arma::cx_mat V)
 {
 	// We need to set all points that is not wall or on the borders to v0.
 	// So, here we just ignore/don't do anything to the walls:D
-
+	double h = h_cx.real(); // First to do stuff with h in the loops, we convert it to 
 	// Area before slit (left side)
-	for(arma::cx_double i = h; i < 1; i+=h){			// y  --> Rip if these must be switched
-		for(arma::cx_double j = h; j < 0.49; j+=h)     // x
-		{V(i,j) = v0;}}
+	for(double i = h; i <= 1; i+=h){			// y  --> Rip if these must be switched
+		for(double j = h; j <= 0.49; j+=h){
+			V(i,j) = v0;
+		}
+	}
 
 	// Area in top slit
-	arma::cx_double stopy_2  = 0.475+h; // Doing these outside for-loops to save time
-	arma::cx_double stopx_2  = 0.51+h;
-	for(arma::cx_double i = 0.425; i < stopy_2; i+=h){
-		for(arma::cx_double j = 0.49; j < stopx_slitx; j+=h)
-		{V(i,j) = v0;}}
+	double stopy_2  = 0.475+h; // Doing these outside for-loops to save time
+	double stopx_2  = 0.51+h;
+	for(double k = 0.425; k <= stopy_2; k+=h){  // kkk ILLUMINATI
+		for(double l = 0.49; l <= stopx_2; l+=h){
+			V(k,l) = v0;
+		}
+	}
 
 	// Area in bottom slit
-	arma::cx_double stopy_3  = 0.575+h;
-	arma::cx_double stopx_3  = 0.51+h;
-	for(arma::cx_double i = 0.525; i < stopy_3; i+=h){
-		for(arma::cx_double j = 0.49; j < stopx_3; j+=h)
-		{V(i,j) = v0;}}
+	double stopy_3  = 0.575+h;
+	double stopx_3  = 0.51+h;
+	for(double m = 0.525; m <= stopy_3; m+=h){
+		for(double n = 0.49; n <= stopx_3; n+=h){
+			V(m,n) = v0;
+		}
+	}
 
 	// Area after slit (right side)
-	arma::cx_double startx_4 = 0.51+h;
-	arma::cx_double stopx_4  = 1-h;
-	for(arma::cx_double i = h; i < 1; i+=h){
-		for(arma::cx_double j = startx_4; j < stopx_4; j+=h)
-		{V(i,j) = v0;}}
+	double startx_4 = 0.51+h;
+	double stopx_4  = 1-h;
+	for(double o = h; o <= 1; o+=h){
+		for(double p = startx_4; p <= stopx_4; p+=h){
+			V(o,p) = v0;
+		}
+	}
 	
 }
 
