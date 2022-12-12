@@ -226,18 +226,37 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec U_0) // U_0 er initia
 /*~~~~~~~~   Initial potential   ~~~~~~~~*/     // Problem 5
 /*=======================================*/
 
-void funcs::initial_V()
+void funcs::double_slit(arma::cx_double h, arma::cx_double v0, arma::sp_cx_mat V)
 {
-	// IDK WHAT I'M DOING HALP
+	// We need to set all points that is not wall or on the borders to v0.
+	// So, here we just ignore/don't do anything to the walls:D
 
-	// Code here
-	arma::cx_double wt = 0.02; 		// Wall thickness
-	arma::cx_double x_c = 0.5; 		// x-centre position
-	arma::cx_double y_c = 0.5;		// y-centre
-	arma::cx_double wts_y = 0.05; 	// Thickness of wall piece separating the two slits (y-distance between the inner edges of the two slits)
-	arma::cx_double so_y = 0.05; 	// Slit opening (y-direction)
-	// Ensure that the slit setup is symmetric around y_c (wall between slits in the middle of y_c)
+	// Area before slit (left side)
+	for(arma::cx_double i = h; i < 1; i+=h){			// y  --> Rip if these must be switched
+		for(arma::cx_double j = h; j < 0.49; j+=h)     // x
+		{V(i,j) = v0;}}
 
+	// Area in top slit
+	arma::cx_double stopy_2  = 0.475+h; // Doing these outside for-loops to save time
+	arma::cx_double stopx_2  = 0.51+h;
+	for(arma::cx_double i = 0.425; i < stopy_2; i+=h){
+		for(arma::cx_double j = 0.49; j < stopx_slitx; j+=h)
+		{V(i,j) = v0;}}
+
+	// Area in bottom slit
+	arma::cx_double stopy_3  = 0.575+h;
+	arma::cx_double stopx_3  = 0.51+h;
+	for(arma::cx_double i = 0.525; i < stopy_3; i+=h){
+		for(arma::cx_double j = 0.49; j < stopx_3; j+=h)
+		{V(i,j) = v0;}}
+
+	// Area after slit (right side)
+	arma::cx_double startx_4 = 0.51+h;
+	arma::cx_double stopx_4  = 1-h;
+	for(arma::cx_double i = h; i < 1; i+=h){
+		for(arma::cx_double j = startx_4; j < stopx_4; j+=h)
+		{V(i,j) = v0;}}
+	
 }
 
 

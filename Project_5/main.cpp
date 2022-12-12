@@ -23,41 +23,46 @@ int main(){
 	/*====================================*/
     /*~~~~ Constants, Variables, etc. ~~~~*/
     /*====================================*/
-	int 	M = 5; 			// M-2 = 3 Here
-	int 	L = pow(M-2,2); // Length of A and B  (LxL)
-	arma::cx_double 	h = 1/M; 		// Stepsize (since x_max and y_max will be 1 due to boudary conditions)
-	arma::cx_double 	T = 100;			// Total time (T timeunits?? s??)
-	arma::cx_double 	dt = 1;			// Timestep (T timeunits?? s??)
-	arma::cx_double 	r_val = 1.0; 	// SANDER: wat the heck is this?
+	int 	M = 5; 			// M-2 = 3 Here (LxL)
+	//arma::cx_double 	h = 1/M; 		// Stepsize (since x_max and y_max will be 1 due to boudary conditions)
+	//arma::cx_double 	T = 100;			// Total time (T timeunits?? s??)
+	//arma::cx_double 	dt = 1;			// Timestep (T timeunits?? s??)
+	// who dis
+	 	// SANDER: wat the heck is this?
 	
 	////////////////////////////////////////////////////////////
 	// Values that sould've been in a txt document or something
 	// Will put into txt document if time
-	arma::cx_double wt = 0.02; 		// Wall thickness
+	// === From problem 5: === //
+	arma::cx_double wtx = 0.02; 	// Wall thickness x-dir
 	arma::cx_double x_c = 0.5; 		// x-centre position
 	arma::cx_double y_c = 0.5;		// y-centre
 	arma::cx_double wts_y = 0.05; 	// Thickness of wall piece separating the two slits (y-distance between the inner edges of the two slits)
 	arma::cx_double so_y = 0.05; 	// Slit opening (y-direction)
-	// From problem 7:
+	// === From problem 7: === //
 	arma::cx_double h = 0.005;
-	arma::cx_double dt = 2.5*10;
+	arma::cx_double dt = 2.5*pow(10,-5);
+	arma::cx_double T = 0.008;
 	arma::cx_double sigma_x = 0.05;
 	arma::cx_double sigma_y = 0.05;
 	arma::cx_double p_x = 200;
 	arma::cx_double p_y = 0;
-	arma::cx_double v_0 = 0; 
-	// Ensure that the slit setup is symmetric around y_c (wall between slits in the middle of y_c)
-	//////////////////////////////////////////////////////////////
-
-
+	arma::cx_double v_0 = 0;
+	/////////////////////////////
+	//arma::cx_double M_cx = 1/h; // Test?
+	//int M = int (M_cx);
+	
+	int L = pow(M-2,2); // Length of A and B 
+	// Testing for r = (i*dt)/(2.0*(h^2))
+	arma::cx_double 	r_val = (0,(dt)/(2.0*(h*h)));
 
 	/*====================================================*/
     /*~~~~ Making matrices filled with ones and zeros ~~~~*/
     /*====================================================*/
-	arma::cx_mat U_n(M,M, arma::fill::zeros); 	// Matrix with elements u_ij (Space where particles move?)
-	arma::cx_mat V(M, M, arma::fill::ones);	// Matrix with elements v_ij (Potentials)
-	arma::cx_mat A(L, L, arma::fill::zeros);
-	arma::cx_mat B(L, L, arma::fill::zeros);
+	arma::sp_cx_mat U_n(M,M, arma::fill::zeros); 	// Matrix with elements u_ij (Space where particles move?)
+	arma::sp_cx_mat V(M, M, arma::fill::none);	// Matrix with elements v_ij (Potentials)
+	arma::sp_cx_mat A(L, L, arma::fill::zeros);
+	arma::sp_cx_mat B(L, L, arma::fill::zeros);
 
 	// Define an empty vector that goes through a function that returns
 	// a full vector dependent on indices (i,j) that we can run through with a loop

@@ -35,6 +35,8 @@ class funcs
 
 	//void initial_u(int M, arma::cx_double h, int L, arma::cx_vec u_0);
 
+  void double_slit(arma::cx_double h, arma::cx_double v0, arma::sp_cx_mat V)
+
 }; // end of class Header
 
 #endif
