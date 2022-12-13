@@ -48,12 +48,12 @@ int main(){
 	arma::cx_double p_x = 200;
 	arma::cx_double p_y = 0;
 	arma::cx_double v_0 = 0;
-	/////////////////////////////
+	
+
 	// Stuff we find using the information above
 	double h = h_cx.real();
 	arma::cx_double M_cx = 1/h; // Test?
 	int M = M_cx.real();
-	
 	int L = pow(M-2,2); // Length of A and B 
 	// Testing for r = (i*dt)/(2.0*(h^2))
 	arma::cx_double 	r_val= (sqrt(-1))*(dt)/(2.0*(h*h));
@@ -61,8 +61,8 @@ int main(){
 	/*====================================================*/
     /*~~~~ Making matrices filled with ones and zeros ~~~~*/
     /*====================================================*/
-	arma::cx_mat U_n(M,M, arma::fill::zeros); 	// Matrix with elements u_ij (Space where particles move?)
-	arma::cx_mat V(M, M, arma::fill::none);	// Matrix with elements v_ij (Potentials)
+	arma::cx_mat U_n(M,M, arma::fill::zeros); 	// Matrix with elements u_ij (Space where particles move)
+	arma::cx_mat V(M, M, arma::fill::none);		// Matrix with elements v_ij (Potentials)
 	arma::cx_mat A(L, L, arma::fill::zeros);
 	arma::cx_mat B(L, L, arma::fill::zeros);
 
@@ -75,10 +75,29 @@ int main(){
 
 
 	////////////// SILJE TESTYTESTS //////////////
-	funcs.matrix_filler( M, r_val, L, A, B);
-	funcs.diagonal_fill_AB(M, h_cx, dt, L, V, A, B);
-	arma::cx_vec b = funcs.Bu_b(M, L, V, B);
-	arma::cx_vec u_n_one = funcs.Au_b(A,b);
+	//funcs.matrix_filler( M, r_val, L, A, B);
+	//funcs.diagonal_fill_AB(M, h_cx, dt, L, V, A, B);
+	//arma::cx_vec b = funcs.Bu_b(M, L, V, B);
+	//arma::cx_vec u_n_one = funcs.Au_b(A,b);
+	
+	/*====================================================*/
+    /*~~~~ Making matrices filled with ones and zeros ~~~~*/     // Problem 6
+    /*====================================================*/
+	// 1. Simulation parameters given above
+	// 2. Setting up the potential matrix V:
+	funcs.double_slit(h_cx, v_0, V);
+	// 3. Setting up the initial state matrix U^0:
+	funcs.initial_u(M,h,L,U_0, x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+	// 4. Setting up the matrices A and B:
+	funcs.diagonal_fill_AB(M, h, dt, L, V, A, B);
+	// 5. Running a loop over time steps to store each new state U^n	
+	double time_step = 0.001;//(double)dt.real();
+	double total_time = (double)T.real();
+	for (double t = 0; t <= total_time; t+=time_step)
+	{
+		cout << "Hello World";
+	}
+
 
 
  	return 0;

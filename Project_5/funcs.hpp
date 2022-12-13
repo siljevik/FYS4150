@@ -37,7 +37,7 @@ class funcs
 	void initial_u(int M, double h, int L, arma::cx_vec U_0, arma::cx_double x_c, arma::cx_double y_c,
                 arma::cx_double sigma_x, arma::cx_double sigma_y, arma::cx_double p_x, arma::cx_double p_y);
 
-  void double_slit(arma::cx_double h, arma::cx_double v0, arma::cx_mat V);
+  void double_slit(arma::cx_double h, arma::cx_double v0, arma::cx_mat & V);
 
 
 }; // end of class Header

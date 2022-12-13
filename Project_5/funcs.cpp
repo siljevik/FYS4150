@@ -191,20 +191,20 @@ arma::cx_vec funcs::Au_b(arma::cx_mat A, arma::cx_vec b)
 void funcs::initial_u(int M, double h, int L, arma::cx_vec U_0, arma::cx_double x_c, arma::cx_double y_c,
 		arma::cx_double sigma_x, arma::cx_double sigma_y, arma::cx_double p_x, arma::cx_double p_y)
 {
-	// Declearing our variables here as doubles.
-	//arma::cx_double x_c, y_c; // coordinates of centre of initial wave packet
-	//arma::cx_double sigma_x, sigma_y; // Initial width of wave packet in x/y-direction
-	//arma::cx_double p_x, p_y; // Wave packet momenta
-	double M_d = (double)M;
-	// Since we will use the positions in calculations, we need y and x to be 
+	// Since we want to use M in our for-loops, we convert it to a double.
+	// Adn we will use the positions in calculations, we need y and x to be 
 	// of the double-type variable
+	double M_d = (double)M;
+	// To save time, we will do some calcuations outside the for-loop when we can:
+	arma::cx_double under_y_division = 2.0*pow(sigma_y, 2);
+	arma::cx_double under_x_division = 2.0*pow(sigma_x, 2);
 	for (double y = 0; y < M_d; y+=h){ // Since y_j = j*h;
 		// To save time, let's do the y-calculations before next for-loop
-		arma::cx_double division_y = (pow((y-y_c),2))/(2.0*pow(sigma_y, 2));
+		arma::cx_double division_y = (pow((y-y_c),2))/under_y_division;
 		arma::cx_double ip_y = p_y*(y-y_c);//multiply with i (as in sqrt(-1))
 
 		for (double x = 0; x < M_d; x+=h){ // Since x_i = i*h;
-			arma::cx_double division_x = (pow((x-x_c),2))/(2.0*pow(sigma_x, 2));
+			arma::cx_double division_x = (pow((x-x_c),2))/under_x_division;
 			arma::cx_double ip_x = p_x*(x-x_c);//multiply with i (as in sqrt(-1))
 
 			// Unnormalized Gaussian wave packet -- Wave function then?
@@ -221,7 +221,7 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec U_0, arma::cx_double 
 /*~~~~~~~~   Initial potential   ~~~~~~~~*/     // Problem 5
 /*=======================================*/
 
-void funcs::double_slit(arma::cx_double h_cx, arma::cx_double v0, arma::cx_mat V)
+void funcs::double_slit(arma::cx_double h_cx, arma::cx_double v0, arma::cx_mat & V)
 {
 	// We need to set all points that is not wall or on the borders to v0.
 	// So, here we just ignore/don't do anything to the walls:D
