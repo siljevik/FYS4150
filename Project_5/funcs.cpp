@@ -195,6 +195,9 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec u0, arma::sp_cx_mat U
 	// Adn we will use the positions in calculations, we need y and x to be 
 	// of the double-type variable
 	double M_d = (double)M;
+
+	// Defining a normalized vector U_n
+	arma::sp_cx_mat norm_U_n;
 	// To save time, we will do some calcuations outside the for-loop when we can:
 	arma::cx_double under_y_division = 2.0*pow(sigma_y, 2);
 	arma::cx_double under_x_division = 2.0*pow(sigma_x, 2);
@@ -209,11 +212,14 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec u0, arma::sp_cx_mat U
 
 			// Unnormalized Gaussian wave packet -- Wave function then?
 			U_n(x,y) = exp(-(division_x)-(division_y)+(ip_x)+(ip_y));
+
+			arma::sp_cx_mat conj_Un = arma::conj( U_n );
+			// Normalized Gaussian
+			norm_U_n = conj_Un * U_n(x,y);
 		} // End of x-loop
 	} // End of y-loop
 
 }
-
 
 
 
