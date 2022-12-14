@@ -48,7 +48,17 @@ int main(){
 	arma::cx_double p_x = 200;
 	arma::cx_double p_y = 0;
 	arma::cx_double v_0 = 0;
-	
+	// === From problem 8 === //
+	/*
+	arma::cx_double h_cx = 0.005;
+	arma::cx_double dt = 2.5*pow(10,-5);
+	arma::cx_double T = 0.002;
+	arma::cx_double sigma_x = 0.05;
+	arma::cx_double sigma_y = 0.05;
+	arma::cx_double p_x = 200;
+	arma::cx_double p_y = 0;
+	arma::cx_double v_0 = 0;
+	*/ 
 
 	// Stuff we find using the information above
 	double h = h_cx.real();
