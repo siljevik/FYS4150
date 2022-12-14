@@ -63,20 +63,11 @@ void funcs::matrix_filler(int M, arma::cx_double r_val, int L, arma::sp_cx_mat &
 	arma::cx_vec r_outer_diagonal( (M-2)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
 	r_outer_diagonal.fill( r_val );
 
-	// Checkpoint
-	//std::cout << "Outer diagonal vector: " << "\n";
-	//std::cout << r_outer_diagonal << std::endl;
-
 	// Want to insert the diaginal matrices containing r into A and B
 	A.diag(M-2) = -r_outer_diagonal;
 	A.diag(2-M) = -r_outer_diagonal;
 	B.diag(M-2) = r_outer_diagonal;
 	B.diag(2-M) = r_outer_diagonal;
-
-	// Checkpoint
-	//std::cout << "Adding outer diagonal to B: " << "\n";
-	//std::cout << B << std::endl;
-
 
 	// Inner diagonal vectors containng r and for each 3rd position,0.
     arma::cx_vec r_inner_diagonal( (M-1)*(M-3), arma::fill::none );// M-3 because we remove 1 position to shift the position in A/B.
@@ -88,34 +79,10 @@ void funcs::matrix_filler(int M, arma::cx_double r_val, int L, arma::sp_cx_mat &
         } // end of if-statement
     }// end of k-loop
 
-	// Checkpoint
-	//std::cout << "r_inner_diagonal vector: " << "\n" ;
-	//std::cout << r_inner_diagonal	<< std::endl;
-
 	A.diag(1)  = -r_inner_diagonal;
 	A.diag(-1) = -r_inner_diagonal;
-    	B.diag(1)  =  r_inner_diagonal;
+    B.diag(1)  =  r_inner_diagonal;
    	B.diag(-1) =  r_inner_diagonal;
-
-	// Checkpoint
-	//std::cout << "Adding the r_inner_diagonal to B: " << "\n";
-	//std::cout << B	<< std::endl;
-
-	// Defining two vectos with cx_vec for the sake of complex numbers.
-	//arma::vec a_vec(L, arma::fill::none);
-	//arma::vec b_vec(L, arma::fill::none);
-	//a_vec.fill(5);
-	//b_vec.fill(77);
-
-	//std::cout << "Diagonal vector b: " << "\n";
-	//std::cout << b_vec << std::endl;
-
-	// Adding the a and b vectors to the A and B matrices
-	//A.diag(0) = a_vec;
-	//B.diag(0) = b_vec;
-
-	//std::cout << "Matrix B " << "\n";
-	//B.print();
 }
 
 
@@ -127,8 +94,10 @@ void funcs::matrix_filler(int M, arma::cx_double r_val, int L, arma::sp_cx_mat &
 // that, using inputs M, h,  and the matrix V as input, can fill two  
 // matrices A and B and  according to the above pattern (point before this one)
 void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L, arma::sp_cx_mat V,arma::sp_cx_mat & A, arma::sp_cx_mat & B){
+	
 	// Making the vector
 	arma::cx_vec un_vec = vector_filler(M,V);
+	
 	// Calling i and j with the extension _plc to not confuse place i with
 	// the complex number i.
 	int i_plc;
@@ -140,19 +109,18 @@ void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L
 	{
 		//Finding the indices i and j
 		index_translator(M, k, i_plc, j_plc); // don't use the & when using the function
+		
 		// vij is element place (i,j) in matrix V
 		arma::cx_double vij = V(i_plc,j_plc);
-		// Complex number i
 
-		// Calculating a_k and b_k ----- SHOULD WE USE INT??? IDK
+		// Calculating a_k and b_k
 		arma::cx_double a_k = 1.0 + (4.0*r) + ((icx*dt)/2.0)*vij;
 		arma::cx_double b_k = 1.0 - (4.0*r) - ((icx*dt)/2.0)*vij;
 
+		// Inserting them into the diagonal spots
 		A(k,k) = a_k;
 		B(k,k) = b_k;
 	}
-	//cout << "\n Matrix A: \n" << A;
-	//cout << "\n Matrix B: \n" << B;
 }
 
 
@@ -174,10 +142,10 @@ arma::cx_vec funcs::Bu_b(int M, int L, arma::sp_cx_mat U, arma::sp_cx_mat B)
 /*=======================================================*/
 /*~~~~~~~~   Calculating the X from the AX = b   ~~~~~~~~*/     // Problem 3.2
 /*=======================================================*/
-arma::cx_vec funcs::Au_b(arma::sp_cx_mat A, arma::cx_vec b)
+arma::cx_vec funcs::Au_b( arma::sp_cx_mat A, arma::cx_vec b)
 {
 	// Using Armadillo solve to solve for x in the Ax=b equation, where x here is u_np1
-	arma::cx_vec u_np1 = spsolve(A, b, "lapack");
+	arma::cx_vec u_np1 = spsolve(A, b);
 	return u_np1;
 }
 
@@ -193,6 +161,9 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec u0, arma::sp_cx_mat U
 	// Adn we will use the positions in calculations, we need y and x to be 
 	// of the double-type variable
 	double M_d = (double)M;
+
+	// Defining a normalized vector U_n
+	arma::sp_cx_mat norm_U_n;
 	// To save time, we will do some calcuations outside the for-loop when we can:
 	arma::cx_double under_y_division = 2.0*pow(sigma_y, 2);
 	arma::cx_double under_x_division = 2.0*pow(sigma_x, 2);
@@ -207,6 +178,10 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec u0, arma::sp_cx_mat U
 
 			// Unnormalized Gaussian wave packet -- Wave function then?
 			U_n(x,y) = exp(-(division_x)-(division_y)+(ip_x)+(ip_y));
+
+			arma::sp_cx_mat conj_Un = arma::conj( U_n );
+			// Normalized Gaussian
+			norm_U_n = conj_Un * U_n(x,y);
 		} // End of x-loop
 	} // End of y-loop
 

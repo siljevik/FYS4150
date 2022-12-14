@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                  		 //
-// Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -larmadillo -lsuperlu    //
+// Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -lomp -larmadillo -lsuperlu    //
 //                                                                                  		 //
 // Run with: ./main.exe                                                              	 	 //
 //                                                                                  		 //
@@ -90,7 +90,8 @@ int main(){
 	funcs.matrix_filler(M, r_val, L, spA, spB);			// Inserting the r
 	funcs.diagonal_fill_AB(M, h, dt, L, spV, spA, spB);   // Diagonals (a_k and b_k)
 	arma::cx_vec b = funcs.Bu_b(M, L, spU, spB);
-	arma::cx_vec u_np1 = funcs.Au_b(spA,b); // Den skjønner ikkje 'spsolve()' :(
+	
+	arma::cx_vec u_np1 = spsolve(spA, b);//funcs.Au_b(spA,b); // Den skjønner ikkje 'spsolve()' :(
 
 // 5. Running a loop over time steps to store each new state U^n	
 	double time_step = (double)dt.real();//(double)dt.real();
