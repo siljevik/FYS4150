@@ -40,7 +40,7 @@ int main(){
 	arma::cx_double wts_y = 0.05; 	// Thickness of wall piece separating the two slits (y-distance between the inner edges of the two slits)
 	arma::cx_double so_y = 0.05; 	// Slit opening (y-direction)
 	// === From problem 7: === //
-	arma::cx_double h_cx = 0.005;
+	arma::cx_double h_cx = 0.05; //////////////////// ENDRE TIL RIKTIG ETTER TESTING
 	arma::cx_double dt = 2.5*pow(10,-5);
 	arma::cx_double T = 0.008;
 	arma::cx_double sigma_x = 0.05;
@@ -72,10 +72,13 @@ int main(){
     /*~~~~ Making matrices filled with ones and zeros ~~~~*/
     /*====================================================*/
 	arma::cx_mat U_n(M,M, arma::fill::zeros); 	// Matrix with elements u_ij (Space where particles move)
-	arma::cx_mat V(M, M, arma::fill::none);		// Matrix with elements v_ij (Potentials)
+	arma::sp_cx_mat spU(U_n);					// Making the matrix sparse to save time
+	arma::cx_mat V(M, M, arma::fill::zeros);		// Matrix with elements v_ij (Potentials)
+	arma::sp_cx_mat spV(V);
 	arma::cx_mat A(L, L, arma::fill::zeros);
+	arma::sp_cx_mat spA(A);
 	arma::cx_mat B(L, L, arma::fill::zeros);
-
+	arma::sp_cx_mat spB(B);
 	// Define an empty vector that goes through a function that returns
 	// a full vector dependent on indices (i,j) that we can run through with a loop
 	//cout << "Vector V: \n" << V;
@@ -93,25 +96,54 @@ int main(){
 	/*====================================================*/
     /*~~~~ Making matrices filled with ones and zeros ~~~~*/     // Problem 6
     /*====================================================*/
-	// 1. Simulation parameters given above
-	// 2. Setting up the potential matrix V:
-	funcs.double_slit(h_cx, v_0, V);
-	// 3. Setting up the initial state matrix U^0:
-	funcs.initial_u(M,h,L,U_0, x_c, y_c, sigma_x, sigma_y, p_x, p_y);
-	// 4. Setting up the matrices A and B:
-	funcs.diagonal_fill_AB(M, h, dt, L, V, A, B);
-	// 5. Running a loop over time steps to store each new state U^n	
-	double time_step = 0.001;//(double)dt.real();
+// 1. Simulation parameters given above
+
+// 2. Setting up the potential matrix V:
+	funcs.double_slit(h, v_0, M, spV);
+
+// 3. Setting up the initial state matrix U^0:
+	arma::cx_vec u0 = funcs.vector_filler(M, spU);
+	funcs.initial_u(M,h,L,u0, spU, x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+	
+// 4. Setting up the matrices A and B:
+	funcs.matrix_filler(M, r_val, L, spA, spB);			// Inserting the r
+	funcs.diagonal_fill_AB(M, h, dt, L, spV, spA, spB);   // Diagonals (a_k and b_k)
+	arma::cx_vec b = funcs.Bu_b(M, L, spU, spB);
+	arma::cx_vec u_np1 = funcs.Au_b(spA,b); // Den skjønner ikkje 'spsolve()' :(
+
+// 5. Running a loop over time steps to store each new state U^n	
+	double time_step = (double)dt.real();//(double)dt.real();
 	double total_time = (double)T.real();
-	for (double t = 0; t <= total_time; t+=time_step)
+	int total_time_steps = total_time/time_step;
+
+	// Creating and opening a .txt-file
+	ofstream datafile;
+	datafile.open("cx_cube.txt", ofstream::out | ofstream::trunc);
+
+	//Creating the cx_cube
+	arma::cx_cube cubeboi(M,M,total_time_steps+1);
+	cubeboi.slice(0) = spU; // Initial matrix inserted to the cube
+
+	cout << cubeboi;
+	/*
+	// Then we are ready to run the time-loop:
+	for (int t = 1; t <= total_time_steps; t++)
 	{
-		cout << "Hello World";
+		arma::cx_vec b = funcs.Bu_b(M, L, spU, spB);
+		arma::cx_vec u_t = funcs.Au_b(spA,b);
+		// Not initial U, but U^n
+		funcs.initial_u(M,h,L,u_t, spU, x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+		cubeboi.slice(t) = spU;
 	}
-
-
+	// Adding cube to txt file:
+	datafile << cubeboi;
+	datafile.close(); // Closing datafile
+	*/
 
  	return 0;
 }
+
+
 
 
 
