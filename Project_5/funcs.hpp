@@ -35,7 +35,7 @@ class funcs
 
 	arma::cx_vec Au_b(arma::sp_cx_mat A, arma::cx_vec b);
 
-	void initial_u(int M, double h, int L, arma::cx_vec u0, arma::sp_cx_mat U_n, arma::cx_double x_c, arma::cx_double y_c,
+	void initial_u(int M, double h, int L, arma::cx_vec u0, arma::sp_cx_mat & U_n, arma::cx_double x_c, arma::cx_double y_c,
                 arma::cx_double sigma_x, arma::cx_double sigma_y, arma::cx_double p_x, arma::cx_double p_y);
 
   void double_slit(double h, arma::cx_double v0, int M, arma::sp_cx_mat & V);

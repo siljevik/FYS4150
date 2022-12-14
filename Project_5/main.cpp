@@ -56,7 +56,8 @@ int main(){
 	int M = M_cx.real();
 	int L = pow(M-2,2); // Length of A and B 
 	// Testing for r = (i*dt)/(2.0*(h^2))
-	arma::cx_double 	r_val= (sqrt(-1))*(dt)/(2.0*(h*h));
+	arma::cx_double icx(0.0,1.0);
+	arma::cx_double r_val= icx*(dt)/(2.0*(h*h));
 
 
 
@@ -91,12 +92,13 @@ int main(){
 	funcs.diagonal_fill_AB(M, h, dt, L, spV, spA, spB);   // Diagonals (a_k and b_k)
 	arma::cx_vec b = funcs.Bu_b(M, L, spU, spB);
 	
-	arma::cx_vec u_np1 = spsolve(spA, b);//funcs.Au_b(spA,b); // Den skjønner ikkje 'spsolve()' :(
+	arma::cx_vec u_np1 = funcs.Au_b(spA,b); // Den skjønner ikkje 'spsolve()' :(
 
 // 5. Running a loop over time steps to store each new state U^n	
 	double time_step = (double)dt.real();//(double)dt.real();
 	double total_time = (double)T.real();
-	int total_time_steps = total_time/time_step;
+	int total_time_steps = (total_time/time_step)/10;
+	cout << "total time steps: " << total_time_steps;
 
 	// Creating and opening a .txt-file
 	ofstream datafile;
@@ -105,22 +107,20 @@ int main(){
 	//Creating the cx_cube
 	arma::cx_cube cubeboi(M,M,total_time_steps+1);
 	cubeboi.slice(0) = spU; // Initial matrix inserted to the cube
-
-	cout << cubeboi;
-	/*
+	
 	// Then we are ready to run the time-loop:
 	for (int t = 1; t <= total_time_steps; t++)
 	{
 		arma::cx_vec b = funcs.Bu_b(M, L, spU, spB);
 		arma::cx_vec u_t = funcs.Au_b(spA,b);
 		// Not initial U, but U^n
-		funcs.initial_u(M,h,L,u_t, spU, x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+		funcs.initial_u(M,h,L, u_t, spU, x_c, y_c, sigma_x, sigma_y, p_x, p_y);
 		cubeboi.slice(t) = spU;
 	}
 	// Adding cube to txt file:
 	datafile << cubeboi;
 	datafile.close(); // Closing datafile
-	*/
+	
 
  	return 0;
 }

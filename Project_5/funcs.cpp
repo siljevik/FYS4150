@@ -102,7 +102,7 @@ void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L
 	// the complex number i.
 	int i_plc;
 	int j_plc;
-	arma::cx_double icx = sqrt(-1); // Complex i
+	arma::cx_double icx(0.0,1.0); // Complex i
 	arma::cx_double r = (icx*dt)/(2.0*(pow(h,2)));
 
 	for(int k = 0; k < L; k++)
@@ -154,7 +154,7 @@ arma::cx_vec funcs::Au_b( arma::sp_cx_mat A, arma::cx_vec b)
 /*===================================*/
 /*~~~~~~~~   Initial state   ~~~~~~~~*/     // Problem 4
 /*===================================*/
-void funcs::initial_u(int M, double h, int L, arma::cx_vec u0, arma::sp_cx_mat U_n, arma::cx_double x_c, arma::cx_double y_c,
+void funcs::initial_u(int M, double h, int L, arma::cx_vec u0, arma::sp_cx_mat & U_n, arma::cx_double x_c, arma::cx_double y_c,
 		arma::cx_double sigma_x, arma::cx_double sigma_y, arma::cx_double p_x, arma::cx_double p_y)
 {
 	// Since we want to use M in our for-loops, we convert it to a double.
@@ -179,7 +179,7 @@ void funcs::initial_u(int M, double h, int L, arma::cx_vec u0, arma::sp_cx_mat U
 			// Unnormalized Gaussian wave packet -- Wave function then?
 			U_n(x,y) = exp(-(division_x)-(division_y)+(ip_x)+(ip_y));
 
-			arma::sp_cx_mat conj_Un = arma::conj( U_n );
+			arma::sp_cx_mat conj_Un = arma::conj(U_n);
 			// Normalized Gaussian
 			norm_U_n = conj_Un * U_n(x,y);
 		} // End of x-loop
