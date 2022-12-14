@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                  		 //
-// Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -lomp -larmadillo -lsuperlu    //
+// Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -larmadillo   //
 //                                                                                  		 //
 // Run with: ./main.exe                                                              	 	 //
 //                                                                                  		 //
@@ -30,15 +30,15 @@ int main(){
 	arma::cx_double y_c = 0.5;		// y-centre
 	arma::cx_double wts_y = 0.05; 	// Thickness of wall piece separating the two slits (y-distance between the inner edges of the two slits)
 	arma::cx_double so_y = 0.05; 	// Slit opening (y-direction)
-	// === From problem 7: === //
-	arma::cx_double h_cx = 0.05; //////////////////// ENDRE TIL RIKTIG ETTER TESTING
+	// === From problem 7: === // (point 1)
+	arma::cx_double h_cx = 0.05; //////////////////// FOR TESTING: should be 0.005, but simply 0.05 to get smaller matrices
 	arma::cx_double dt = 2.5*pow(10,-5);
 	arma::cx_double T = 0.008;
 	arma::cx_double sigma_x = 0.05;
-	arma::cx_double sigma_y = 0.05;
+	arma::cx_double sigma_y = 0.05; // = 0.10; (point 3)
 	arma::cx_double p_x = 200;
 	arma::cx_double p_y = 0;
-	arma::cx_double v_0 = 0;
+	arma::cx_double v_0 = 0;	    // = pow(10,10); (point 3)
 	// === From problem 8 === //
 	/*
 	arma::cx_double h_cx = 0.005;
@@ -52,7 +52,7 @@ int main(){
 	*/ 
 	// Stuff we find using the information above
 	double h = h_cx.real();
-	arma::cx_double M_cx = 1/h; // Test?
+	arma::cx_double M_cx = 1/h; 
 	int M = M_cx.real();
 	int L = pow(M-2,2); // Length of A and B 
 	// Testing for r = (i*dt)/(2.0*(h^2))
@@ -97,7 +97,7 @@ int main(){
 // 5. Running a loop over time steps to store each new state U^n	
 	double time_step = (double)dt.real();//(double)dt.real();
 	double total_time = (double)T.real();
-	int total_time_steps = (total_time/time_step)/10;
+	int total_time_steps = (total_time/time_step)/10; // FOR TESTING: Dividing by 10 for fewer loops
 	cout << "total time steps: " << total_time_steps;
 
 	// Creating and opening a .txt-file
@@ -149,3 +149,4 @@ int main(){
 //     |'.'.'.|  |^^^^^^|______|  ( ~~~ )|_,_/(((((((())))))))\_,_|
 //     ~~~~~~~ ""       `------'  `w---w'|_____`------------'_____|
 // ________________________________________________________________
+//   	  We wish for another week to finish this project <3
