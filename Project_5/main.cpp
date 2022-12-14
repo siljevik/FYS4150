@@ -1,14 +1,15 @@
-//////////////////////////////////////////////////////////////////////////////////////
-//                                                                                  //
-// Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -larmadillo     //
-//                                                                                  //
-// Run with: ./main.exe                                                             //
-//                                                                                  //
-//////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                  		 //
+// Compile with: g++ -O2 main.cpp -std=c++11 -I include -o main.exe -larmadillo -lsuperlu    //
+//                                                                                  		 //
+// Run with: ./main.exe                                                              	 	 //
+//                                                                                  		 //
+///////////////////////////////////////////////////////////////////////////////////////////////
 // SEE BOTTOM FOR CHRISTMAS SURPRISE <3 //
 //////////////////////////////////////////
 #include <iostream>
 #include <armadillo>
+#include <complex>
 #include <vector>
 
 #include "funcs.hpp"
@@ -23,16 +24,6 @@ int main(){
 	/*====================================*/
     /*~~~~ Constants, Variables, etc. ~~~~*/
     /*====================================*/
-	//int 	M = 5; 			// M-2 = 3 Here (LxL)
-	//arma::cx_double 	h = 1/M; 		// Stepsize (since x_max and y_max will be 1 due to boudary conditions)
-	//arma::cx_double 	T = 100;			// Total time (T timeunits?? s??)
-	//arma::cx_double 	dt = 1;			// Timestep (T timeunits?? s??)
-	// who dis
-	 	// SANDER: wat the heck is this?
-	
-	////////////////////////////////////////////////////////////
-	// Values that sould've been in a txt document or something
-	// Will put into txt document if time
 	// === From problem 5: === //
 	arma::cx_double wtx = 0.02; 	// Wall thickness x-dir
 	arma::cx_double x_c = 0.5; 		// x-centre position
@@ -59,7 +50,6 @@ int main(){
 	arma::cx_double p_y = 0;
 	arma::cx_double v_0 = 0;
 	*/ 
-
 	// Stuff we find using the information above
 	double h = h_cx.real();
 	arma::cx_double M_cx = 1/h; // Test?
@@ -67,6 +57,8 @@ int main(){
 	int L = pow(M-2,2); // Length of A and B 
 	// Testing for r = (i*dt)/(2.0*(h^2))
 	arma::cx_double 	r_val= (sqrt(-1))*(dt)/(2.0*(h*h));
+
+
 
 	/*====================================================*/
     /*~~~~ Making matrices filled with ones and zeros ~~~~*/
@@ -79,19 +71,8 @@ int main(){
 	arma::sp_cx_mat spA(A);
 	arma::cx_mat B(L, L, arma::fill::zeros);
 	arma::sp_cx_mat spB(B);
-	// Define an empty vector that goes through a function that returns
-	// a full vector dependent on indices (i,j) that we can run through with a loop
-	//cout << "Vector V: \n" << V;
-	//cout << head.index_translator(M) << endl;
-
-	// TRUR ME BURDE HA NOKE INNI EIN TIMELOOP
 
 
-	////////////// SILJE TESTYTESTS //////////////
-	//funcs.matrix_filler( M, r_val, L, A, B);
-	//funcs.diagonal_fill_AB(M, h_cx, dt, L, V, A, B);
-	//arma::cx_vec b = funcs.Bu_b(M, L, V, B);
-	//arma::cx_vec u_n_one = funcs.Au_b(A,b);
 	
 	/*====================================================*/
     /*~~~~ Making matrices filled with ones and zeros ~~~~*/     // Problem 6
@@ -142,10 +123,6 @@ int main(){
 
  	return 0;
 }
-
-
-
-
 
 
 

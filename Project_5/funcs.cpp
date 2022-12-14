@@ -1,12 +1,13 @@
-// =========================== //
-// See bottom for a good laugh //
-// =========================== //
+// ========================== //
+// See bottom for a good time //
+// ========================== //
 #include <iostream>
 #include <armadillo>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <chrono>
+#include <complex>
 #include <random>
 #include <vector>
 #include <map>
@@ -161,12 +162,10 @@ void funcs::diagonal_fill_AB(int M, arma::cx_double h, arma::cx_double dt, int L
 /*=====================================================*/
 arma::cx_vec funcs::Bu_b(int M, int L, arma::sp_cx_mat U, arma::sp_cx_mat B)
 {
-	// Random vector
+	// First we make the vector containing all elements from U
 	arma::cx_vec un_vec = vector_filler(M,U);
-	//cout << "Vector un_vec in Bu_b: \n" << un_vec;//size(un_vec);
-	//We need to transpose the vector (flip it 90 degrees)
+	// Then we can use it to solve for vector b
 	arma::cx_vec b = B*un_vec;
-	//cout << "\n\n VECTOR b: \n" << b;
 	return b;
 }
 
@@ -177,9 +176,8 @@ arma::cx_vec funcs::Bu_b(int M, int L, arma::sp_cx_mat U, arma::sp_cx_mat B)
 /*=======================================================*/
 arma::cx_vec funcs::Au_b(arma::sp_cx_mat A, arma::cx_vec b)
 {
-	// Using Armadillo solve to solve for x in the
+	// Using Armadillo solve to solve for x in the Ax=b equation, where x here is u_np1
 	arma::cx_vec u_np1 = spsolve(A, b, "lapack");
-	//cout << "\n Vector u^(n+1): \n" << X;
 	return u_np1;
 }
 
@@ -264,7 +262,6 @@ void funcs::double_slit(double h, arma::cx_double v0, int M, arma::sp_cx_mat & V
 			V(o,p) = v0;
 		}
 	}
-	
 }
 
 
